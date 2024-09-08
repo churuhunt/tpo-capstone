@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>신고내용 작성</title>
+</head>
+<body>
+<h1>신고내용 작성</h1>
+<form action="/posts/report" method="post" th:object="${report}">
+    <input type="hidden" name="postId" th:value="${postId}" />
+    <label for="reportContent">신고 내용:</label>
+    <textarea id="reportContent" name="content" rows="4" cols="50" th:field="*{content}"></textarea>
+    <br>
+    <button type="submit">제출</button>
+</form>
+</body>
+</html>

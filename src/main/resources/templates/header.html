@@ -1,0 +1,31 @@
+<nav id="navbar-example2" class="navbar bg-body-tertiary px-3 mb-3" th:fragment="header"
+     xmlns:sec="http://www.w3.org/1999/xhtml">
+    <a class="navbar-brand" href="/">게시판</a>
+    <ul class="nav nav-pills">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">회원관리</a>
+            <ul class="dropdown-menu" sec:authorize="!isAuthenticated()">
+                <li><a class="dropdown-item" href="/login">로그인</a></li>
+                <li><a class="dropdown-item" href="/join">회원가입</a></li>
+            </ul>
+            <ul class="dropdown-menu" sec:authorize="isAuthenticated()">
+                <li><a class="dropdown-item" href="/logout">로그아웃</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
+
+<!-- 상단 타이틀이랑 드롭다운메뉴 헤더로 빼놓은 파일
+href="/" <- 게시판 클릭하면 메인화면으로 리다이렉션 하게 연결시켜 둔 코드
+
+회원관리 옆에 href="#" 은 그냥 비워둔 것
+
+sec:authorize="isAuthenticated() <- 권한이 있으면
+sec:authorize="!isAuthenticated() <- 권한이 없으면
+이 두개는 스프링 시큐리티에서 제공하는 권한이 있는 사용자만 보이는 블럭 ( 로그인 세션이 유지중이면 로그아웃이 보이고 로그인 세션이 유지되고 있지 않으면, 로그인 회원가입이 보임)
+
+href="/login" <- 로그인 클릭하면 /login 매핑을 get 해서 로그인 창으로 이동하는 코드 이런 코드들은 전부 controller 패키지에 가면 코드들 다 확인 가능
+href="/join" <- 클릭하면 회원가입창으로 이동
+href="/logout" <- 로그아웃
+-->
