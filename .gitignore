@@ -21,3 +21,28 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Java 관련
+*.class
+*.jar
+*.war
+*.ear
+/target/
+**/build/
+*.log
+
+# Node 관련
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 환경 설정 관련
+.env
+
+# IntelliJ IDEA
+.idea/
+*.iml
+
+# 기타
+.DS_Store
