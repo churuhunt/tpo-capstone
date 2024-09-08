@@ -1,0 +1,69 @@
+.my-menu-container {
+    position: relative;
+    height: 100vh;
+}
+
+.my-menu-container a {
+    color: #fff;
+}
+
+.background-image {
+    background-image: url('../image/background.jpg');
+    background-size: cover;
+    background-repeat: no-repeat; 
+    background-position: center; 
+    height: 40%;
+}
+
+.profile-info {
+    position: absolute;
+    top: 40%;
+    left: 150px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+}
+
+.profile-picture {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.7);
+}
+
+.nickname {
+    font-size: 24px;
+    color: #fff;
+    transform: translateY(-50%);
+}
+
+.my-menu-container .aa {
+    width: 80%;
+    height: 35%;
+    background-color: rgb(255, 255, 255);
+    border: 2px solid rgb(0, 0, 0);
+    position: absolute;
+    top: 52%;
+    left: 10%;
+    border-radius: 10px;
+}
+
+.my-menu-container .button-container {
+    position: absolute;
+    top: calc(52% - 50px); 
+    right: 10%; 
+    
+  }
+  
+  .my-menu-container button1,
+  .my-menu-container button2 {
+    width: 100px;
+    height: 50px;
+    margin-right: 10px;
+    position: absolute; 
+    top: calc(52% - 50px); 
+    right: 10%; 
+    
+
+  }
+

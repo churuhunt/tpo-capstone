@@ -1,0 +1,135 @@
+.ranking-container {
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.ranking-container .ranking-table {
+  width: 60%;
+  min-height: 200px;
+  margin: 0 auto; 
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  background-color: #fff;
+  position: relative;
+  border-radius: 20px; 
+}
+
+.ranking-container .ranking-table tr:first-child td:first-child {
+  border-radius: 20px 0 0 0;
+}
+
+.ranking-container .ranking-table tr:first-child td:nth-child(4) {
+  border-radius: 0 20px 0 0;
+}
+
+.ranking-container .ranking-table td,
+.ranking-container .ranking-table th {
+  width: 33.33%;
+  height: 40px;
+  padding: 8px;
+}
+
+.ranking-container .ranking-table th {
+  background-color: #f2f2f2;
+}
+
+.ranking-container .ranking-item:hover {
+  cursor: pointer;
+}
+
+.ranking-container .pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  position: relative;
+}
+
+.ranking-container .pagination button {
+  padding: 8px 16px;
+  margin: 0 5px;
+  background-color: #3e3e3f;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.ranking-container .pagination button:hover {
+  background-color: #222222;
+}
+
+.ranking-container .pagination button:disabled {
+  background-color: #c9c1c1;
+  cursor: not-allowed;
+}
+
+.ranking-container .ranking-item {
+  transition: background-color 0.3s ease;
+}
+
+/*.ranking-container @keyframes fallingConfetti {
+  0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(80vh) rotate(720deg); opacity: 0; }
+}
+*/
+.ranking-container .confetti {
+  position: absolute;
+  width: 13px;
+  height: 10px;
+  top: -10px;
+  z-index: 2;
+  animation: fallingConfetti 5s linear infinite;
+  pointer-events: none;
+}
+
+.ranking-container .confetti:nth-child(2n) {
+  background-color: rgba(255, 223, 0, 0.8);
+}
+
+.ranking-container .confetti:nth-child(2n-1) {
+  background-color: rgba(255, 105, 180, 0.8);
+}
+
+.ranking-container .confetti:nth-child(3n) {
+  background-color: rgba(0, 191, 255, 0.8);
+}
+
+.ranking-container .confetti:nth-child(4n) {
+  background-color: rgba(50, 205, 50, 0.8);
+}
+
+.ranking-container .ranking-table td:nth-child(1),
+.ranking-container .ranking-table th:nth-child(1) {
+  width: 10%;
+  text-align: center;
+}
+
+.ranking-container .ranking-table td:nth-child(2),
+.ranking-container .ranking-table th:nth-child(2) {
+  width: 8%;
+}
+
+.ranking-container .ranking-table td:nth-child(3),
+.ranking-container .ranking-table th:nth-child(3) {
+  width: 40%;
+}
+
+.ranking-container .ranking-table td:nth-child(4),
+.ranking-container .ranking-table th:nth-child(4) {
+  width: 42%;
+}
+
+.ranking-container .ranking-table .profile-cell {
+  text-align: center;
+}
+
+.ranking-container h2 {
+  color: #fff;
+  font-size: 3vh;
+  text-align: center; 
+  display: flex;
+  align-items: center; 
+  justify-content: center; 
+  height: 10%;
+}

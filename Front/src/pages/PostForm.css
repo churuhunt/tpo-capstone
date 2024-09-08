@@ -1,0 +1,90 @@
+.post-form-container {
+    max-width: 70%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: hsl(0, 0%, 98%);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post-form-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.title-category-container {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.title-category-container label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+}
+
+.title-label {
+    flex: 70%;
+}
+
+.category-label {
+    flex: 30%;
+}
+
+.post-form-container input[type="text"],
+.post-form-container select {
+    padding: 8px;
+}
+
+.editor-controls {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 5px; /* 간격을 줄여서 버튼들이 붙어있게 만듭니다 */
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.icon-button img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.submit-button,
+.list-button {
+    height: 50px;
+    background-color: #454545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    
+}
+
+.submit-button:hover,
+.post-form-container .list-button:hover {
+    background-color: #898989;
+}
+
+.content-editable {
+    min-height: 500px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+}

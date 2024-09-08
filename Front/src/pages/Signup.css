@@ -1,0 +1,120 @@
+.signuppagecontainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  color: #333;
+  position: relative;
+  z-index: 1;
+}
+
+.signup-container {
+  min-width: 550px; /* 전체적으로 2배 크기로 조정 */
+  margin: auto;
+  padding: 80px; /* 전체적으로 2배 크기로 조정 */
+  border-radius: 20px; /* 전체적으로 2배 크기로 조정 */
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.4); /* 그림자도 조정 */
+  text-align: center;
+  background-color: #222;
+}
+
+.signup-container h2 {
+  margin-bottom: 20px;
+  text-align: center;
+  color: #fff;
+}
+
+.signup-container form {
+  display: flex;
+  flex-direction: column;
+  color: #fff;
+}
+
+/*.signup-container form label {
+  
+}*/
+
+.signup-container form .input-group {
+  display: flex;
+  align-items: center;
+  margin: 8px 0; 
+}
+
+.signup-container form input {
+  flex: 1;
+  width:90%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  height: 30px;
+  margin-left:10px;
+}
+
+.signup-container .button1 {
+  margin-left: 10px;
+  height: 50px;
+  width: 80px;
+  font-size: 12px;
+  padding: 8px 15px;
+  background-color: #7d7f81;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.signup-container .button2 {
+  margin: 0 auto; /* 수평 가운데 정렬 */
+  display: block; /* 인라인 요소를 블록 요소로 변경하여 가운데 정렬이 적용되도록 함 */
+  width: 150px;
+  font-size: 14px;
+  padding: 8px 15px;
+  background-color: #7d7f81;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+
+.signup-container .button1:hover {
+  background-color: #bdbdbd;
+}
+
+
+.signup-container .button2:hover {
+  background-color: #bdbdbd;
+}
+
+.signuppagecontainer label{
+  text-align: left;
+  margin-left: 20px;
+  display: block;
+  justify-content: flex-start;
+}
+
+.signuppagecontainer .input1{
+  width: 72%;
+}
+
+
+.signuppagecontainer .btndiv{
+  margin-left: 7px;
+}
+
+.signuppagecontainer .btndiv:nth-of-type(1){
+  margin-bottom:-20px;
+}
+
+.btndiv label {
+  margin-bottom: -20px;
+  margin-left: 13px;
+}
+
+.signup-container form .input-group:nth-of-type(1) .btndiv label {
+  margin-bottom: -100px; /* 첫 번째 btndiv 내부의 라벨의 아래 여백을 조정합니다. */
+}
+
+.signup-container .aa{
+  color: #fff;
+}

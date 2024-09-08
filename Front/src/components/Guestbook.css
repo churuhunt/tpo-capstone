@@ -1,0 +1,50 @@
+.guestbook-container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+  }
+  
+  .guestbook-container h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .guestbook-container p {
+    font-size: 18px;
+  }
+  
+  .guestbook-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .guestbook-container li {
+    border-bottom: 1px solid #ccc;
+    padding: 10px 0;
+  }
+  
+  .guestbook-container form {
+    margin-top: 20px;
+  }
+  
+  .guestbook-container input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .guestbook-container button {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .guestbook-container button:hover {
+    background-color: #0056b3;
+  }
+  

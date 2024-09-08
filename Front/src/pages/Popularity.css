@@ -1,0 +1,291 @@
+.board3-container {
+  max-width: 1500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.board3-container .write-button-container {
+  display: flex;
+  justify-content: flex-end;   
+}
+
+.board3-container .post-table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fff;
+  table-layout: fixed;
+}
+
+.board3-container .post-table th,
+.board3-container .post-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  height: 33px;
+  border: none;
+}
+
+.board3-container .post-table th:nth-child(1),
+.board3-container .post-table td:nth-child(1) {
+  width: 7%;
+}
+
+.board3-container .post-table th:nth-child(2),
+.board3-container .post-table td:nth-child(2) {
+  width: 8%;
+}
+
+.board3-container .post-table th:nth-child(3),
+.board3-container .post-table td:nth-child(3) {
+  width: 50%;
+  text-align: left;
+  padding-left: 1rem;
+  cursor: pointer;
+}
+
+.board3-container .post-table th:nth-child(3) {
+  text-align: center;
+  cursor: default;
+}
+
+.board3-container .post-table th:nth-child(4),
+.board3-container .post-table td:nth-child(4) {
+  width: 10%;
+}
+
+.board3-container .post-table th:nth-child(5),
+.board3-container .post-table td:nth-child(5) {
+  width: 7%;
+}
+
+.board3-container .post-table th:nth-child(6),
+.board3-container .post-table td:nth-child(6) {
+  width: 7%;
+}
+
+.board3-container .post-table th:nth-child(7),
+.board3-container .post-table td:nth-child(7) {
+  width: 7%;
+}
+
+.board3-container .post-table th {
+  background-color: #bbbbbb;
+  color: black;
+  font-weight: bold;
+  text-align: center;
+}
+
+.board3-container .post-table td {
+  text-align: center;
+}
+
+.board3-container .post-table td:nth-child(3) {
+  text-align: left;
+  padding-left: 1rem;
+}
+
+.board3-container .post-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.board3-container .post-table tr:hover {
+  background-color: #cecdcd;
+}
+
+.board3-container .empty-row {
+  height: 33px;
+}
+
+.board3-container .sort-menu {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.board3-container .pagination-write-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: -16px;
+  margin-bottom: 20px;
+  margin-left: -41px;
+}
+
+.board3-container .pagination-container {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.board3-container .pagination {
+  list-style: none;
+  padding: 0;
+  display: inline-flex;
+  gap: 5px;
+}
+
+.board3-container .pagination li {
+  display: inline;
+}
+
+.board3-container .pagination button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.board3-container .pagination button:hover {
+  background-color: #c5c3c3;
+}
+
+.board3-container h2 {
+  position: relative;
+  font-size: 1.7rem;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.board3-container .date a {
+  position: relative;
+  font-size: 1.2rem;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.board3-container h2::before,
+.board3-container .date a::before {
+  transform: scaleX(0);
+  transform-origin: bottom right;
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: #bbbbbb;
+  z-index: -1;
+  transition: transform 0.3s ease;
+}
+
+.board3-container h2:hover::before,
+.board3-container .date a:hover::before {
+  transform: scaleX(1);
+  transform-origin: bottom left;
+}
+
+.board3-container ul {
+  list-style-type: none;
+  padding: 0;
+  display: flex;
+}
+
+.board3-container li {
+  display: inline;
+  position: relative;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.board3-container li:not(:last-child):after {
+  content: "|";
+  position: absolute;
+  right: 0;
+  color: #ddd;
+}
+
+.board3-container a {
+  text-decoration: none;
+  color: white;
+}
+
+.board3-container-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.board3-container .search-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: flex-end;
+  flex-grow: 1;
+}
+
+.board3-container .search-container .board3-select-wrapper {
+  background-color: #eee;
+  border: 1px solid #aaa;
+  color: #aaa;
+  cursor: pointer;
+  overflow: hidden;
+  padding-right: 0em;
+  position: relative;
+  width: 150px;
+  height: 50px;
+  display: flex;
+  margin-bottom: -9px;
+  align-items: center;
+}
+
+.board3-container .search-container .board3-select {
+  background-color: #eee;
+  border-width: 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-size: 0.8em;
+  line-height: 1em;
+  padding: 1em 1em;
+  width: 100%;
+  width: calc(80% + 2em);
+}
+
+.board3-container .search-container .board3-select:focus {
+  outline: none;
+}
+
+.board3-container .search-container .board3-select-icon {
+  position: absolute;
+  top: 0.8em;
+  right: 1em;
+}
+
+.board3-container .search-container .input-group {
+  display: flex;
+  width: 300px;
+  height: 40px;
+}
+
+.board3-container .search-container .form-control {
+  width: 100%;
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px 0 0 5px;
+  font-size: 0.8em;
+  height: 100%;
+}
+
+.board3-container .search-container .input-group-append .btn {
+  padding: 5px 10px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  height: 100%;
+}
+
+.board3-container .search-container .input-group-append .btn:hover {
+  background-color: #0056b3;
+}
+
+.board3-container .search-container .fa-search {
+  font-size: 1em;
+}
+
+.board3-container .write-button-container {
+  display: none;
+}

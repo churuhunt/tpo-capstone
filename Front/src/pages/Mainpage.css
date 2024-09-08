@@ -1,0 +1,139 @@
+/* 메인 페이지 스타일 */
+.main-page {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial, sans-serif';
+  height: 100vh;
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.background-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.3;
+}
+
+.content {
+  width: 100%;
+  text-align: center;
+  z-index: 1;
+  margin: 0 auto;
+  
+}
+
+/* 슬라이드 컨테이너 */
+.slideshow-container {
+  background-color: #6c5d53;
+  width: 100%;
+  height: 150;
+  margin: -290px auto 10px; /* 위로 조금 올리기 */
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 1s ease-in-out; /* 슬라이드 컨테이너에 fadeIn 애니메이션 추가 */
+}
+
+
+/* 각 슬라이드 이미지 */
+.each-slide {
+  width: 100%;
+  height: 550px; /* 이미지 높이 설정 */
+}
+
+.each-slide img {
+  background-size: cover;
+    background-repeat: no-repeat; 
+    background-position: center; 
+    height: 100%;
+}
+
+
+
+.text-container {
+  margin-top: 20px;
+}
+
+.main-title {
+  font-size: 3em;
+  margin: 0;
+  animation: slideIn 1s ease-out;
+}
+
+.main-description {
+  font-size: 1.5em;
+  margin: 20px 0;
+  animation: slideInDescription 1s ease-out;
+}
+
+.explore-button {
+  background-color: #ff6f61;
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+  animation: slideInButton 1s ease-out;
+}
+
+.explore-button:hover {
+  background-color: #ff4b3a;
+}
+
+/* 슬라이드 애니메이션 */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 타이틀 애니메이션 */
+@keyframes slideIn {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 버튼 애니메이션 */
+@keyframes slideInButton {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInDescription {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
