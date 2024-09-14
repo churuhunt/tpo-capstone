@@ -15,7 +15,7 @@ const Topbar = () => {
           <li><Link to="/notification">📢공지사항</Link></li>
           <li><Link to="/popularity">🔥인기</Link></li>
           <li><Link to="/community">💬커뮤니티</Link></li>
-          <li><Link to="/Recommendedboard">👍추천</Link></li>
+          <li><Link to="/recommendedboard">👍추천</Link></li>
           <li><Link to="/informationboard">ℹ️정보</Link></li>
           <li><Link to="/ranking">🏆랭킹</Link></li>
           <li><Link to="/store">🏪상점</Link></li>

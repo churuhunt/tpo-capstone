@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './RecommendationBoard.css';  // CSS 파일 이름을 변경해 주세요.
+import './Recommendedboard.css';
 import { Link } from 'react-router-dom';
 import BubblyButton from '../components/BubblyButton';
 
@@ -124,7 +124,7 @@ const RecommendationBoard = () => {
           </tr>
           </thead>
           <tbody>
-          {currentPosts.map((post, index) => (
+          {posts.map((post, index) => (
               <tr key={index}>
                 <td>{post.category}</td>
                 <td>{post.id}</td>
@@ -137,7 +137,7 @@ const RecommendationBoard = () => {
                 <td>{post.likes}</td>
               </tr>
           ))}
-          {currentPosts.length < postsPerPage && [...Array(postsPerPage - currentPosts.length)].map((_, index) => (
+          {posts.length < postsPerPage && [...Array(postsPerPage - posts.length)].map((_, index) => (
               <tr key={`empty-${index}`} className="board5-container empty-row">
                 <td></td>
                 <td></td>
@@ -170,5 +170,4 @@ const RecommendationBoard = () => {
   );
 }
 
-export default RecommendedBoard;
-
+export default RecommendationBoard;

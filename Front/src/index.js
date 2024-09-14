@@ -15,6 +15,7 @@ import MyMenu from './pages/Mymenu';
 import PostForm from './pages/PostForm';
 import Community from './pages/community';
 import Informationboard from './pages/Informationboard';
+import Recommendedboard from './pages/Recommendedboard';
 
 
 const App = () => {
@@ -29,6 +30,7 @@ const App = () => {
           <Route path="/popularity" element={<Popularity />} />
           <Route path="/community" element={<Community />} />
           <Route path="/informationboard" element={<Informationboard />} />
+          <Route path="/recommendedboard" element={<Recommendedboard />} />
           <Route path="/ranking" element={<Ranking />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
