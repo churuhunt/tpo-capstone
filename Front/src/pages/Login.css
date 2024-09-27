@@ -1,80 +1,369 @@
-.login-container {
-  height: 100vh;
-  background-color: #000;
+:root{
+  --login-form-height: 550px;
+  --login-form-width: 900px;
+  --login-left-color: #9fdeaf;
+  --login-right-color: #96dbe2;
+}
+
+body, html{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  font-family: 'Helvetica Neue', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+.login-container{
+  width: var(--login-form-width);
+  height: var(--login-form-height);
+  position: relative;
+  margin: auto;
+  box-shadow: 2px 10px 40px rgba(22,20,19,0.4);
+  border-radius: 10px;
+  margin-top: 50px;
+  background-color: white;
+}
+
+/* 
+----------------------
+      Overlay
+----------------------
+*/
+.login-overlay{
+  width: 100%; 
+  height: 100%;
+  position: absolute;
+  z-index: 100;
+  background-image: linear-gradient(to right, var(--login-left-color), var(--login-right-color));
+  border-radius: 10px;
+  color: white;
+  clip: rect(0, 385px, var(--login-form-height), 0);
+}
+
+.login-open-sign-up{
+  animation: login-slideleft 1s linear forwards;
+}
+
+.login-open-sign-in{
+  animation: login-slideright 1s linear forwards;
+}
+
+.login-overlay .login-sign-in, .login-overlay .login-sign-up{
+  --login-padding: 50px;
+  width: calc(385px - var(--login-padding) * 2);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px var(--login-padding);
+  text-align: center;
+}
+
+.login-overlay .login-sign-in{
+  float: left;
+}
+
+.login-overlay-text-left-animation{
+  animation: login-text-slide-in-left 1s linear;
+}
+
+.login-overlay-text-left-animation-out{
+  animation: login-text-slide-out-left 1s linear;
+}
+
+.login-overlay .login-sign-up{
+  float:right;
+}
+
+.login-overlay-text-right-animation{
+  animation: login-text-slide-in-right 1s linear;
+}
+
+.login-overlay-text-right-animation-out{
+  animation: login-text-slide-out-right 1s linear;
+}
+
+.login-overlay h1{
+  margin: 0px 5px;
+  font-size: 2.1rem;
+}
+
+.login-overlay p{
+  margin: 20px 0px 30px;
+  font-weight: 200;
+}
+
+/* 
+------------------------
+      Buttons
+------------------------
+*/
+.login-switch-button, .login-control-button{
+  cursor: pointer;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 140px;
+  height: 40px;
+  font-size: 14px;
+  text-transform: uppercase;
+  background: none;
+  border-radius: 20px;
+  color: white;
+}
+
+.login-switch-button{
+  border: 2px solid;
+}
+
+.login-control-button{
+  border: none;
+  margin-top: 15px;
+}
+
+.login-switch-button:focus, .login-control-button:focus{
+  outline: none;
+}
+
+.login-control-button.login-up{
+  background-color: var(--login-left-color);
+}
+
+.login-control-button.login-in{
+  background-color: var(--login-right-color);
+}
+
+/* 
+--------------------------
+      Forms
+--------------------------
+*/
+.login-form{
+  width: 100%; 
+  height: 100%;
+  position: absolute;
+  border-radius: 10px;
+}
+
+.login-form .login-sign-in, .login-form .login-sign-up{
+  --login-padding: 50px;
+  position: absolute;
+  width: calc(var(--login-form-width) - 385px - var(--login-padding) * 2);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 0px var(--login-padding);
+  text-align: center;
+}
+
+.login-form .login-sign-in{
+  display: none;
+}
+
+.login-form .login-sign-in{
+  left: 0;
+}
+
+.login-form .login-sign-up{
+  right: 0;
+}
+
+.login-form-right-slide-in{
+  animation: login-form-slide-in-right 1s;
+}
+
+.login-form-right-slide-out{
+  animation: login-form-slide-out-right 1s;
+}
+
+.login-form-left-slide-in{
+  animation: login-form-slide-in-left 1s;
+}
+
+.login-form-left-slide-out{
+  animation: login-form-slide-out-left 1s;
+}
+
+.login-form .login-sign-in h1{
+  color: var(--login-right-color);
+  margin: 0;
+}
+
+.login-form .login-sign-up h1{
+  color: var(--login-left-color);
+  margin: 0;
+}
+
+.login-social-media-buttons{
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin: 15px;
+}
+
+.login-social-media-buttons .login-icon{
+  width: 40px;
+  height: 40px;
+  border: 1px solid #dadada;
+  border-radius: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
+  margin: 10px 7px;
 }
 
-.login-container2 {
-  min-width: 500px; /* 전체적으로 2배 크기로 조정 */
-  margin: auto;
-  padding: 80px; /* 전체적으로 2배 크기로 조정 */
-  border-radius: 20px; /* 전체적으로 2배 크기로 조정 */
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.4); /* 그림자도 조정 */
-  text-align: center;
-  background-color: #222;
+.login-small{
+  font-size: 13px;
+  color: grey;
+  font-weight: 200;
+  margin: 5px;
 }
 
-.login-container h2 {
-  margin-bottom: 60px; /* 전체적으로 2배 크기로 조정 */
-  color: #fff;
+.login-social-media-buttons .login-icon svg{
+  width: 25px;
+  height: 25px;
 }
 
-.login-container form div {
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  width: 100%;
-  margin-bottom: 40px; 
-}
-
-.login-container form label {
-  font-weight: bold;
-  width: 200px; 
-  text-align: left;
-  margin-right: 20px;
-  color: #fff;
-}
-
-.login-container form input[type="text"],
-.login-container form input[type="password"] {
-  width: 300px;
-  flex: 1; /* 입력창을 가능한 한 크게 만듭니다. */
-  padding: 24px; /* 입력창 내 여백 */
-  padding-left: 40px; /* 왼쪽 여백을 늘립니다. */
-  border: 2px solid #ccc; /* 테두리 스타일 */
-  border-radius: 10px; /* 테두리를 둥글게 만듭니다. */
-  margin-left: -120px; /* 입력창을 왼쪽으로 이동합니다. */
-  background-color: #afafaf; /* 입력창 배경색 */
-  color: #fff; /* 입력된 텍스트 색상 */
-  font-size: 18px; /* 입력창 내 글꼴 크기 */
-}
-
-.login-container form button {
-  width: 100%;
-  font-size: 20px;
-  padding: 24px; 
-  background-color: #5f6163;
-  color: #fff;
+#login-sign-in-form input, #login-sign-up-form input{
+  margin: 12px;
+  font-size: 14px;
+  padding: 15px;
+  width: 260px;
+  font-weight: 300;
   border: none;
-  border-radius: 10px; 
+  background-color: #e4e4e494;
+  font-family: 'Helvetica Neue', sans-serif;
+  letter-spacing: 1.5px;
+  padding-left: 20px;
+}
+
+#login-sign-in-form input::placeholder{
+  letter-spacing: 1px;
+}
+
+.login-forgot-password{
+  font-size: 12px;
+  display: inline-block;
+  border-bottom: 2px solid #efebeb;
+  padding-bottom: 3px;
+}
+
+.login-forgot-password:hover{
   cursor: pointer;
-  margin-top: 40px; 
 }
 
-.login-container form button:hover {
-  background-color: #9ea0a2;
+/* 
+---------------------------
+    Animation
+---------------------------
+*/
+@keyframes login-slideright{
+  0%{
+    clip: rect(0, 385px, var(--login-form-height), 0);
+  }
+  30%{
+    clip: rect(0, 480px, var(--login-form-height), 0);
+  }
+  50%{
+    clip: rect(0px, calc(var(--login-form-width) / 2 + 480px / 2), var(--login-form-height), calc(var(--login-form-width) / 2 - 480px / 2));
+  }
+  80%{
+    clip: rect(0px, var(--login-form-width), var(--login-form-height), calc(var(--login-form-width) - 480px));
+  }
+  100%{
+    clip: rect(0px, var(--login-form-width), var(--login-form-height), calc(var(--login-form-width) - 385px));
+  }
 }
 
-.login-container a {
-  margin-top: 40px; /* 전체적으로 2배 크기로 조정 */
-  display: block;
-  color: #ffffff;
-  text-decoration: none;
+@keyframes login-slideleft{
+  100%{
+    clip: rect(0, 385px, var(--login-form-height), 0);
+  }
+  70%{
+    clip: rect(0, 480px, var(--login-form-height), 0);
+  }
+  50%{
+    clip: rect(0px, calc(var(--login-form-width) / 2 + 480px / 2), var(--login-form-height), calc(var(--login-form-width) / 2 - 480px / 2));
+  }
+  30%{
+    clip: rect(0px, var(--login-form-width), var(--login-form-height), calc(var(--login-form-width) - 480px));
+  }
+  0%{
+    clip: rect(0px, var(--login-form-width), var(--login-form-height), calc(var(--login-form-width) - 385px));
+  }
 }
 
-.login-container a:hover {
-  text-decoration: underline;
-  color: #8f8f8f;
+@keyframes login-text-slide-in-left{
+  0% {
+    padding-left: 20px;
+  }
+  100% {
+    padding-left: 50px;
+  }
+}
+
+@keyframes login-text-slide-in-right{
+  0% {
+    padding-right: 20px;
+  }
+  100% {
+    padding-right: 50px;
+  }
+}
+
+@keyframes login-text-slide-out-left{
+  0% {
+    padding-left: 50px;
+  }
+  100% {
+    padding-left: 20px;
+  }
+}
+
+@keyframes login-text-slide-out-right{
+  0% {
+    padding-right: 50px;
+  }
+  100% {
+    padding-right: 20px;
+  }
+}
+
+@keyframes login-form-slide-in-right{
+  0%{
+    padding-right: 100px;
+  }
+  100%{
+    padding-right: 50px;
+  }
+}
+
+@keyframes login-form-slide-in-left{
+  0%{
+    padding-left: 100px;
+  }
+  100%{
+    padding-left: 50px;
+  }
+}
+
+@keyframes login-form-slide-out-right{
+  0%{
+    padding-right: 50px;
+  }
+  100%{
+    padding-right: 80px;
+  }
+}
+
+@keyframes login-form-slide-out-left{
+  0%{
+    padding-left: 50px;
+  }
+  100%{
+    padding-left: 80px;
+  }
 }
