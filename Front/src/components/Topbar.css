@@ -20,6 +20,7 @@ nav ul {
   justify-content: center;
   margin: 0;
   padding: 0;
+  user-select: none; 
 }
 
 nav ul li {
