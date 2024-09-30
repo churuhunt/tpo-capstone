@@ -279,7 +279,7 @@
 
 .card-view {
   display: grid;
-  grid-template-columns: repeat(5, 1fr); /* 가로 최대 5개의 카드 배치 */
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 반응형 그리드 */
   gap: 20px;
 }
 
@@ -288,8 +288,8 @@
   border-radius: 5px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  background-color: #333; /* 배경색 추가 */
-  color: white; /* 텍스트를 흰색으로 */
+  background-color: #333;
+  color: white;
 }
 
 .thumbnail {
@@ -304,7 +304,7 @@
 
 .card-info h3,
 .card-info p {
-  color: white; /* 카드 안의 텍스트 색상을 흰색으로 */
+  color: white;
 }
 
 .author-info {
@@ -343,4 +343,17 @@
 .view-toggle-button.active {
   background-color: #bbb;
   font-weight: bold;
+}
+
+/* 반응형 미디어 쿼리 */
+@media (max-width: 768px) {
+  .card-view {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .card-view {
+    grid-template-columns: 1fr; /* 창이 작아지면 1열로 줄어듦 */
+  }
 }

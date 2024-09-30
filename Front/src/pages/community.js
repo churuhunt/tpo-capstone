@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import BubblyButton from '../components/BubblyButton';
 
 const Community = () => {
-  // 임시 게시물 데이터 추가
   const [posts, setPosts] = useState([
     {
       id: 1,
@@ -15,7 +14,7 @@ const Community = () => {
       views: 100,
       likes: 20,
       thumbnailUrl: 'https://via.placeholder.com/300x200',
-      profileImageUrl: 'https://via.placeholder.com/50' // 임시 프로필 이미지
+      profileImageUrl: 'https://via.placeholder.com/50' 
     },
     {
       id: 2,
@@ -26,7 +25,7 @@ const Community = () => {
       views: 150,
       likes: 30,
       thumbnailUrl: 'https://via.placeholder.com/300x200',
-      profileImageUrl: 'https://via.placeholder.com/50' // 임시 프로필 이미지
+      profileImageUrl: 'https://via.placeholder.com/50' 
     },
     {
       id: 3,
@@ -37,7 +36,7 @@ const Community = () => {
       views: 200,
       likes: 40,
       thumbnailUrl: 'https://via.placeholder.com/300x200',
-      profileImageUrl: 'https://via.placeholder.com/50' // 임시 프로필 이미지
+      profileImageUrl: 'https://via.placeholder.com/50' 
     }
   ]);
 
@@ -46,9 +45,8 @@ const Community = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(15);
-  const [viewMode, setViewMode] = useState('card'); // 기본값을 카드형으로 설정
+  const [viewMode, setViewMode] = useState('card'); 
 
-  // 게시물 정렬
   const sortPosts = (sortByKey) => {
     if (sortBy === sortByKey) {
       setSortAscending(!sortAscending);
@@ -62,24 +60,20 @@ const Community = () => {
   const indexOfFirstPost = indexOfLastPost - postsPerPage;
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
-  // 카테고리 필터링
   const handleCategoryClick = (category) => {
     setCurrentPage(1);
   };
 
-  // 검색 시 실행
   const handleSearch = () => {
     setCurrentPage(1);
   };
 
-  // 필터 초기화
   const handleResetFilter = () => {
     setSearchTerm('');
     setSortBy('date-rise');
     setCurrentPage(1);
   };
 
-  // 페이지네이션
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
@@ -173,6 +167,7 @@ const Community = () => {
                   <img src={post.profileImageUrl} alt={`${post.author} 프로필`} className="profile-image" />
                   <p>{post.author}</p>
                 </div>
+                <p>카테고리: {post.category}</p> {/* 카테고리 추가 */}
                 <p>조회수: {post.views}</p>
                 <p>추천수: {post.likes}</p>
               </div>
