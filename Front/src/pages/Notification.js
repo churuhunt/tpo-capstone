@@ -4,7 +4,279 @@ import { Link } from 'react-router-dom';
 
 const Notification = () => { 
   const initialPosts = [
-
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '🎁이벤트',
+      title: '첫 번째 이벤트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '🆙업데이트',
+      title: '첫 번째 업데이트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '🎁이벤트',
+      title: '첫 번째 이벤트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '🆙업데이트',
+      title: '첫 번째 업데이트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '🎁이벤트',
+      title: '첫 번째 이벤트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '🆙업데이트',
+      title: '첫 번째 업데이트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '🎁이벤트',
+      title: '첫 번째 이벤트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '🆙업데이트',
+      title: '첫 번째 업데이트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '🎁이벤트',
+      title: '첫 번째 이벤트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '🆙업데이트',
+      title: '첫 번째 업데이트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '🎁이벤트',
+      title: '첫 번째 이벤트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '🆙업데이트',
+      title: '첫 번째 업데이트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '🎁이벤트',
+      title: '첫 번째 이벤트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '🆙업데이트',
+      title: '첫 번째 업데이트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '🎁이벤트',
+      title: '첫 번째 이벤트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '🆙업데이트',
+      title: '첫 번째 업데이트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '🎁이벤트',
+      title: '첫 번째 이벤트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '🆙업데이트',
+      title: '첫 번째 업데이트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '🎁이벤트',
+      title: '첫 번째 이벤트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '🆙업데이트',
+      title: '첫 번째 업데이트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '🎁이벤트',
+      title: '첫 번째 이벤트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '🆙업데이트',
+      title: '첫 번째 업데이트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '🎁이벤트',
+      title: '첫 번째 이벤트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '🆙업데이트',
+      title: '첫 번째 업데이트입니다.',
+      date: '2024-10-01',
+      views: 322,
+      likes: 150,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    },
+    {
+      category: '📢공지',
+      title: '첫 번째 공지사항입니다.',
+      date: '2024-10-01',
+      views: 100,
+      likes: 10,
+    }
   ];
 
   const [posts, setPosts] = useState(initialPosts);
@@ -112,6 +384,7 @@ const Notification = () => {
       <table className="board2-container post-table">
         <thead>
           <tr>
+            <th>카테고리</th>
             <th>제목</th>
             <th>작성일자</th>
             <th>조회수</th>
@@ -121,6 +394,7 @@ const Notification = () => {
         <tbody>
           {currentPosts.map((post, index) => (
             <tr key={index}>
+              <td>{post.category}</td> {/* 카테고리 표시 */}
               <td>
                 <Link to="/postview" style={{ color: 'black' }}>{post.title}</Link>
               </td>

@@ -123,6 +123,7 @@
   cursor: pointer;
   padding: 5px 10px;
   border-radius: 5px;
+  color: white;
 }
 
 .board4-container .pagination button:hover {

@@ -1,4 +1,3 @@
-
 .top-menu {
   display: flex;
   justify-content: space-between;
@@ -23,21 +22,15 @@ nav ul {
   justify-content: center;
   margin: 0;
   padding: 0;
-  user-select: none; 
+  user-select: none;
 }
 
 nav ul li {
   margin-left: 20px;
-  padding: max(8px, 15px) 15px;
+  padding: 10px;
+  position: relative;
   color: white;
-}
-
-nav ul li:hover {
-  background-color: rgb(165, 165, 165);
-}
-
-nav ul li:first-child {
-  margin-left: 0;
+  cursor: pointer;
 }
 
 nav ul li a {
@@ -47,9 +40,33 @@ nav ul li a {
   white-space: nowrap;
 }
 
+nav ul li:hover .submenu {
+  display: block;
+}
+
+.submenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #444;
+  padding: 10px 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.submenu li {
+  padding: 10px;
+  white-space: nowrap;
+}
+
+.submenu li:hover {
+  background-color: #555;
+}
+
 nav ul li.active {
   font-weight: bold;
-  color:yellow;
+  color: yellow;
   background-color: rgb(165, 165, 165);
 }
 

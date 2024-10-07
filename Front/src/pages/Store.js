@@ -29,7 +29,7 @@ const Store = () => {
   return (
     <div className="store-container">
       <div className="store-header">
-        <h2>상점</h2>
+        <h2>🏪상점</h2>
         <div className="store-search">
           <input type="text" placeholder="검색어를 입력하세요..." />
           <button>검색</button>

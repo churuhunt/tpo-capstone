@@ -13,7 +13,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* 어두운 오버레이 */
+  background-color: rgba(0, 0, 0, 0.5);
   opacity: 0.3;
 }
 
@@ -35,7 +35,7 @@
 
 .each-slide {
   width: 100%;
-  height: 550px; /* 이미지 높이 설정 */
+  height: 550px;
 }
 
 .each-slide img {
@@ -46,7 +46,6 @@
   height: 100%;
 }
 
-/* 섹션 스타일 */
 .sections-container {
   display: flex;
   flex-wrap: wrap;
@@ -57,6 +56,7 @@
 
 .section {
   background-color: #444;
+  background-color: black;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -64,18 +64,56 @@
   margin: 0 10px 20px;
   flex: 1 1 calc(30% - 20px);
   min-width: 300px;
+  position: relative;
 }
 
 .section h2 {
   font-size: 1.5rem;
   color: white;
   text-align: left;
+  position: relative;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+
+.section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: white;
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.popularity-links {
+  display: flex;
+  gap: 10px; /* 링크 사이 간격 */
+}
+
+.period-link {
+  background-color: transparent;
+  color: white;
+  margin-left: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  border-bottom: 2px solid transparent; /* 기본 상태에서 밑줄 없음 */
+  padding-bottom: 5px;
+}
+
+.period-link.selected {
+  color: red;
+  border-bottom: 2px solid red; /* 선택된 상태에서 빨간 밑줄 */
+}
+
+.period-link:hover {
+  color: #ddd;
 }
 
 .section ul {
@@ -86,15 +124,13 @@
 .section ul li {
   margin: 10px 0;
   color: #fff;
-  cursor: pointer; /* 리스트 항목에 커서 변경 */
+  cursor: pointer;
 }
 
 .section ul li:hover {
   color: #ddd;
-  cursor: pointer;
 }
 
-/* 더보기 버튼 */
 .more-button {
   margin-top: 15px;
   padding: 10px 20px;
@@ -109,26 +145,6 @@
   background-color: #0056b3;
 }
 
-/* 인기 게시판의 기간 링크 */
-.popularity-links {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.period-links .period-link {
-  background-color: transparent;
-  color: white;
-  margin-right: 15px;
-  cursor: pointer; /* 커서 포인터 적용 */
-  text-decoration: none; /* 링크 밑줄 제거 */
-}
-
-.period-links .period-link:hover {
-  color: #ddd;
-  cursor: pointer;
-}
-
-/* 인기 게시판의 게시글 목록 */
 .popular-posts {
   list-style: none;
   padding: 0;
@@ -143,10 +159,46 @@
 
 .popular-posts li:hover {
   color: #fff;
-  cursor: pointer;
 }
 
-/* 슬라이드 애니메이션 */
+.ranking-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.ranking-item {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+}
+
+.ranking-item .profile-image {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.ranking-item .nickname {
+  font-weight: bold;
+  color: white;
+}
+
+.section-with-border {
+  border-left: 2px solid white;  /* 왼쪽 구분선 */
+  border-right: 2px solid white; /* 오른쪽 구분선 */
+  padding-left: 20px;  /* 구분선과 콘텐츠 사이에 약간의 여백 추가 */
+  padding-right: 20px; /* 구분선과 콘텐츠 사이에 약간의 여백 추가 */
+}
+
+.popularity-header {
+  display: flex;
+  justify-content: space-between; /* h2와 links를 양쪽에 배치 */
+  align-items: center;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -158,15 +210,31 @@
   }
 }
 
-/* 반응형 디자인 */
 @media (max-width: 1024px) {
   .section {
-    flex: 1 1 calc(50% - 40px); /* 화면이 줄어들 때 최대 2개의 섹션 */
+    flex: 1 1 calc(50% - 40px);
   }
 }
 
 @media (max-width: 768px) {
   .section {
-    flex: 1 1 calc(100% - 40px); /* 모바일 화면에서는 1개씩 표시 */
+    flex: 1 1 calc(100% - 40px);
   }
+}
+.popular-posts .post-item {
+  display: flex;
+  justify-content: space-between; /* 글 제목과 작성자를 양쪽에 배치 */
+  align-items: center;
+  padding: 5px 0; /* 글 사이 간격 조정 */
+}
+.post-author {
+  display: flex;
+  align-items: center;
+}
+
+.popular-posts .post-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 0; /* 글 사이의 간격을 조정 */
 }
