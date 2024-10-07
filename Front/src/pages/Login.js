@@ -16,13 +16,13 @@ const Login = () => {
     <div className="login-container">
       <div className={`login-overlay ${isSignUp ? 'login-open-sign-up' : 'login-open-sign-in'}`}>
         <div className="login-sign-in">
-          <h1>회원가입회원가입</h1>
-          <p>bbbbbbbbbbbbbbbbbbbb</p>
+          <h1>TPO 회원가입</h1>
+          <p>Time Place Occasion</p>
           <button className="login-switch-button" onClick={openSignIn}>로그인</button>
         </div>
         <div className="login-sign-up">
-          <h1>로그인로그인</h1>
-          <p>aaaaaaaaaaaaaaaaaaaaaaa</p>
+          <h1>TPO 로그인</h1>
+          <p>Time Place Occasion</p>
           <button className="login-switch-button" onClick={openSignUp}>회원가입</button>
         </div>
       </div>
