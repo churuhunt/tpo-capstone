@@ -6,7 +6,7 @@
 
 .board4-container .write-button-container {
   display: flex;
-  justify-content: flex-end;   
+  justify-content: flex-end;
 }
 
 .board4-container .post-table {
@@ -19,7 +19,7 @@
 .board4-container .post-table th, .board4-container .post-table td {
   border: 1px solid #ddd;
   padding: 8px;
-  height: 33px; 
+  height: 33px;
   border: none;
 }
 
@@ -84,7 +84,7 @@
 }
 
 .board4-container .empty-row {
-  height: 33px; 
+  height: 33px;
 }
 
 .board4-container .sort-menu {
@@ -94,16 +94,16 @@
 
 .board4-container .pagination-write-container {
   display: flex;
-  justify-content: space-between; 
+  justify-content: space-between;
   align-items: center;
   margin-top: -50px;
   margin-bottom: 20px;
-  margin-left:150px;
+  margin-left: 150px;
 }
 
 .board4-container .pagination-container {
   flex-grow: 1;
-  text-align: center; 
+  text-align: center;
 }
 
 .board4-container .pagination {
@@ -129,33 +129,32 @@
   background-color: #c5c3c3;
 }
 
-.board4-container h2{
+.board4-container h2 {
   position: relative;
-  font-size: 1.7rem; 
+  font-size: 1.7rem;
   color: white;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
 }
-
 
 .board4-container .date a {
   position: relative;
-  font-size: 1.2rem; 
+  font-size: 1.2rem;
   color: white;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
 }
 
-.board4-container h2::before, .board4-container .date a::before {  
+.board4-container h2::before, .board4-container .date a::before {
   transform: scaleX(0);
   transform-origin: bottom right;
   content: " ";
   display: block;
   position: absolute;
-  top: 0; 
-  bottom: 0; 
+  top: 0;
+  bottom: 0;
   left: 0;
   width: 100%;
   background: #bbbbbb;
@@ -178,7 +177,7 @@
   display: inline;
   position: relative;
   padding: 0 10px;
-  cursor: pointer; 
+  cursor: pointer;
 }
 
 .board4-container li:not(:last-child):after {
@@ -215,7 +214,7 @@
   overflow: hidden;
   padding-right: 0em;
   position: relative;
-  width: 150px; 
+  width: 150px;
   height: 50px;
   display: flex;
   margin-bottom: -9px;
@@ -247,7 +246,7 @@
 .board4-container .search-container .input-group {
   display: flex;
   width: 300px;
-  height: 40px; 
+  height: 40px;
 }
 
 .board4-container .search-container .form-control {
@@ -256,7 +255,7 @@
   border: 1px solid #ddd;
   border-radius: 5px 0 0 5px;
   font-size: 0.8em;
-  height: 100%; 
+  height: 100%;
 }
 
 .board4-container .search-container .input-group-append .btn {
@@ -266,7 +265,7 @@
   color: #fff;
   border-radius: 0 5px 5px 0;
   cursor: pointer;
-  height: 100%; 
+  height: 100%;
 }
 
 .board4-container .search-container .input-group-append .btn:hover {
@@ -277,34 +276,60 @@
   font-size: 1em;
 }
 
+/* 카드 애니메이션 관련 스타일 */
 .card-view {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* 반응형 그리드 */
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
 }
 
 .card {
+  position: relative;
   border: 1px solid #ddd;
   border-radius: 5px;
   overflow: hidden;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   background-color: #333;
   color: white;
+  height: 350px;
+  cursor: pointer;
 }
 
 .thumbnail {
   width: 100%;
-  height: 200px;
+  height: 100%;
   object-fit: cover;
+  transition: opacity 0.5s ease-in-out; /* 서서히 흐려지게 만드는 전환 시간 조정 */
 }
 
 .card-info {
-  padding: 15px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.8);
+  transform: translateY(50%);
+  transition: transform 0.5s ease-in-out;
 }
 
-.card-info h3,
-.card-info p {
+.card h3 {
+  margin: 0;
+  font-size: 1.2rem;
   color: white;
+}
+
+.card .details {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.card:hover .card-info {
+  transform: translateY(0);
+}
+
+.card:hover .details {
+  opacity: 1;
 }
 
 .author-info {
@@ -314,10 +339,23 @@
 }
 
 .profile-image {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   margin-right: 10px;
+}
+
+/* 반응형 미디어 쿼리 */
+@media (max-width: 768px) {
+  .card-view {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .card-view {
+    grid-template-columns: 1fr;
+  }
 }
 
 .view-toggle-container {
@@ -325,35 +363,23 @@
   gap: 10px;
 }
 
-.view-toggle-button {
-  margin-left: 10px;
-  padding: 10px 15px;
+.view-toggle-icon {
+  width: 25px;
+  height: 25px;
   cursor: pointer;
-  border: 1px solid #ddd;
-  background-color: #eee;
-  font-size: 14px;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+  filter: brightness(0) invert(1);
 }
 
-.view-toggle-button:hover {
-  background-color: #ccc;
+.view-toggle-icon:hover {
+  opacity: 1;
 }
 
-.view-toggle-button.active {
-  background-color: #bbb;
-  font-weight: bold;
+.view-toggle-icon.active {
+  opacity: 1;
 }
-
-/* 반응형 미디어 쿼리 */
-@media (max-width: 768px) {
-  .card-view {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .card-view {
-    grid-template-columns: 1fr; /* 창이 작아지면 1열로 줄어듦 */
-  }
+.card:hover .thumbnail {
+  opacity: 0.5; /* 투명도만 조절 */
+   /* 밝기 조정으로 흐리게 */
 }

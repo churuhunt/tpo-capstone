@@ -23,25 +23,28 @@ const App = () => {
     <div className="app-container">
       <Router>
         <Topbar />
-        <Routes>
-          <Route path="/" element={<Mainpage />} />
-          <Route path="/main" element={<Mainpage />} />
-          <Route path="/notification" element={<Notification />} />
-          <Route path="/popularity" element={<Popularity />} />
-          <Route path="/community" element={<Community />} />
-          <Route path="/informationboard" element={<Informationboard />} />
-          <Route path="/recommendedboard" element={<Recommendedboard />} />
-          <Route path="/ranking" element={<Ranking />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/store" element={<Store />} />
-          <Route path="/mymenu" element={<MyMenu />} />
-          <Route exact path="/write" element={<PostForm />} />
-        </Routes>
+        <div className="content-container">
+          <Routes>
+            <Route path="/" element={<Mainpage />} />
+            <Route path="/main" element={<Mainpage />} />
+            <Route path="/notification" element={<Notification />} />
+            <Route path="/popularity" element={<Popularity />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/informationboard" element={<Informationboard />} />
+            <Route path="/recommendedboard" element={<Recommendedboard />} />
+            <Route path="/ranking" element={<Ranking />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/store" element={<Store />} />
+            <Route path="/mymenu" element={<MyMenu />} />
+            <Route exact path="/write" element={<PostForm />} />
+          </Routes>
+        </div>
       </Router>
     </div>
   );
 };
+
 
 ReactDOM.render(
   <React.StrictMode>

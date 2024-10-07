@@ -9,18 +9,16 @@ body {
   background-color: black;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
 .app-container {
-  position: relative; 
+  position: relative;
   width: 100%;
   height: 100%;
-  overflow: hidden; 
+  overflow: hidden;
 }
 
+.content-container {
+  padding-top: 80px; /* Topbar의 높이만큼 padding 추가 */
+}
 
 .app-container::before {
   content: '';
@@ -29,12 +27,10 @@ code {
   left: 0;
   width: 100%;
   height: 100%;
-  /*background-image: url('./image/mainbackground.jpg');*/
   background-repeat: no-repeat;
   background-size: cover;
-  z-index: -2; 
+  z-index: -2;
 }
-
 
 .app-container::after {
   content: '';
@@ -43,6 +39,6 @@ code {
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); 
+  background-color: rgba(0, 0, 0, 0.5);
   z-index: -1;
 }
