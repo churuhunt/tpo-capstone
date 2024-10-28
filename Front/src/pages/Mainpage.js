@@ -8,6 +8,8 @@ import mainimg1 from '../image/mainimg1.jpg';
 import mainimg2 from '../image/mainimg2.jpg';
 import mainimg3 from '../image/mainimg3.jpg';
 
+import main1 from '../image/mainpage-banner1.jpg';
+
 const slideImages = [mainimg1, mainimg2, mainimg3];
 
 const rankings = [
@@ -58,7 +60,10 @@ const Mainpage = () => {
 
   return (
     <div className="main-page">
-      <div className="background-overlay"></div>
+      <div className="main-page-banner">
+                {/*<h2 className="main-page-title">🧾게시글 작성</h2>*/}
+            </div>
+      {/*<div className="background-overlay"></div>*/}
       <div className="content">
         <div className="slideshow-container">
           <Slide easing="ease">

@@ -11,10 +11,14 @@ import centerIcon from '../image/center.png';
 import rightIcon from '../image/right.png';
 import imageIcon from '../image/image.png';
 
+
 const PostForm = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [category, setCategory] = useState('커뮤니티');
+    const [activeIndex, setActiveIndex] = useState(null); // 클릭한 메뉴 인덱스
+    const [hoverIndex, setHoverIndex] = useState(null);
+
     const navigate = useNavigate();
     const contentRef = useRef(null);
 
@@ -40,6 +44,8 @@ const PostForm = () => {
         }
     };
 
+    const menuItems = ["자유게시판", "데일리룩게시판", "질문게시판"];
+
     const applyStyle = (command, value = null) => {
         document.execCommand(command, false, value);
     };
@@ -55,7 +61,32 @@ const PostForm = () => {
 
     return (
         <div className="post-form-container">
-            <h2 className="post-form-title">게시글 작성</h2>
+            <div className="banner">
+                <h2 className="post-form-title">🧾게시글 작성</h2>
+            </div>
+            <nav className="post-form-sub-menu">
+        <ul>
+          {menuItems.map((item, index) => (
+            <li
+              key={index}
+              onClick={() => setActiveIndex(index)}
+              onMouseEnter={() => setHoverIndex(index)}
+              onMouseLeave={() => setHoverIndex(null)}
+              className={activeIndex === index ? 'active' : ''}
+            >
+              {item}
+            </li>
+          ))}
+        </ul>
+        <div
+          className="underline"
+          style={{
+            left: hoverIndex !== null ? `${hoverIndex * 100}px` : `${activeIndex * 100}px`,
+            transition: hoverIndex !== null ? 'left 0.3s ease' : 'left 0.6s ease'
+          }}
+        ></div>
+      </nav>
+            <form className="post-form-container1">
             <form onSubmit={handleSubmit}>
                 <div className="title-category-container">
                     <label className="title-label">
@@ -73,6 +104,7 @@ const PostForm = () => {
                         </select>
                     </label>
                 </div>
+                </form>
                 <div className="editor-controls">
                     <label>
                         <select onChange={(e) => applyStyle('fontName', e.target.value)}>

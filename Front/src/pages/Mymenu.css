@@ -63,7 +63,9 @@
     position: absolute; 
     top: calc(52% - 50px); 
     right: 10%; 
-    
+  }
 
+  .my-menu-container .my-menu-follow {
+    color:red;
   }
 

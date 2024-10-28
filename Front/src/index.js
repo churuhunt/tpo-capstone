@@ -16,13 +16,14 @@ import PostForm from './pages/PostForm';
 import Community from './pages/community';
 import Informationboard from './pages/Informationboard';
 import Recommendedboard from './pages/Recommendedboard';
-import PageView from './pages/PageView';  // PageView 추가
-
+import PageView from './pages/PageView';
+import ScrollToTop from './components/ScrollToTop';
 
 const App = () => {
   return (
     <div className="app-container">
       <Router>
+        <ScrollToTop targetPaths={['/postview/:postId', '/informationboard', '/write']} /> {/*페이지 전환 시 스크롤 위로 둘 페이지 목록*/}
         <Topbar />
         <div className="content-container">
           <Routes>
@@ -38,7 +39,7 @@ const App = () => {
             <Route path="/signup" element={<Signup />} />
             <Route path="/store" element={<Store />} />
             <Route path="/mymenu" element={<MyMenu />} />
-            <Route exact path="/write" element={<PostForm />} />
+            <Route path="/write" element={<PostForm />} />
             <Route path="/postview/:postId" element={<PageView />} />
           </Routes>
         </div>

@@ -15,6 +15,11 @@ const MyMenu = () => {
             <div className="profile-info">
                 <img src={profileImage} className="profile-picture" alt="프로필 사진" />
                 <span className="nickname">사용자 닉네임</span>
+                <span className="nickname">사용자 닉네임</span>
+            </div>
+            <div className="my-menu-follow">
+                <span className="nickname">팔로우</span>
+                <span className="nickname">팔로윙</span>
             </div>
             <div className="aa">
                 {activeTab === 'activity' && <ActivityLog />}

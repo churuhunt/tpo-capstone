@@ -1,16 +1,30 @@
-.post-form-container {
-    max-width: 70%;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: hsl(0, 0%, 98%);
-    border-radius: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+.post-form-container .post-form-title {
+    color: white;
+    position: absolute;
+    left: 80px;
+    top: 200px;
+    font-size: 30px;
+    text-shadow: 
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000, 
+     1px  1px 0 #000,
+     0 0 1px #fff,
+     0 0 3px #fff,
+     0 0 3px #fff;
 }
 
-.post-form-title {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
+.banner{
+    background-color: blue;
+    background-image: url("");
+    background-repeat: no-repeat; /* 이미지 반복 제거 */
+    background-size: cover; /* 요소 전체에 맞추어 이미지 크기 조정 */
+    background-position: center;
+    color: white;
+    height: 310px;
+    position: relative;
+    top:-82px;
+
 }
 
 .title-category-container {
@@ -87,4 +101,61 @@
     padding: 10px;
     background-color: white;
     border-radius: 5px;
+}
+
+
+.post-form-container1{
+    max-width: 70%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: hsl(0, 0%, 98%);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+.post-form-sub-menu {
+    background-color: #f9f9f9;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    top:-82px;
+    padding-top:20px;
+    padding-bottom:20px;
+}
+
+.post-form-sub-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  position: relative;
+}
+
+.post-form-sub-menu li {
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+  padding: 5px 10px;
+  position: relative;
+}
+
+.post-form-sub-menu li.active {
+  color: #000;
+}
+
+.post-form-sub-menu li:hover {
+  color: #555;
+}
+
+.underline {
+  position: absolute;
+  bottom: 0;
+  height: 2px;
+  width: 100px; /* 각 항목 너비에 맞게 설정 */
+  background-color: black;
+  transition: left 0.3s ease;
 }

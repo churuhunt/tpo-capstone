@@ -13,7 +13,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  /*background-color: rgba(0, 0, 0, 0.5);*/
   opacity: 0.3;
 }
 
@@ -56,7 +56,7 @@
 
 .section {
   background-color: #444;
-  background-color: black;
+  background-color: white;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
@@ -69,7 +69,7 @@
 
 .section h2 {
   font-size: 1.5rem;
-  color: white;
+  color: black;
   text-align: left;
   position: relative;
   margin-bottom: 15px;
@@ -83,7 +83,7 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background-color: white;
+  background-color: black;
 }
 
 .section-header {
@@ -99,7 +99,7 @@
 
 .period-link {
   background-color: transparent;
-  color: white;
+  color: black;
   margin-left: 10px;
   cursor: pointer;
   text-decoration: none;
@@ -113,7 +113,7 @@
 }
 
 .period-link:hover {
-  color: #ddd;
+  color: gray;
 }
 
 .section ul {
@@ -123,15 +123,15 @@
 
 .section ul li {
   margin: 10px 0;
-  color: #fff;
+  color: black;
   cursor: pointer;
 }
 
 .section ul li:hover {
-  color: #ddd;
+  color: red;
 }
 
-.more-button {
+/*.more-button {
   margin-top: 15px;
   padding: 10px 20px;
   background-color: #007bff;
@@ -143,7 +143,7 @@
 
 .more-button:hover {
   background-color: #0056b3;
-}
+}*/
 
 .popular-posts {
   list-style: none;
@@ -181,17 +181,13 @@
   margin-right: 10px;
 }
 
-.ranking-item .nickname {
-  font-weight: bold;
-  color: white;
-}
 
-.section-with-border {
-  border-left: 2px solid white;  /* 왼쪽 구분선 */
-  border-right: 2px solid white; /* 오른쪽 구분선 */
-  padding-left: 20px;  /* 구분선과 콘텐츠 사이에 약간의 여백 추가 */
-  padding-right: 20px; /* 구분선과 콘텐츠 사이에 약간의 여백 추가 */
-}
+/*.section-with-border {
+  border-left: 2px solid blue;
+  border-right: 2px solid white;
+  padding-left: 20px; 
+  padding-right: 20px; 
+}*/
 
 .popularity-header {
   display: flex;
@@ -237,4 +233,35 @@
   justify-content: space-between;
   align-items: center;
   padding: 5px 0; /* 글 사이의 간격을 조정 */
+}
+
+.main-page-banner{
+  background-color: blue;
+  background-image: url("https://sociallypowerful.com/wp-content/uploads/2024/07/mens-fashion-banner.jpg");
+  background-repeat: no-repeat; /* 이미지 반복 제거 */
+  background-size: contain; /* 요소 전체에 맞추어 이미지 크기 조정 */
+  background-position: center;
+  color: white;
+  height: 500px;
+  position: relative;
+}
+
+.main-page .main-page-title {
+  color: white;
+  position: absolute;
+  left: 80px;
+  top: 200px;
+  font-size: 30px;
+  text-shadow: 
+  -1px -1px 0 #000,
+   1px -1px 0 #000,
+  -1px  1px 0 #000, 
+   1px  1px 0 #000,
+   0 0 1px #fff,
+   0 0 3px #fff,
+   0 0 3px #fff;
+}
+
+.main-page {
+  margin-top: -82px; /* topbar에 공간 할당 */
 }

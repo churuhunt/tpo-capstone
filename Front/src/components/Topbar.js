@@ -9,7 +9,12 @@ const Topbar = () => {
     <header className="top-menu">
       <div className="logo">
         <Link to="/main">
-          <img src={logoImage} alt="MyLogo" width="70px" height="60px" />
+          <img 
+            src={logoImage} 
+            alt="MyLogo" 
+            width="70px" 
+            height="60px" 
+          />
         </Link>
       </div>
       <nav>

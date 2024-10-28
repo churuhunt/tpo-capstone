@@ -6,7 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
-  background-color: black;
+  background-color: white;
 }
 
 .app-container {
@@ -16,9 +16,7 @@ body {
   overflow: hidden;
 }
 
-.content-container {
-  padding-top: 80px; /* Topbar의 높이만큼 padding 추가 */
-}
+
 
 .app-container::before {
   content: '';
@@ -32,7 +30,7 @@ body {
   z-index: -2;
 }
 
-.app-container::after {
+/*.app-container::after {
   content: '';
   position: absolute;
   top: 0;
@@ -41,4 +39,4 @@ body {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: -1;
-}
+}*/
