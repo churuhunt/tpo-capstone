@@ -235,16 +235,21 @@
   padding: 5px 0; /* 글 사이의 간격을 조정 */
 }
 
-.main-page-banner{
+/*.main-page-banner{
   background-color: blue;
   background-image: url("https://sociallypowerful.com/wp-content/uploads/2024/07/mens-fashion-banner.jpg");
-  background-repeat: no-repeat; /* 이미지 반복 제거 */
-  background-size: contain; /* 요소 전체에 맞추어 이미지 크기 조정 */
+  background-repeat: no-repeat;
+  background-size: contain;
   background-position: center;
   color: white;
   height: 500px;
   position: relative;
+}*/
+
+.main-page-banner{
+  top:-50px;
 }
+
 
 .main-page .main-page-title {
   color: white;

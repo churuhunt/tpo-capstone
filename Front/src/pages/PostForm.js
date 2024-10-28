@@ -1,6 +1,6 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';  // axios로 API 요청
+import axios from 'axios';
 import './PostForm.css';
 
 import boldIcon from '../image/bold.png';
@@ -10,17 +10,30 @@ import leftIcon from '../image/left.png';
 import centerIcon from '../image/center.png';
 import rightIcon from '../image/right.png';
 import imageIcon from '../image/image.png';
-
+import strikethroughIcon from '../image/strikethrough.png';
+import fontcolorIcon from '../image/fontcolor.png';
+import fontbackcolorIcon from '../image/fontbackcolor.png';
 
 const PostForm = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [category, setCategory] = useState('커뮤니티');
-    const [activeIndex, setActiveIndex] = useState(null); // 클릭한 메뉴 인덱스
+    const [fontColor, setFontColor] = useState('#000000');
+    const [fontBackColor, setFontBackColor] = useState('#ffffff');
+    const [tags, setTags] = useState('');
+    const [activeIndex, setActiveIndex] = useState(null);
     const [hoverIndex, setHoverIndex] = useState(null);
-
+    const underlineRef = useRef(null);
     const navigate = useNavigate();
     const contentRef = useRef(null);
+
+    useEffect(() => {
+        const menuItem = document.querySelectorAll('.post-form-sub-menu li')[hoverIndex ?? activeIndex];
+        if (menuItem && underlineRef.current) {
+            underlineRef.current.style.width = `${menuItem.offsetWidth}px`;
+            underlineRef.current.style.left = `${menuItem.offsetLeft}px`;
+        }
+    }, [hoverIndex, activeIndex]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -28,35 +41,47 @@ const PostForm = () => {
             title,
             content,
             category,
-            author: '현재 사용자 이름',  // 실제로는 로그인된 사용자 정보가 필요.
-            date: new Date(),  // 현재 시간을 설정
-            views: 0,  // 새로운 게시물은 조회수 0으로 시작
-            likes: 0,  // 새로운 게시물은 추천수 0으로 시작
+            tags,
+            author: '현재 사용자 이름',
+            date: new Date(),
+            views: 0,
+            likes: 0,
         };
 
         try {
-            // 서버로 POST 요청 보내기
             await axios.post('/api/posts', postData);
             alert('게시물이 성공적으로 작성되었습니다.');
-            navigate('/community');  // 게시물 작성 후 커뮤니티 목록으로 이동
+            navigate('/community');
         } catch (error) {
             console.error('게시물 작성 중 오류가 발생했습니다:', error);
         }
     };
 
-    const menuItems = ["자유게시판", "데일리룩게시판", "질문게시판"];
-
     const applyStyle = (command, value = null) => {
+        if (contentRef.current) contentRef.current.focus();
         document.execCommand(command, false, value);
+    };
+
+    const handleColorChange = (color) => {
+        setFontColor(color);
+        applyStyle('foreColor', color);
+    };
+
+    const handleBackgroundColorChange = (color) => {
+        setFontBackColor(color);
+        applyStyle('backColor', color);
     };
 
     const insertImage = (e) => {
         const file = e.target.files[0];
-        const reader = new FileReader();
-        reader.onload = function (event) {
-            document.execCommand('insertImage', false, event.target.result);
-        };
-        reader.readAsDataURL(file);
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                if (contentRef.current) contentRef.current.focus();
+                applyStyle('insertImage', event.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
     };
 
     return (
@@ -65,36 +90,24 @@ const PostForm = () => {
                 <h2 className="post-form-title">🧾게시글 작성</h2>
             </div>
             <nav className="post-form-sub-menu">
-        <ul>
-          {menuItems.map((item, index) => (
-            <li
-              key={index}
-              onClick={() => setActiveIndex(index)}
-              onMouseEnter={() => setHoverIndex(index)}
-              onMouseLeave={() => setHoverIndex(null)}
-              className={activeIndex === index ? 'active' : ''}
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
-        <div
-          className="underline"
-          style={{
-            left: hoverIndex !== null ? `${hoverIndex * 100}px` : `${activeIndex * 100}px`,
-            transition: hoverIndex !== null ? 'left 0.3s ease' : 'left 0.6s ease'
-          }}
-        ></div>
-      </nav>
-            <form className="post-form-container1">
-            <form onSubmit={handleSubmit}>
+                <ul>
+                    {["자유게시판", "데일리룩게시판", "질문게시판"].map((item, index) => (
+                        <li
+                            key={index}
+                            onClick={() => setActiveIndex(index)}
+                            onMouseEnter={() => setHoverIndex(index)}
+                            onMouseLeave={() => setHoverIndex(null)}
+                            className={activeIndex === index ? 'active' : ''}
+                        >
+                            {item}
+                        </li>
+                    ))}
+                </ul>
+                <div className="underline" ref={underlineRef}></div>
+            </nav>
+            <form className="post-form-container1" onSubmit={handleSubmit}>
                 <div className="title-category-container">
-                    <label className="title-label">
-                        제목:
-                        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
-                    </label>
                     <label className="category-label">
-                        카테고리:
                         <select value={category} onChange={(e) => setCategory(e.target.value)}>
                             <option value="자유게시판">자유게시판</option>
                             <option value="데일리룩">데일리룩</option>
@@ -103,16 +116,19 @@ const PostForm = () => {
                             <option value="정보게시판">정보게시판</option>
                         </select>
                     </label>
+                    <label className="title-label">
+                        <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="제목을 입력해주세요" />
+                    </label>
                 </div>
-                </form>
+                
                 <div className="editor-controls">
                     <label>
                         <select onChange={(e) => applyStyle('fontName', e.target.value)}>
-                            <option value="Arial">Arial</option>
-                            <option value="Courier New">Courier New</option>
-                            <option value="Georgia">Georgia</option>
-                            <option value="Times New Roman">Times New Roman</option>
-                            <option value="Verdana">Verdana</option>
+                            <option value="Arial">폰트1</option>
+                            <option value="Courier New">폰트2</option>
+                            <option value="Georgia">폰트3</option>
+                            <option value="Times New Roman">폰트4</option>
+                            <option value="Verdana">폰트5</option>
                         </select>
                     </label>
                     <label>
@@ -126,38 +142,74 @@ const PostForm = () => {
                             <option value="7">48</option>
                         </select>
                     </label>
-                    <button type="button" onClick={() => applyStyle('bold')} className="icon-button">
+                    <button type="button" onMouseDown={() => applyStyle('bold')} className="PostForm-icon-button">
                         <img src={boldIcon} alt="Bold" />
                     </button>
-                    <button type="button" onClick={() => applyStyle('italic')} className="icon-button">
+                    <button type="button" onMouseDown={() => applyStyle('italic')} className="PostForm-icon-button">
                         <img src={italicsIcon} alt="Italic" />
                     </button>
-                    <button type="button" onClick={() => applyStyle('underline')} className="icon-button">
+                    <button type="button" onMouseDown={() => applyStyle('underline')} className="PostForm-icon-button">
                         <img src={underlineIcon} alt="Underline" />
                     </button>
-                    <button type="button" onClick={() => applyStyle('justifyLeft')} className="icon-button">
+                    <button type="button" onMouseDown={() => applyStyle('strikethrough')} className="PostForm-icon-button">
+                        <img src={strikethroughIcon} alt="Strikethrough" />
+                    </button>
+
+                    <label className="PostForm-icon-button" onMouseDown={(e) => e.preventDefault()}>
+                        <img src={fontcolorIcon} alt="Font Color" />
+                        <input
+                            type="color"
+                            value={fontColor}
+                            onChange={(e) => handleColorChange(e.target.value)}
+                            style={{ display: 'none' }}
+                        />
+                    </label>
+
+                    <label className="PostForm-icon-button" onMouseDown={(e) => e.preventDefault()}>
+                        <img src={fontbackcolorIcon} alt="Font Background Color" />
+                        <input
+                            type="color"
+                            value={fontBackColor}
+                            onChange={(e) => handleBackgroundColorChange(e.target.value)}
+                            style={{ display: 'none' }}
+                        />
+                    </label>
+                    
+                    <button type="button" onMouseDown={() => applyStyle('justifyLeft')} className="PostForm-icon-button">
                         <img src={leftIcon} alt="Left" />
                     </button>
-                    <button type="button" onClick={() => applyStyle('justifyCenter')} className="icon-button">
+                    <button type="button" onMouseDown={() => applyStyle('justifyCenter')} className="PostForm-icon-button">
                         <img src={centerIcon} alt="Center" />
                     </button>
-                    <button type="button" onClick={() => applyStyle('justifyRight')} className="icon-button">
+                    <button type="button" onMouseDown={() => applyStyle('justifyRight')} className="PostForm-icon-button">
                         <img src={rightIcon} alt="Right" />
                     </button>
-                    <label className="icon-button">
+                    <label className="PostForm-icon-button" onMouseDown={(e) => e.preventDefault()}>
                         <img src={imageIcon} alt="Insert Image" />
                         <input type="file" accept="image/*" onChange={insertImage} style={{ display: 'none' }} />
                     </label>
                 </div>
+                
                 <div
                     ref={contentRef}
                     contentEditable
                     className="content-editable"
                     onInput={(e) => setContent(e.currentTarget.innerHTML)}
                 ></div>
-                <br />
-                <button type="submit" className="submit-button">게시글 작성</button>
-                <button type="button" className="list-button" onClick={() => navigate(-1)}>목록</button>
+
+                <div className="tag-container">
+                    <input
+                        type="text"
+                        value={tags}
+                        onChange={(e) => setTags(e.target.value)}
+                        placeholder="본문에 #을 이용하여 태그를 사용해보세요! (최대 10개)"
+                    />
+                </div>
+
+                <div className="buttons-container">
+                    <button type="submit" className="submit-button">등록</button>
+                    <button type="button" className="list-button" onClick={() => navigate(-1)}>취소</button>
+                </div>
             </form>
         </div>
     );
