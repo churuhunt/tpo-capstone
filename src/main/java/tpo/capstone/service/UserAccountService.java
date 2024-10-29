@@ -133,4 +133,11 @@ public class UserAccountService {
     public boolean isNicknameTaken(String nickname) {
         return userAccountRepository.findByNickname(nickname).isPresent();
     }
+
+    // 특정 userId로 사용자 조회 메서드
+    @Transactional(readOnly = true)
+    public UserAccount getUserByUserId(String userId) {
+        return userAccountRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with userId: " + userId));
+    }
 }

@@ -2,7 +2,9 @@ package tpo.capstone.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tpo.capstone.entity.Post;
@@ -12,9 +14,8 @@ import tpo.capstone.repository.PostRepository;
 import tpo.capstone.repository.ReportRepository;
 import tpo.capstone.repository.UserAccountRepository;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+
 
 @Service
 public class PostService {
@@ -131,6 +132,20 @@ public class PostService {
         }
 
 
+    }
+
+    // 메인 화면 데이터 가져오기 (공지사항 및 인기 게시물)
+    public Map<String, Object> getMainPageData(int page, int size) {
+        List<Post> popularPosts = getPopularPosts();
+        Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
+        Page<Post> announcements = getFilteredPosts("공지사항", null, pageable);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("popularPosts", popularPosts);
+        response.put("announcements", announcements.getContent());
+        response.put("announcementCount", announcements.getTotalElements());
+
+        return response;
     }
 
     // 신고 처리 메서드

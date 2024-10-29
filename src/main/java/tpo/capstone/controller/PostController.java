@@ -14,6 +14,9 @@ import tpo.capstone.service.PostService;
 import tpo.capstone.auth.CustomUserDetails;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
 
 @RestController
 @RequestMapping("/api")
@@ -75,6 +78,43 @@ public class PostController {
     public Post getPost(@PathVariable Long postId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         String userId = userDetails.getUsername();
         return postService.getPost(postId, userId);
+    }
+
+    /*// 메인 화면 데이터 가져오기 (공지사항 및 인기 게시물)
+    @GetMapping("/main")
+    public Map<String, Object> getMainPageData(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size
+    ) {
+        return postService.getMainPageData(page, size);
+    }
+*/
+
+    // 공지사항 가져오기
+    @GetMapping("/posts/notices")
+    public Page<Post> getNotices(@RequestParam(defaultValue = "0") int page,
+                                 @RequestParam(defaultValue = "10") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return postService.getFilteredPosts("공지사항", null, pageable);
+    }
+
+    // 메인페이지용 API 엔드포인트
+    @GetMapping("/main")
+    public Map<String, Object> getMainPagePosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        Map<String, Object> response = new HashMap<>();
+
+        // 인기 게시물 가져오기
+        List<Post> popularPosts = postService.getPopularPosts();
+        response.put("popularPosts", popularPosts);
+
+        // 공지사항 가져오기
+        Page<Post> notices = postService.getFilteredPosts("공지사항", null, PageRequest.of(page, size));
+        response.put("notices", notices.getContent());
+        response.put("totalNotices", notices.getTotalElements());
+
+        return response;
     }
 
     // 게시글 신고 처리

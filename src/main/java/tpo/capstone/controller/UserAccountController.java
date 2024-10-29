@@ -1,5 +1,7 @@
 package tpo.capstone.controller;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,12 +59,24 @@ public class UserAccountController {
 
     // 로그인 처리 및 JWT 발급
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
         log.debug("Login request received for userId: {}", loginRequest.getUserId());
 
         try {
             JwtResponse jwtResponse = userAccountService.login(loginRequest);
             log.debug("Login successful, JWT token generated for userId: {}", loginRequest.getUserId());
+
+            // 세션에 userId 저장
+            HttpSession session = request.getSession();
+            session.setAttribute("userId", loginRequest.getUserId());
+
+            // 세션에 저장된 userId 확인
+            String sessionUserId = (String) session.getAttribute("userId");
+            if (sessionUserId != null) {
+                log.debug("Session userId stored: {}", sessionUserId);
+            } else {
+                log.warn("Failed to store userId in session.");
+            }
 
             return ResponseEntity.ok(jwtResponse);
         } catch (IllegalArgumentException ex) {
@@ -129,4 +143,33 @@ public class UserAccountController {
         }
         return ResponseEntity.ok("사용 가능한 닉네임입니다.");
     }
+
+    // 사용자 포인트 조회 메서드 추가
+    @GetMapping("/users/{id}/points")
+    public ResponseEntity<Integer> getUserPoints(@PathVariable Long id) {
+        UserAccount user = userAccountService.getUserAccount(id);
+        return ResponseEntity.ok(user.getPoints());
+    }
+
+    // 현재 로그인한 사용자의 포인트 조회
+    @GetMapping("/user/points")
+    public ResponseEntity<Integer> getCurrentUserPoints(Principal principal) {
+        String userId = principal.getName(); // 로그인한 사용자의 ID 가져오기
+        UserAccount user = userAccountService.getUserByUserId(userId); // 사용자 정보 조회
+        return ResponseEntity.ok(user.getPoints()); // 포인트 반환
+    }
+
+    // userId로 사용자 정보 조회
+    @GetMapping("/users/by-userId/{userId}")
+    public ResponseEntity<UserAccount> getUserByUserId(@PathVariable String userId) {
+        UserAccount user = userAccountService.getUserByUserId(userId);
+        return ResponseEntity.ok(user);
+    }
+
+   /* @GetMapping("/users/current")
+    public ResponseEntity<UserAccount> getCurrentUser(Principal principal) {
+        String userId = principal.getName();
+        UserAccount user = userAccountService.getUserByUserId(userId);
+        return ResponseEntity.ok(user);
+    }*/
 }
