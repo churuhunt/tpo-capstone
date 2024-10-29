@@ -1,7 +1,11 @@
 .board4-container {
-  max-width: 1500px;
   margin: 0 auto;
   padding: 20px;
+  top:-83px;
+  background-position: center;
+  color: white;
+  position: relative;
+  top:-100px;
 }
 
 .board4-container .write-button-container {
@@ -142,7 +146,7 @@
 .board4-container .date a {
   position: relative;
   font-size: 1.2rem;
-  color: white;
+  color: black;
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
@@ -383,4 +387,32 @@
 .card:hover .thumbnail {
   opacity: 0.5; /* 투명도만 조절 */
    /* 밝기 조정으로 흐리게 */
+}
+
+.board4-container .banner{
+  background-color: rgb(255, 255, 255);
+  background-image: url("https://www.macromedia-fachhochschule.de/wp-content/uploads/2021/04/210412-macromedia-hochschule-bachelor-fashion-management-5440x1700-ll.jpg");
+  background-repeat: no-repeat; /* 이미지 반복 제거 */
+  background-size: cover; /* 요소 전체에 맞추어 이미지 크기 조정 */
+  background-position: center;
+  color: white;
+  height: 310px;
+  position: relative;
+
+}
+
+.board4-container .post-form-title {
+  color: white;
+  position: absolute;
+  left: 80px;
+  top: 200px;
+  font-size: 30px;
+  text-shadow: 
+  -1px -1px 0 #000,
+   1px -1px 0 #000,
+  -1px  1px 0 #000, 
+   1px  1px 0 #000,
+   0 0 1px #fff,
+   0 0 3px #fff,
+   0 0 3px #fff;
 }

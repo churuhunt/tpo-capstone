@@ -25,7 +25,8 @@
 }
 
 .slideshow-container {
-  width: 80%;
+  width: 100%;
+  height: 100%;
   margin: -290px auto 10px;
   overflow: hidden;
   margin-top: 10px;
@@ -270,3 +271,24 @@
 .main-page {
   margin-top: -82px; /* topbar에 공간 할당 */
 }
+
+
+
+.main-page {
+  margin-top: -82px;
+}
+
+.banner-slideshow {
+  width: 100%;
+  height: 700px;
+  overflow: hidden;
+}
+
+.main-page-banner {
+  width: 100%;
+  height: 700px;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+

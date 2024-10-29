@@ -283,6 +283,10 @@ const Community = () => {
   return (
     <div className="board4-container">
       <h2 onClick={handleResetFilter}>💬커뮤니티</h2>
+      <div className="banner">
+                <h2 className="post-form-title">💬커뮤니티</h2>
+            </div>
+            
       <div className="board4-container-top">
         <div className="date">
           <ul>

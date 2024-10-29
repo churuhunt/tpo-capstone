@@ -9,8 +9,11 @@ import mainimg2 from '../image/mainimg2.jpg';
 import mainimg3 from '../image/mainimg3.jpg';
 
 import mainbanner1 from '../image/mainpage-banner1.jpg';
+import mainbanner2 from '../image/mainpage-banner2.jpg';
+import mainbanner3 from '../image/mainpage-banner3.jpg';
 
 const slideImages = [mainimg1, mainimg2, mainimg3];
+const slideBanners = [mainbanner1, mainbanner2, mainbanner3];
 
 const rankings = [
   { nickname: 'User6', points: 13213, profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' },
@@ -60,22 +63,16 @@ const Mainpage = () => {
 
   return (
     <div className="main-page">
-      <div
-      className="main-page-banner"
-      style={{
-        backgroundImage: `url(${mainbanner1})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'contain',
-        backgroundPosition: 'center',
-        color: 'white',
-        height: '500px',
-        position: 'relative',
-      }}
-    >
-    </div>
-      {/*<div className="background-overlay"></div>*/}
+      <div className="banner-slideshow">
+        <Slide easing="ease">
+          {slideBanners.map((image, index) => (
+            <div className="main-page-banner" key={index} style={{ backgroundImage: `url(${image})` }}>
+            </div>
+          ))}
+        </Slide>
+      </div>
       <div className="content">
-        <div className="slideshow-container">
+        {/*<div className="slideshow-container">
           <Slide easing="ease">
             {slideImages.map((image, index) => (
               <div className="each-slide" key={index}>
@@ -83,7 +80,7 @@ const Mainpage = () => {
               </div>
             ))}
           </Slide>
-        </div>
+        </div>*/}
         <div className="sections-container">
           {/* 첫 번째 영역 - 공지사항 */}
           <div className="section">

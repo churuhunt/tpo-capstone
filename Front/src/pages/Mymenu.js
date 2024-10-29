@@ -15,7 +15,6 @@ const MyMenu = () => {
             <div className="profile-info">
                 <img src={profileImage} className="profile-picture" alt="프로필 사진" />
                 <span className="nickname">사용자 닉네임</span>
-                <span className="nickname">사용자 닉네임</span>
             </div>
             <div className="my-menu-follow">
                 <span className="nickname">팔로우</span>
@@ -26,7 +25,7 @@ const MyMenu = () => {
                 {activeTab === 'guestbook' && <Guestbook />}
             </div>
             <div className="button-container">
-                <button className="button1" onClick={() => setActiveTab('activity')}>활동내역</button>
+                <button className="button1" onClick={() => setActiveTab('activity')}>게시물</button>
                 <button className="button2" onClick={() => setActiveTab('guestbook')}>방명록</button>
             </div>
         </div>
