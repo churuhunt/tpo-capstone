@@ -1,0 +1,58 @@
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import reportWebVitals from './reportWebVitals';
+import Topbar from './components/Topbar';
+import Mainpage from './pages/Mainpage';
+import Notification from './pages/Notification';
+import Popularity from './pages/Popularity';
+import Login from './pages/Login';
+import Signup from './pages/Signup';
+import Store from './pages/Store';
+import Ranking from './pages/Ranking';
+import MyMenu from './pages/Mymenu';
+import PostForm from './pages/PostForm';
+import Community from './pages/community';
+import Informationboard from './pages/Informationboard';
+import Recommendedboard from './pages/Recommendedboard';
+import PageView from './pages/PageView';
+import ScrollToTop from './components/ScrollToTop';
+
+const App = () => {
+  return (
+    <div className="app-container">
+      <Router>
+        <ScrollToTop targetPaths={['/postview/:postId', '/informationboard', '/write']} /> {/*페이지 전환 시 스크롤 위로 둘 페이지 목록*/}
+        <Topbar />
+        <div className="content-container">
+          <Routes>
+            <Route path="/" element={<Mainpage />} />
+            <Route path="/main" element={<Mainpage />} />
+            <Route path="/notification" element={<Notification />} />
+            <Route path="/popularity" element={<Popularity />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/informationboard" element={<Informationboard />} />
+            <Route path="/recommendedboard" element={<Recommendedboard />} />
+            <Route path="/ranking" element={<Ranking />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/store" element={<Store />} />
+            <Route path="/mymenu" element={<MyMenu />} />
+            <Route path="/write" element={<PostForm />} />
+            <Route path="/postview/:postId" element={<PageView />} />
+          </Routes>
+        </div>
+      </Router>
+    </div>
+  );
+};
+
+ReactDOM.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+  document.getElementById('root')
+);
+
+reportWebVitals();

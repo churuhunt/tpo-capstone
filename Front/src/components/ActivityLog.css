@@ -1,0 +1,37 @@
+.activity-log-container {
+  max-height: 500px; /* 최대 높이 설정 */
+  overflow-y: auto; /* y축 스크롤바 표시 */
+}
+
+.activity-sections-container {
+  display: flex;
+}
+
+.activity-section {
+  flex: 1;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.activity-section + .activity-section {
+  margin-left: 10px;
+}
+
+.activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.activity-item {
+  margin-bottom: 10px;
+}
+
+.activity-item-content {
+  margin-bottom: 5px;
+}
+
+.activity-item-date {
+  font-size: 12px;
+  color: #888;
+}

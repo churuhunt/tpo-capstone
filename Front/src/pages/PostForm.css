@@ -1,0 +1,210 @@
+.post-form-container .post-form-title {
+    color: white;
+    position: absolute;
+    left: 80px;
+    top: 200px;
+    font-size: 30px;
+    text-shadow: 
+    -1px -1px 0 #000,
+     1px -1px 0 #000,
+    -1px  1px 0 #000, 
+     1px  1px 0 #000,
+     0 0 1px #fff,
+     0 0 3px #fff,
+     0 0 3px #fff;
+}
+
+.banner{
+    background-color: rgb(255, 255, 255);
+    background-image: url("https://www.macromedia-fachhochschule.de/wp-content/uploads/2021/04/210412-macromedia-hochschule-bachelor-fashion-management-5440x1700-ll.jpg");
+    background-repeat: no-repeat; /* 이미지 반복 제거 */
+    background-size: cover; /* 요소 전체에 맞추어 이미지 크기 조정 */
+    background-position: center;
+    color: white;
+    height: 310px;
+    position: relative;
+    top:-82px;
+
+}
+
+.title-category-container {
+    display: flex;
+    margin-bottom: 15px;
+    width: 100%;
+    gap:15px;
+}
+
+
+
+.post-form-container input[type="text"] {
+    padding: 20px;
+    font-size: 16px; 
+    color: #333; 
+    background-color: #fff; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    appearance: none; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    padding-right: 30px; 
+    width: 95%;
+
+}
+
+
+.post-form-container select {
+    padding: 20px;
+    font-size: 16px; 
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc; 
+    border-radius: 5px;
+    appearance: none; 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: relative;
+    z-index: 1;
+    padding-right: 30px; 
+    background-image: url('https://cdn-icons-png.flaticon.com/512/32/32195.png');
+    background-size: 10px;
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+}
+
+.editor-controls {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 10px; /* 버튼 간격 조정 */
+    margin-bottom: 20px;
+    align-items: center;
+    justify-content: flex-start; /* 왼쪽 정렬 */
+}
+
+
+.PostForm-icon-button{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px; /* 버튼 간격을 일정하게 설정 */
+}
+
+
+.post-form-container .PostForm-icon-button:hover {
+    background-color:gray;
+}
+
+.post-form-container .PostForm-icon-button img {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+}
+
+.post-form-container .PostForm-icon-button{
+    border: none;
+    background-color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.submit-button,
+.list-button {
+    height: 50px;
+    background-color: #454545;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    justify-content: flex-end; 
+    
+}
+
+.submit-button:hover,
+.post-form-container .list-button:hover {
+    background-color: #898989;
+}
+
+.content-editable {
+    min-height: 500px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+    margin-bottom:20px;
+}
+
+
+
+.post-form-container1{
+    width: 70%;
+    margin: 20px auto;
+    padding: 20px;
+    padding-bottom: 100px;
+    margin-top:-80px;
+    background-color: hsl(0, 0%, 98%);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(150, 71, 71, 0.1);
+}
+
+
+.post-form-sub-menu {
+    background-color: #f9f9f9;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    top:-82px;
+    padding-top:20px;
+    padding-bottom:20px;
+}
+
+.post-form-sub-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+  }
+
+.post-form-sub-menu li {
+  cursor: pointer;
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+  padding: 5px 10px;
+  position: relative;
+}
+
+.post-form-sub-menu li.active {
+  color: #000;
+  background-color: transparent;
+}
+
+.post-form-sub-menu li:hover {
+  color: #555;
+}
+
+.underline {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background-color: black;
+    transition: left 0.3s ease, width 0.3s ease;
+}
+
+.content-editable[placeholder]:empty:before{
+    content: attr(placeholder);
+    color: #aaa;
+    pointer-events: none;
+}
+
+.post-form-container .buttons-container{
+    float: right;
+}
