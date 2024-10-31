@@ -15,10 +15,15 @@ import org.springframework.web.bind.annotation.*;
 import tpo.capstone.dto.LoginRequest;
 import tpo.capstone.dto.JwtResponse;
 import tpo.capstone.dto.UserAccountRequest;
+import tpo.capstone.dto.UserSummaryDTO;
+import tpo.capstone.entity.Block;
 import tpo.capstone.entity.UserAccount;
 import tpo.capstone.auth.CustomUserDetails;
+import tpo.capstone.entity.UserSettings;
+import tpo.capstone.service.BlockService;
 import tpo.capstone.service.UserAccountService;
 import tpo.capstone.security.JwtTokenProvider;
+import tpo.capstone.service.UserSettingsService;
 
 import java.security.Principal;
 import java.util.List;
@@ -31,12 +36,16 @@ public class UserAccountController {
     private final UserAccountService userAccountService;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
+    private final BlockService blockService;
+    private final UserSettingsService userSettingsService;
 
     @Autowired
-    public UserAccountController(UserAccountService userAccountService, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider) {
+    public UserAccountController(UserAccountService userAccountService, AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, BlockService blockService, UserSettingsService userSettingsService) {
         this.userAccountService = userAccountService;
         this.authenticationManager = authenticationManager;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.blockService = blockService;
+        this.userSettingsService = userSettingsService;
     }
 
     // 회원가입 처리
@@ -166,10 +175,108 @@ public class UserAccountController {
         return ResponseEntity.ok(user);
     }
 
-   /* @GetMapping("/users/current")
+   @GetMapping("/users/current")
     public ResponseEntity<UserAccount> getCurrentUser(Principal principal) {
         String userId = principal.getName();
         UserAccount user = userAccountService.getUserByUserId(userId);
         return ResponseEntity.ok(user);
-    }*/
+    }
+
+    // 닉네임 클릭시 닉네임, 아이디, 포인트 만 응답
+    @GetMapping("/users/{id}/summary")
+    public ResponseEntity<UserSummaryDTO> getUserSummary(@PathVariable Long id) {
+        UserSummaryDTO userSummary = userAccountService.getUserSummaryById(id);
+        return ResponseEntity.ok(userSummary);
+    }
+
+    // 사용자 차단
+    @PostMapping("/{userId}/block")
+    public ResponseEntity<?> blockUser(@PathVariable Long userId, Principal principal) {
+        Long blockerId = userAccountService.getUserIdFromPrincipal(principal);
+        blockService.blockUser(blockerId, userId);
+        return ResponseEntity.ok("사용자가 차단되었습니다.");
+    }
+
+    // 차단 해제
+    @DeleteMapping("/{userId}/unblock")
+    public ResponseEntity<?> unblockUser(@PathVariable Long userId, Principal principal) {
+        Long blockerId = userAccountService.getUserIdFromPrincipal(principal);
+        blockService.unblockUser(blockerId, userId);
+        return ResponseEntity.ok("사용자 차단이 해제되었습니다.");
+    }
+
+    // 차단 여부 확인
+    @GetMapping("/{userId}/is-blocked")
+    public ResponseEntity<Boolean> isUserBlocked(@PathVariable Long userId, Principal principal) {
+        Long blockerId = userAccountService.getUserIdFromPrincipal(principal);
+        boolean isBlocked = blockService.isBlocked(blockerId, userId);
+        return ResponseEntity.ok(isBlocked);
+    }
+
+    // 사용자 설정 조회
+    @GetMapping("/users/{id}/settings")
+    public ResponseEntity<UserSettings> getUserSettings(@PathVariable Long id) {
+        UserAccount user = userAccountService.getUserAccount(id);
+        UserSettings settings = userSettingsService.getUserSettings(user);
+        return ResponseEntity.ok(settings);
+    }
+
+    // 사용자 설정 업데이트
+    @PutMapping("/users/{id}/settings")
+    public ResponseEntity<?> updateUserSettings(@PathVariable Long id, @RequestBody UserSettings settings) {
+        UserAccount user = userAccountService.getUserAccount(id);
+        userSettingsService.updateUserSettings(user, settings);
+        return ResponseEntity.ok("User settings updated successfully.");
+    }
+
+    // 닉네임 변경 API
+    @PutMapping("/settings/nickname")
+    public ResponseEntity<?> changeNickname(@RequestParam Long userId, @RequestParam String newNickname) {
+        userSettingsService.changeNickname(userId, newNickname);
+        return ResponseEntity.ok("닉네임이 변경되었습니다.");
+    }
+
+    // 이메일 변경 API
+    @PutMapping("/settings/email")
+    public ResponseEntity<?> changeEmail(@RequestParam Long userId, @RequestParam String newEmail) {
+        userSettingsService.changeEmail(userId, newEmail);
+        return ResponseEntity.ok("이메일이 변경되었습니다.");
+    }
+
+    // 아이디 변경 API
+    @PutMapping("/settings/userId")
+    public ResponseEntity<?> changeUserId(@RequestParam Long userId, @RequestParam String newUserId) {
+        userSettingsService.changeUserId(userId, newUserId);
+        return ResponseEntity.ok("아이디가 변경되었습니다.");
+    }
+
+    // 비밀번호 변경 API
+    @PutMapping("/settings/password")
+    public ResponseEntity<?> changePassword(@RequestParam Long userId,
+                                            @RequestParam String oldPassword,
+                                            @RequestParam String newPassword) {
+        userSettingsService.changePassword(userId, oldPassword, newPassword);
+        return ResponseEntity.ok("비밀번호가 변경되었습니다.");
+    }
+
+    // 차단 목록 조회
+    @GetMapping("/settings/blocked")
+    public ResponseEntity<List<Block>> getBlockedUsers(@RequestParam Long userId) {
+        List<Block> blockedUsers = userSettingsService.getBlockedUsers(userId);
+        return ResponseEntity.ok(blockedUsers);
+    }
+
+    // 차단 추가 API
+    @PostMapping("/settings/block")
+    public ResponseEntity<?> blockUser(@RequestParam Long blockerId, @RequestParam Long blockedId) {
+        userSettingsService.blockUser(blockerId, blockedId);
+        return ResponseEntity.ok("사용자가 차단되었습니다.");
+    }
+
+    // 차단 해제 API
+    @DeleteMapping("/settings/unblock")
+    public ResponseEntity<?> unblockUser(@RequestParam Long blockerId, @RequestParam Long blockedId) {
+        userSettingsService.unblockUser(blockerId, blockedId);
+        return ResponseEntity.ok("차단이 해제되었습니다.");
+    }
 }

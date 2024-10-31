@@ -3,6 +3,7 @@ package tpo.capstone.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tpo.capstone.config.NotificationType;
 import tpo.capstone.entity.Comment;
 import tpo.capstone.entity.Post;
 import tpo.capstone.entity.Report;
@@ -30,28 +31,31 @@ public class CommentService {
     @Autowired
     private ReportRepository reportRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
 
     @Transactional
-    public Comment saveComment(Long postId, String content, String author) {
+    public Comment saveComment(Long postId, String content, String authorUserId) {
         // 게시물 조회
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid postId"));
 
+        // 댓글 작성자 조회
+        UserAccount author = userAccountRepository.findByUserId(authorUserId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid author userId"));
+
         // 댓글 생성 및 저장
         Comment comment = new Comment();
         comment.setContent(content);
-        comment.setAuthor(author);
+        comment.setAuthor(author); // UserAccount 타입의 author 설정
         comment.setPost(post);
         comment.setDate(new java.util.Date());  // 현재 날짜 설정
         Comment savedComment = commentRepository.save(comment);
 
         // 댓글 작성자 포인트 5점 증가
-        Optional<UserAccount> optionalUser = userAccountRepository.findByUserId(author);
-        if (optionalUser.isPresent()) {
-            UserAccount user = optionalUser.get();
-            user.setPoints(user.getPoints() + 5); // 댓글 작성 시 5포인트 증가
-            userAccountRepository.save(user);
-        }
+        author.setPoints(author.getPoints() + 5); // 댓글 작성 시 5포인트 증가
+        userAccountRepository.save(author);
 
         return savedComment;
     }
@@ -104,4 +108,16 @@ public class CommentService {
         reportRepository.save(report);
     }
 
+
+    public void addComment(Post post, Comment comment) {
+        // 댓글 저장 로직
+        String message = post.getTitle() + "에 댓글이 달렸습니다.";
+        notificationService.createNotification(post.getAuthor(), post, NotificationType.COMMENT, message);
+    }
+
+    public void addReply(Comment parentComment, Comment reply) {
+        // 대댓글 저장 로직
+        String message = parentComment.getContent() + "에 대댓글이 달렸습니다.";
+        notificationService.createNotification(parentComment.getAuthor(), parentComment.getPost(), NotificationType.REPLY, message);
+    }
 }

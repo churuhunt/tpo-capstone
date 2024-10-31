@@ -9,12 +9,14 @@ import tpo.capstone.auth.CustomUserDetails;
 import tpo.capstone.dto.JwtResponse;
 import tpo.capstone.dto.LoginRequest;
 import tpo.capstone.dto.UserAccountRequest;
+import tpo.capstone.dto.UserSummaryDTO;
 import tpo.capstone.entity.UserAccount;
 import tpo.capstone.repository.UserAccountRepository;
 import tpo.capstone.security.JwtTokenProvider;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -139,5 +141,18 @@ public class UserAccountService {
     public UserAccount getUserByUserId(String userId) {
         return userAccountRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with userId: " + userId));
+    }
+
+    // 프론트에서 닉네임 클릭했을때 해당 정보만 반환
+    public UserSummaryDTO getUserSummaryById(Long id) {
+        UserAccount user = getUserAccount(id);
+        return new UserSummaryDTO(user.getNickname(), user.getUserId(), user.getPoints());
+    }
+
+    public Long getUserIdFromPrincipal(Principal principal) {
+        String userId = principal.getName();
+        UserAccount user = userAccountRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with userId: " + userId));
+        return user.getId();
     }
 }

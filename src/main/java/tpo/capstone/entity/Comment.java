@@ -20,7 +20,10 @@ public class Comment {
     private Long id;
 
     private String content;
-    private String author;  // 댓글 작성자
+
+    @ManyToOne
+    @JoinColumn(name = "author_id")
+    private UserAccount author;
 
     @ManyToOne
     @JoinColumn(name = "post_id")

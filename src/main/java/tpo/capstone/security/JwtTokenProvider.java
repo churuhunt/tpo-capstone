@@ -61,4 +61,10 @@ public class JwtTokenProvider {
         }
         return false;
     }
+
+    public Long getUserIdFromToken(String token) {
+        String userId = getUsernameFromToken(token);
+        return Long.parseLong(userId);
+    }
+
 }

@@ -26,7 +26,10 @@ public class Post {
     private String title;
     private String content;
     private String category;
-    private String author;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id")
+    private UserAccount author;
     private int views;
     private int likes;
     private int dislikes = 0; // 비추천 수 초기값 0
