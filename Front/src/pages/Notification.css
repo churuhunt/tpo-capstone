@@ -49,6 +49,11 @@
   width: 7%;
 }
 
+
+.board2-container .post-table th:nth-child(5), .board2-container .post-table td:nth-child(5) {
+  width: 7%;
+}
+
 .board2-container .post-table th {
   background-color: #bbbbbb;
   color: black;

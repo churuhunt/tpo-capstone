@@ -23,6 +23,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 추천수가 10 이상인 게시물 찾기
     List<Post> findByLikesGreaterThanEqual(int likes);
 
+
     // 날짜 정렬을 위한 메소드
     Page<Post> findByCategoryAndTitleContainingOrderByDateAsc(String category, String searchTerm, Pageable pageable);
     Page<Post> findByCategoryAndTitleContainingOrderByDateDesc(String category, String searchTerm, Pageable pageable);

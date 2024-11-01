@@ -48,16 +48,44 @@ const RecommendationBoard = () => {
     };
 
     fetchPosts();
-  }, [searchTerm, sortBy, currentPage, filteredCategory]);
+  }, [searchTerm, currentPage, filteredCategory]);
+
+
 
   const sortPosts = (sortByKey) => {
+    let sortedPosts = [...posts];
+    switch (sortByKey) {
+      case 'date-rise':
+        sortedPosts.sort((a, b) => new Date(a.date) - new Date(b.date));
+        break;
+      case 'date-fall':
+        sortedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        break;
+      case 'likes-rise':
+        sortedPosts.sort((a, b) => a.likes - b.likes);
+        break;
+      case 'likes-fall':
+        sortedPosts.sort((a, b) => b.likes - a.likes);
+        break;
+      case 'views-rise':
+        sortedPosts.sort((a, b) => a.views - b.views);
+        break;
+      case 'views-fall':
+        sortedPosts.sort((a, b) => b.views - a.views);
+        break;
+      default:
+        break;
+    }
     if (sortByKey === sortBy) {
-      setSortAscending(!sortAscending);  // 동일 정렬 기준 클릭 시 방향 전환
+      sortedPosts.reverse();
+      setSortAscending(!sortAscending);
     } else {
       setSortBy(sortByKey);
-      setSortAscending(true); // 새 정렬 기준 설정 시 오름차순으로 시작
+      setSortAscending(true);
     }
+    setPosts(sortedPosts);
   };
+
 
   const handleCategoryClick = (category) => {
     setFilteredCategory(category);
@@ -143,10 +171,10 @@ const RecommendationBoard = () => {
                 <td>{post.category}</td>
                 <td>{post.id}</td>
                 <td>
-                  <Link to="/postview" style={{ color: 'black' }}>{post.title}</Link>
+                  <Link to={`/postview/${post.id}`} style={{ color: 'black' }}>{post.title}</Link>
                 </td>
                 <td>{post.author}</td>
-                <td>{post.date}</td>
+                <td>{new Date(post.date).toLocaleDateString()}</td> {/* 작성일자 포맷 변경 */}
                 <td>{post.views}</td>
                 <td>{post.likes}</td>
               </tr>

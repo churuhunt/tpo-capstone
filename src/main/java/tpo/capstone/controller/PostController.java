@@ -80,15 +80,6 @@ public class PostController {
         return postService.getPost(postId, userId);
     }
 
-    /*// 메인 화면 데이터 가져오기 (공지사항 및 인기 게시물)
-    @GetMapping("/main")
-    public Map<String, Object> getMainPageData(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
-    ) {
-        return postService.getMainPageData(page, size);
-    }
-*/
 
     // 공지사항 가져오기
     @GetMapping("/posts/notices")

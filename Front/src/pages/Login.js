@@ -5,19 +5,40 @@ import './Login.css';
 
 const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [username, setUsername] = useState('');
+  const [userId, setUserId] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
+
+  const handleLogin = async(e) => {
     e.preventDefault();
-    console.log('Username:', username);
-    console.log('Password:', password);
+    try {
+      const response = await axios.post('http://localhost:8080/api/login', {
+        userId,
+        password,
+      });
+
+      if (response.status === 200) {
+        // JWT 토큰을 로컬 스토리지에 저장
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('nickname', response.data.nickname); // 서버에서 받은 닉네임 저장
+        alert('로그인 성공!');
+        navigate('/');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        alert('로그인 실패: 아이디 또는 비밀번호가 잘못되었습니다.');
+      } else {
+        alert('로그인 중 오류가 발생했습니다.');
+      }
+      console.error('로그인 실패:', error);
+    }
   };
 
 
 
   const openSignUp = () => {
-    setIsSignUp(true);
+    navigate('/signup');  // '/signup' 경로로 이동
   };
 
   const openSignIn = () => {
@@ -60,16 +81,38 @@ const Login = () => {
               </div>
             </div>
             <form id="Login-page-sign-in-form">
-              <input type="email" placeholder="아이디" />
-              <input type="password" placeholder="비밀번호" />
+
+              <div>
+                <label htmlFor="userId">아이디</label>
+                <input
+                    type="email"
+                    id="userId"
+                    value={userId}
+                    onChange={(e) => setUserId(e.target.value)}
+                    required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="password">비밀번호</label>
+                <input
+                    type="password"
+                    id="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+              </div>
               <p className="Login-page-forgot-password">아이디/비밀번호 찾기</p>
-              <button className="Login-page-control-button Login-page-in">로그인</button>
+              <button className="Login-page-control-button Login-page-in" onClick={handleLogin}>로그인</button>
             </form>
           </div>
-          <div className={`Login-page-sign-up ${isSignUp ? 'Login-page-form-right-slide-in' : 'Login-page-form-right-slide-out'}`} style={{ display: isSignUp ? 'flex' : 'none' }}>
+          <div
+              className={`Login-page-sign-up ${isSignUp ? 'Login-page-form-right-slide-in' : 'Login-page-form-right-slide-out'}`}
+              style={{display: isSignUp ? 'flex' : 'none'}}>
             <h1>회원가입</h1>
             <form id="Login-page-sign-up-form">
-              <input type="email" placeholder="아이디" />
+            <input type="email" placeholder="아이디" />
               <input type="text" placeholder="이름" />
               <input type="text" placeholder="닉네임" />
               <input type="password" placeholder="비밀번호" />

@@ -5,8 +5,11 @@ import profileImage from '../image/profile.png';
 import api from '../axios';  // axios.js에서 만든 api 인스턴스를 가져옵니다.
 
 
-const Rankings = ({ rankings }) => {
+const Rankings = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [rankings, setRankings] = useState([]);
+  const [rankingType, setRankingType] = useState('total'); // 기본 랭킹 타입은 '전체'
+
   const itemsPerPage = 15;
 
 

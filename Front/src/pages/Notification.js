@@ -5,7 +5,6 @@ import api from '../axios'
 
 
 const Notification = () => {
-
   const [posts, setPosts] = useState([]);
   const [sortBy, setSortBy] = useState('date-rise');
   const [sortAscending, setSortAscending] = useState(true);
@@ -15,15 +14,6 @@ const Notification = () => {
   const [loading, setLoading] = useState(true);
   const [filteredCategory, setFilteredCategory] = useState(''); // 카테고리 필터링 상태
 
-
-  const sortMapping = {
-    'date-rise': 'date',
-    'date-fall': 'date',
-    'likes-rise': 'likes',
-    'likes-fall': 'likes',
-    'views-rise': 'views',
-    'views-fall': 'views'
-  };
 
   // 게시물 데이터 가져오기
   useEffect(() => {
@@ -41,7 +31,8 @@ const Notification = () => {
           }
         });
         setPosts(response.data.content);
-        setTotalPages(response.data.totalPages);
+
+
       } catch (error) {
         console.error('게시물 데이터를 가져오는 데 실패했습니다:', error);
       } finally {
@@ -50,16 +41,19 @@ const Notification = () => {
     };
 
     fetchPosts();
-  }, [filteredCategory, searchTerm, sortBy, currentPage]);
+  }, [filteredCategory, searchTerm, currentPage]);
 
 
-  useEffect(() => {
-    sortPosts(sortBy);
-  }, [sortBy]);
+  const sortMapping = {
+    'date-rise': 'date',
+    'date-fall': 'date',
+    'likes-rise': 'likes',
+    'likes-fall': 'likes',
+    'views-rise': 'views',
+    'views-fall': 'views'
+  };
 
-  useEffect(() => {
-    filterPosts();
-  }, [searchTerm]);
+
 
   const sortPosts = (sortByKey) => {
     let sortedPosts = [...posts];
@@ -95,6 +89,8 @@ const Notification = () => {
     setPosts(sortedPosts);
   };
 
+
+/*
   const filterPosts = () => {
     const filteredPosts = initialPosts.filter(post => 
       post.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -102,13 +98,15 @@ const Notification = () => {
     setPosts(filteredPosts);
     setCurrentPage(1);
   };
+*/
+
 
   const handleSearch = () => {
-    filterPosts();
+    setCurrentPage(1);
   };
 
   const handleResetFilter = () => {
-    setPosts(initialPosts);
+    setFilteredCategory('공지사항');
     setSearchTerm('');
     setSortBy('date-rise');
     setCurrentPage(1);
@@ -160,15 +158,16 @@ const Notification = () => {
         </thead>
         <tbody>
           {currentPosts.map((post, index) => (
-            <tr key={index}>
-              <td>{post.category}</td> {/* 카테고리 표시 */}
-              <td>
-                <Link to="/postview" style={{ color: 'black' }}>{post.title}</Link>
-              </td>
-              <td>{post.date}</td>
-              <td>{post.views}</td>
-              <td>{post.likes}</td>
-            </tr>
+              <tr key={index}>
+                <td>{post.category}</td>
+                {/* 카테고리 표시 */}
+                <td>
+                  <Link to={`/postview/${post.id}`} style={{color: 'black'}}>{post.title}</Link>
+                </td>
+                <td>{new Date(post.date).toLocaleDateString()}</td>
+                <td>{post.views}</td>
+                <td>{post.likes}</td>
+              </tr>
           ))}
           {currentPosts.length < postsPerPage && [...Array(postsPerPage - currentPosts.length)].map((_, index) => (
             <tr key={`empty-${index}`} className="board2-container empty-row">
