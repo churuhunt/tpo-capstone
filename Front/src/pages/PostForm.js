@@ -1,3 +1,4 @@
+//글작성 JS
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -13,8 +14,12 @@ import imageIcon from '../image/image.png';
 import strikethroughIcon from '../image/strikethrough.png';
 import fontcolorIcon from '../image/fontcolor.png';
 import fontbackcolorIcon from '../image/fontbackcolor.png';
+import banner1 from '../image/banner1.jpg';
+import PageSubMenu from '../components/PageSubMenu'; /*sub*/
+import Banner from '../components/Banner';
 
 const PostForm = () => {
+    const menuItems = ["🗽자유게시판", "👖데일리룩게시판", "❔질문게시판"]; /*sub */
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [category, setCategory] = useState('커뮤니티');
@@ -26,14 +31,6 @@ const PostForm = () => {
     const underlineRef = useRef(null);
     const navigate = useNavigate();
     const contentRef = useRef(null);
-
-    useEffect(() => {
-        const menuItem = document.querySelectorAll('.post-form-sub-menu li')[hoverIndex ?? activeIndex];
-        if (menuItem && underlineRef.current) {
-            underlineRef.current.style.width = `${menuItem.offsetWidth}px`;
-            underlineRef.current.style.left = `${menuItem.offsetLeft}px`;
-        }
-    }, [hoverIndex, activeIndex]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -86,25 +83,12 @@ const PostForm = () => {
 
     return (
         <div className="post-form-container">
-            <div className="banner">
-                <h2 className="post-form-title">🧾게시글 작성</h2>
-            </div>
-            <nav className="post-form-sub-menu">
-                <ul>
-                    {["자유게시판", "데일리룩게시판", "질문게시판"].map((item, index) => (
-                        <li
-                            key={index}
-                            onClick={() => setActiveIndex(index)}
-                            onMouseEnter={() => setHoverIndex(index)}
-                            onMouseLeave={() => setHoverIndex(null)}
-                            className={activeIndex === index ? 'active' : ''}
-                        >
-                            {item}
-                        </li>
-                    ))}
-                </ul>
-                <div className="underline" ref={underlineRef}></div>
-            </nav>
+
+            <Banner src={banner1} title="🧾게시글 작성" />
+            
+            <div className="post-form-container"> {/*sub*/}
+            <PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
+        </div>
             <form className="post-form-container1" onSubmit={handleSubmit}>
                 <div className="title-category-container">
                     <label className="category-label">
@@ -212,6 +196,7 @@ const PostForm = () => {
                 </div>
             </form>
         </div>
+        
     );
 };
 

@@ -1,13 +1,4 @@
-.board4-container {
-  margin: 0 auto;
-  padding: 20px;
-  top:-83px;
-  background-position: center;
-  color: white;
-  position: relative;
-  top:-100px;
-}
-
+/*커뮤니티 CSS*/
 .board4-container .write-button-container {
   display: flex;
   justify-content: flex-end;

@@ -3,9 +3,16 @@ import Confetti from '../components/Confetti';
 import './Ranking.css';
 import profileImage from '../image/profile.png';
 
+import PageSubMenu from '../components/PageSubMenu'; /*sub*/
+import Banner from '../components/Banner';
+import banner1 from '../image/rankingbanner.jpg';
+
+
 const Rankings = ({ rankings }) => {
+  const menuItems = ["🅿️누적포인트", "👍추천수", "👁️조회수"]; /*sub */
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 15;
+  const [activeIndex, setActiveIndex] = useState(null);
 
   if (!rankings) {
     rankings = [
@@ -58,7 +65,11 @@ const Rankings = ({ rankings }) => {
   return (
     <div className="ranking-container">
       <Confetti />
-      <h2>🏆랭킹</h2>
+      <Banner src={banner1} title="🏆랭킹" />
+            
+            <div className="post-form-container"> {/*sub*/}
+            <PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
+        </div>
       <table className="ranking-table">
         <tbody>
           {currentRankings.map((rank, index) => {

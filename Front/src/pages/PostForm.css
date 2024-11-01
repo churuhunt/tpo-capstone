@@ -1,3 +1,4 @@
+/*글작성 CSS*/
 .post-form-container .post-form-title {
     color: white;
     position: absolute;
@@ -14,18 +15,6 @@
      0 0 3px #fff;
 }
 
-.banner{
-    background-color: rgb(255, 255, 255);
-    background-image: url("https://www.macromedia-fachhochschule.de/wp-content/uploads/2021/04/210412-macromedia-hochschule-bachelor-fashion-management-5440x1700-ll.jpg");
-    background-repeat: no-repeat; /* 이미지 반복 제거 */
-    background-size: cover; /* 요소 전체에 맞추어 이미지 크기 조정 */
-    background-position: center;
-    color: white;
-    height: 310px;
-    position: relative;
-    top:-82px;
-
-}
 
 .title-category-container {
     display: flex;
@@ -140,7 +129,6 @@
 }
 
 
-
 .post-form-container1{
     width: 70%;
     margin: 20px auto;
@@ -150,59 +138,6 @@
     background-color: hsl(0, 0%, 98%);
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(150, 71, 71, 0.1);
-}
-
-
-.post-form-sub-menu {
-    background-color: #f9f9f9;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-    position: relative;
-    top:-82px;
-    padding-top:20px;
-    padding-bottom:20px;
-}
-
-.post-form-sub-menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    position: relative;
-  }
-
-.post-form-sub-menu li {
-  cursor: pointer;
-  font-size: 16px;
-  color: #333;
-  font-weight: bold;
-  padding: 5px 10px;
-  position: relative;
-}
-
-.post-form-sub-menu li.active {
-  color: #000;
-  background-color: transparent;
-}
-
-.post-form-sub-menu li:hover {
-  color: #555;
-}
-
-.underline {
-    position: absolute;
-    bottom: 0;
-    height: 2px;
-    background-color: black;
-    transition: left 0.3s ease, width 0.3s ease;
-}
-
-.content-editable[placeholder]:empty:before{
-    content: attr(placeholder);
-    color: #aaa;
-    pointer-events: none;
 }
 
 .post-form-container .buttons-container{

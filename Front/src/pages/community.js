@@ -1,13 +1,21 @@
+//커뮤니티 JS
 import React, { useState } from 'react';
 import './community.css';
 import { Link } from 'react-router-dom';
 import BubblyButton from '../components/BubblyButton';
+import Banner from '../components/Banner';
+import banner1 from '../image/banner1.jpg';
 
 // 리스트형, 액자형 아이콘 import
 import listViewIcon from '../image/listview.png';
 import gridViewIcon from '../image/gridview.png';
 
+import PageSubMenu from '../components/PageSubMenu'; /*sub*/
+
 const Community = () => {
+  const [activeIndex, setActiveIndex] = useState(0); /*sub */
+  const menuItems = ["🗽자유게시판", "👖데일리룩게시판", "❔질문게시판"]; /*sub */
+
   const [posts, setPosts] = useState([
     {
       id: 1,
@@ -282,11 +290,10 @@ const Community = () => {
 
   return (
     <div className="board4-container">
-      <h2 onClick={handleResetFilter}>💬커뮤니티</h2>
-      <div className="banner">
-                <h2 className="post-form-title">💬커뮤니티</h2>
-            </div>
-            
+      <Banner src={banner1} title="💬커뮤니티" />
+            <div className="post-form-container"> {/*sub*/}
+            <PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
+        </div>
       <div className="board4-container-top">
         <div className="date">
           <ul>

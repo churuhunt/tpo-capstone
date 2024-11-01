@@ -1,0 +1,26 @@
+/* Banner.css */
+.banner {
+    background-repeat: no-repeat; /* 이미지 반복 제거 */
+    background-size: cover; /* 요소 전체에 맞추어 이미지 크기 조정 */
+    background-position: center; /* 이미지 중앙 정렬 */
+    color: white;
+    height: 310px;
+    position: relative;
+    top: -82px;
+}
+
+.banner-title {
+    color: white;
+    position: absolute;
+    left: 80px;
+    top: 200px;
+    font-size: 30px;
+    text-shadow:
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000,
+        0 0 1px #fff,
+        0 0 3px #fff,
+        0 0 3px #fff;
+}

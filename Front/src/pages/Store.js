@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -7,7 +7,13 @@ import Store1 from '../image/Store1.jpg';
 import Store2 from '../image/Store2.jpg';
 import Store3 from '../image/Store3.jpg';
 
+import PageSubMenu from '../components/PageSubMenu'; /*sub*/
+import Banner from '../components/Banner';
+import banner1 from '../image/rankingbanner.jpg';
+
 const Store = () => {
+  const menuItems = ["🅿️누적포인트", "👍추천수", "👁️조회수"]; /*sub */
+  const [activeIndex, setActiveIndex] = useState(null);
   const settings = {
     dots: true,
     infinite: true,
@@ -28,8 +34,8 @@ const Store = () => {
 
   return (
     <div className="store-container">
+      <Banner src={banner1} title="🏪상점" />
       <div className="store-header">
-        <h2>🏪상점</h2>
         <div className="store-search">
           <input type="text" placeholder="검색어를 입력하세요..." />
           <button>검색</button>
