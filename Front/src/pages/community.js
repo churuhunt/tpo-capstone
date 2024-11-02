@@ -14,7 +14,7 @@ import PageSubMenu from '../components/PageSubMenu'; /*sub*/
 
 const Community = () => {
   const [activeIndex, setActiveIndex] = useState(0); /*sub */
-  const menuItems = ["🗽자유게시판", "👖데일리룩게시판", "❔질문게시판"]; /*sub */
+  const menuItems = ["전체", "🗽자유게시판", "👖데일리룩게시판", "❔질문게시판"]; /*sub */
 
   const [posts, setPosts] = useState([
     {

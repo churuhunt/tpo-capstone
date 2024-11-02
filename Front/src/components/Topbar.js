@@ -73,8 +73,8 @@ const Topbar = () => {
           <li>
             <Link to="/mymenu">⭐마이메뉴</Link>
             <ul className="submenu">
-              <li><Link to="/mymenu/profile">👤프로필</Link></li>
-              <li><Link to="/mymenu/settings">⚙️설정</Link></li>
+              <li><Link to="/profile">👤내정보관리</Link></li>
+              <li><Link to="/error">⚙️설정</Link></li>
             </ul>
           </li>
         </ul>
