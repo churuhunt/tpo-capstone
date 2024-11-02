@@ -1,7 +1,12 @@
 .store-container {
-  max-width: 1000px;
+  width: 100%;
+}
+
+.store-container2{
+  width: 60%;
   margin: 0 auto;
-  padding: 20px;
+  position: relative; 
+  top:-150px;
 }
 
 .store-header {
@@ -23,10 +28,9 @@
   margin-right: 10px;
 }
 
-
-
 .store-points {
   font-weight: bold;
+  font-size: 0px;
 }
 
 .image-slider {
@@ -37,8 +41,10 @@
 
 .image-slider img {
   width: 100%;
-  height: 350px;
+  height: 550px;
+  object-fit: cover; /* 이미지 비율을 유지하면서 슬라이더 영역을 꽉 채움 */
 }
+
 
 .menu-tabs {
   display: flex;
@@ -59,12 +65,13 @@
 
 .item-sale {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); 
+  grid-template-columns: repeat(6, 1fr); 
   gap: 20px;
 }
 
 .item-sale .aa {
   background-color: #fff;
+  background-image: url("https://img.freepik.com/premium-vector/white-grey-gradient-background-empty-room-studio_137206-40.jpg");
   border: 1px solid #000;
   padding: 20px;
   width: 100px;
@@ -76,4 +83,29 @@
   font-size: 30px;
 }
 
+.image-slider {
+  border: 1px solid black;
+  overflow: hidden; 
+  margin-bottom: 20px;
+  position: relative;
+}
 
+.image-slider img {
+  width: 100%;
+  max-height: 550px;
+  object-fit: cover;
+}
+
+.item-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin: 10px auto; /* 상하 10px 여백과 수평 가운데 정렬 */
+  display: block; /* 블록 요소로 설정하여 가운데 정렬 적용 */
+}
+
+.item-sale p {
+  font-size: 14px;
+  margin: 0;
+  color: #333;
+}
