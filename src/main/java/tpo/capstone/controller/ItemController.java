@@ -23,9 +23,13 @@ public class ItemController {
         this.itemService = itemService;
     }
 
-    // 모든 아이템 목록 조회 API
+    /**
+     * 모든 아이템 목록 조회 API
+     * @return 모든 아이템의 리스트
+     */
     @GetMapping
     public ResponseEntity<List<Item>> getAllItems() {
+        log.info("Fetching all items from the inventory.");
         List<Item> items = itemService.getAllItems();
         return ResponseEntity.ok(items);
     }

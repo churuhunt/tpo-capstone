@@ -19,17 +19,18 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String content;
+    private String content; // 댓글 내용
 
-    @ManyToOne
-    @JoinColumn(name = "author_id")
-    private UserAccount author;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = false)
+    private UserAccount author; // 댓글 작성자와의 관계
 
-    @ManyToOne
-    @JoinColumn(name = "post_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
     private Post post;  // 게시물과의 관계 설정
 
     @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
     private Date date;  // 댓글 작성 날짜
 
     private int likes = 0; // 추천 수 초기값 0
@@ -37,9 +38,13 @@ public class Comment {
 
     private boolean isBlind = false; // 블라인드 여부 초기값 false
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "comment_liked_users", joinColumns = @JoinColumn(name = "comment_id"))
+    @Column(name = "user_id")
     private Set<String> likedUsers = new HashSet<>(); // 추천한 사용자 목록
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.LAZY)
+    @CollectionTable(name = "comment_disliked_users", joinColumns = @JoinColumn(name = "comment_id"))
+    @Column(name = "user_id")
     private Set<String> dislikedUsers = new HashSet<>(); // 비추천한 사용자 목록
 }

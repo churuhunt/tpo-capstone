@@ -12,4 +12,9 @@ public interface ShopItemRepository extends JpaRepository<ShopItem, Long> {
 
     List<ShopItem> findAllByOrderByPriceDesc();
 
+    // 특정 가격 이상인 물품을 가격 오름차순으로 정렬
+    List<ShopItem> findByPriceGreaterThanEqualOrderByPriceAsc(int minPrice);
+
+    // 특정 가격 이하인 물품을 가격 내림차순으로 정렬
+    List<ShopItem> findByPriceLessThanEqualOrderByPriceDesc(int maxPrice);
 }

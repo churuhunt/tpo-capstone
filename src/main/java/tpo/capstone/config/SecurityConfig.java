@@ -33,7 +33,8 @@ public class SecurityConfig {
     private final UserAccountService userAccountService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailsService customUserDetailsService, UserAccountService userAccountService, JwtTokenProvider jwtTokenProvider) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, UserDetailsService customUserDetailsService,
+                          UserAccountService userAccountService, JwtTokenProvider jwtTokenProvider) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
         this.customUserDetailsService = customUserDetailsService;
         this.userAccountService = userAccountService;
@@ -48,12 +49,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(csrf -> csrf.disable()) // CSRF 보호 비활성화 (또는 정책을 명시적으로 설정)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/signup", "/api/login", "/api/check-userId", "/api/check-nickname", "/oauth2/**", "/api/user/points", "/api/notification").permitAll()
-                        .anyRequest().authenticated()
-
+                        .requestMatchers("/api/signup", "/api/login", "/api/check-userId", "/api/check-nickname", "/oauth2/**",
+                                "/api/user/points", "/api/notification").permitAll() // 인증이 필요 없는 엔드포인트 설정
+                        .anyRequest().authenticated() // 나머지 요청에 대해서는 인증 필요
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
@@ -63,13 +64,13 @@ public class SecurityConfig {
                         })
                 )
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션을 사용하지 않도록 설정
                 )
                 .oauth2Login(oauth2 -> oauth2
                         .authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorize"))
                         .redirectionEndpoint(redirection -> redirection.baseUri("/oauth2/callback/*"))
-                        .defaultSuccessUrl("/")
-                        .failureUrl("/login?error=true")
+                        .defaultSuccessUrl("/") // 인증 성공 후 리디렉션할 기본 URL
+                        .failureUrl("/login?error=true") // 인증 실패 시 리디렉션할 URL
                         .successHandler(oAuth2LoginSuccessHandler())
                 )
                 // JWT 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
@@ -95,5 +96,4 @@ public class SecurityConfig {
     public AuthenticationSuccessHandler oAuth2LoginSuccessHandler() {
         return new OAuth2LoginSuccessHandler(userAccountService, jwtTokenProvider);
     }
-
 }

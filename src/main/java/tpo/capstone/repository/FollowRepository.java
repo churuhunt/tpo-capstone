@@ -15,11 +15,9 @@ public interface FollowRepository extends JpaRepository<Follow, Long> {
 
     Optional<Follow> findByFollowerAndFollowing(UserAccount follower, UserAccount following);
 
-    List<Follow> findByFollower_Id(Long followerId);
+    List<Follow> findByFollower_Id(Long followerId);  // follower의 id를 사용하여 조회
 
-    default List<Follow> findByFollowing(UserAccount following) {
-        return null;
-    }
+    List<Follow> findByFollowing(UserAccount following);  // following 사용자를 기준으로 팔로우 목록 조회
 
     boolean existsByFollowerAndFollowing(UserAccount follower, UserAccount following);
 

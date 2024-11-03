@@ -25,110 +25,180 @@ public class UserSettingsService {
     @Autowired
     private BlockRepository blockRepository;
 
-
-    // 닉네임 변경 - 7일 제한 적용
+    /**
+     * 닉네임 변경 (7일 제한 적용)
+     *
+     * @param userId 사용자 ID
+     * @param newNickname 새 닉네임
+     * @return 닉네임 변경 성공 여부
+     */
     public boolean changeNickname(Long userId, String newNickname) {
         UserSettings settings = getUserSettings(userId);
         if (settings.getNicknameLastChanged().isAfter(LocalDateTime.now().minusDays(7))) {
             throw new IllegalArgumentException("닉네임은 7일에 한 번만 변경할 수 있습니다.");
         }
+
         UserAccount user = settings.getUser();
         user.setNickname(newNickname);
         settings.setNicknameLastChanged(LocalDateTime.now());
+
         userAccountRepository.save(user);
         userSettingsRepository.save(settings);
         return true;
     }
 
-    // 이메일 변경 - 1회 한정
+    /**
+     * 이메일 변경 (1회 한정)
+     *
+     * @param userId 사용자 ID
+     * @param newEmail 새 이메일
+     * @return 이메일 변경 성공 여부
+     */
     public boolean changeEmail(Long userId, String newEmail) {
         UserSettings settings = getUserSettings(userId);
         if (settings.isEmailChanged()) {
             throw new IllegalArgumentException("이메일은 한 번만 변경할 수 있습니다.");
         }
+
         UserAccount user = settings.getUser();
         user.setEmail(newEmail);
         settings.setEmailChanged(true);
+
         userAccountRepository.save(user);
         userSettingsRepository.save(settings);
         return true;
     }
 
-    // 아이디 변경
+    /**
+     * 사용자 아이디 변경
+     *
+     * @param userId 사용자 ID
+     * @param newUserId 새 아이디
+     * @return 아이디 변경 성공 여부
+     */
     public boolean changeUserId(Long userId, String newUserId) {
         if (userAccountRepository.findByUserId(newUserId).isPresent()) {
             throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
         }
+
         UserAccount user = userAccountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+
         user.setUserId(newUserId);
         userAccountRepository.save(user);
         return true;
     }
 
-    // 비밀번호 변경
+    /**
+     * 비밀번호 변경
+     *
+     * @param userId 사용자 ID
+     * @param oldPassword 기존 비밀번호
+     * @param newPassword 새 비밀번호
+     * @return 비밀번호 변경 성공 여부
+     */
     public boolean changePassword(Long userId, String oldPassword, String newPassword) {
         UserAccount user = userAccountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
         if (!encoder.matches(oldPassword, user.getPassword())) {
             throw new IllegalArgumentException("기존 비밀번호가 일치하지 않습니다.");
         }
+
         user.setPassword(encoder.encode(newPassword));
         userAccountRepository.save(user);
         return true;
     }
 
-    // 차단 목록 관리
+    /**
+     * 차단 목록 조회
+     *
+     * @param userId 사용자 ID
+     * @return 차단된 사용자 목록
+     */
     public List<Block> getBlockedUsers(Long userId) {
         return blockRepository.findByBlocker_Id(userId);
     }
 
+    /**
+     * 사용자 차단
+     *
+     * @param blockerId 차단하는 사용자 ID
+     * @param blockedId 차단당하는 사용자 ID
+     * @return 차단 성공 여부
+     */
     public boolean blockUser(Long blockerId, Long blockedId) {
         if (blockRepository.existsByBlocker_IdAndBlocked_Id(blockerId, blockedId)) {
             return false;
         }
+
         UserAccount blocker = userAccountRepository.findById(blockerId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
         UserAccount blocked = userAccountRepository.findById(blockedId)
                 .orElseThrow(() -> new IllegalArgumentException("차단할 사용자를 찾을 수 없습니다."));
+
         Block block = new Block(blocker, blocked);
         blockRepository.save(block);
         return true;
     }
 
+    /**
+     * 사용자 차단 해제
+     *
+     * @param blockerId 차단을 해제하는 사용자 ID
+     * @param blockedId 차단을 해제할 대상 사용자 ID
+     * @return 차단 해제 성공 여부
+     */
     public boolean unblockUser(Long blockerId, Long blockedId) {
         Block block = blockRepository.findByBlocker_IdAndBlocked_Id(blockerId, blockedId)
                 .orElseThrow(() -> new IllegalArgumentException("차단 관계가 없습니다."));
+
         blockRepository.delete(block);
         return true;
     }
 
+    /**
+     * 사용자 설정 조회
+     *
+     * @param userId 사용자 ID
+     * @return 사용자 설정 정보
+     */
     private UserSettings getUserSettings(Long userId) {
         UserAccount user = userAccountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
-        return userSettingsRepository.findByUser(user)
+        return userSettingsRepository.findByUserAccount(user)
                 .orElseGet(() -> {
-                    // 기본값을 설정하여 새로운 UserSettings 생성 및 저장
                     UserSettings newSettings = new UserSettings(user);
                     return userSettingsRepository.save(newSettings);
                 });
     }
+
+    /**
+     * 사용자 설정 조회
+     *
+     * @param user 사용자 계정
+     * @return 사용자 설정 정보
+     */
     public UserSettings getUserSettings(UserAccount user) {
-        return userSettingsRepository.findByUser(user)
+        return userSettingsRepository.findByUserAccount(user)
                 .orElseGet(() -> new UserSettings(user, true, true));
     }
 
+    /**
+     * 사용자 설정 업데이트
+     *
+     * @param user 사용자 계정
+     * @param settings 업데이트할 사용자 설정
+     */
     public void updateUserSettings(UserAccount user, UserSettings settings) {
-        // settings 객체에서 알림 설정을 가져와 업데이트
-        UserSettings userSettings = userSettingsRepository.findByUser(user)
+        UserSettings userSettings = userSettingsRepository.findByUserAccount(user)
                 .orElseGet(() -> {
                     settings.setUser(user);
                     return userSettingsRepository.save(settings);
                 });
 
-        // 설정값 업데이트
         userSettings.setAllowCommentNotifications(settings.isAllowCommentNotifications());
         userSettings.setAllowReplyNotifications(settings.isAllowReplyNotifications());
         userSettingsRepository.save(userSettings);

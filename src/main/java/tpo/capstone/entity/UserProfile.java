@@ -13,13 +13,22 @@ public class UserProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, optional = false) // 지연 로딩 및 필수 값 설정
+    @JoinColumn(name = "user_id", nullable = false)
     private UserAccount user;
 
+    @Column(length = 500) // 프로필 이미지 URL 길이 제한 설정
     private String profileImageUrl;
-    private String backgroundImageUrl;
-    private String nicknameDecoration; // 닉네임 꾸미기 아이템
-    private String introduction;
-    private String interests;
 
+    @Column(length = 500) // 배경 이미지 URL 길이 제한 설정
+    private String backgroundImageUrl;
+
+    @Column(length = 255) // 닉네임 꾸미기 필드 길이 제한 설정
+    private String nicknameDecoration;
+
+    @Column(length = 1000) // 자기소개 필드 길이 제한 설정
+    private String introduction;
+
+    @Column(length = 1000) // 관심사 필드 길이 제한 설정
+    private String interests;
 }

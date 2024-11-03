@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
 
-    List<Bookmark> findByUserId(Long userId);
+    List<Bookmark> findByUser_Id(Long userId);  // user 필드의 id를 사용하여 조회
 
-    Optional<Bookmark> findByUserIdAndPostId(Long userId, Long postId);
+    Optional<Bookmark> findByUser_IdAndPost_Id(Long userId, Long postId);  // user와 post의 id로 조회
 }

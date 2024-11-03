@@ -22,6 +22,11 @@ public class JwtTokenProvider {
     @Value("${jwt.expiration}")
     private long JWT_EXPIRATION;
 
+    /**
+     * 주어진 사용자 정보로 JWT 토큰을 생성
+     * @param userDetails 사용자 세부 정보
+     * @return 생성된 JWT 토큰
+     */
     public String createToken(CustomUserDetails userDetails) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
@@ -35,6 +40,11 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    /**
+     * JWT 토큰에서 사용자 이름을 추출
+     * @param token JWT 토큰
+     * @return 사용자 이름 (주로 사용자 ID)
+     */
     public String getUsernameFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(JWT_SECRET)
@@ -44,6 +54,11 @@ public class JwtTokenProvider {
                 .getSubject();
     }
 
+    /**
+     * 주어진 JWT 토큰의 유효성을 검증
+     * @param token 검증할 JWT 토큰
+     * @return 유효한 경우 true, 그렇지 않으면 false
+     */
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(JWT_SECRET).build().parseClaimsJws(token);
@@ -62,9 +77,19 @@ public class JwtTokenProvider {
         return false;
     }
 
+    /**
+     * JWT 토큰에서 사용자 ID를 추출
+     * @param token JWT 토큰
+     * @return 사용자 ID (Long 타입으로 변환된 값)
+     */
     public Long getUserIdFromToken(String token) {
         String userId = getUsernameFromToken(token);
-        return Long.parseLong(userId);
+        try {
+            return Long.parseLong(userId);
+        } catch (NumberFormatException e) {
+            logger.error("User ID is not in numeric format: {}", userId);
+            return null; // 또는 적절한 예외를 던질 수 있습니다.
+        }
     }
 
 }

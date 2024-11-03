@@ -24,6 +24,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserDetailsService customUserDetailsService;
 
+    // JwtTokenProvider와 UserDetailsService를 주입받아 필터 초기화
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService customUserDetailsService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.customUserDetailsService = customUserDetailsService;
@@ -34,16 +35,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         try {
+            // 요청에서 JWT 토큰을 추출
             String token = getJwtFromRequest(request);
             logger.debug("Extracted token: {}", token);
 
+            // 토큰 유효성 검증
             if (token != null && jwtTokenProvider.validateToken(token)) {
+                // 토큰에서 사용자 이름 추출
                 String username = jwtTokenProvider.getUsernameFromToken(token);
                 logger.debug("Username extracted from token: {}", username);
 
+                // 사용자 정보 로드
                 UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
                 if (userDetails != null) {
+                    // 인증 객체 생성 및 SecurityContext에 설정
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -56,20 +62,29 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             logger.error("Could not set user authentication in security context", e);
         }
 
+        // 다음 필터로 요청 전달
         filterChain.doFilter(request, response);
     }
 
-    // 로그인 및 회원가입 경로에 대해 필터링을 적용하지 않도록 설정
+    /**
+     * 로그인 및 회원가입 경로에 대해 필터링을 적용하지 않도록 설정
+     */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String requestURI = request.getRequestURI();
         return requestURI.equals("/api/login") || requestURI.equals("/api/signup");
     }
 
+    /**
+     * 요청 헤더에서 JWT 토큰 추출
+     *
+     * @param request HttpServletRequest 객체
+     * @return JWT 토큰 (Bearer prefix 제거)
+     */
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+            return bearerToken.substring(7); // "Bearer " 접두사 제거
         }
         return null;
     }

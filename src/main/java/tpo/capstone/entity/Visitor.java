@@ -15,16 +15,20 @@ public class Visitor {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY) // 지연 로딩 적용
+    @JoinColumn(name = "user_id", nullable = false)
     private UserAccount user;  // 마이홈의 주인
 
+    @Column(nullable = false)
     private String visitorUsername;  // 방문자의 이름 또는 ID
+
+    @Column(nullable = false)
     private LocalDateTime visitTime; // 방문 시간
 
     // 기본 생성자
     public Visitor() {}
 
+    // 필드 값을 초기화하는 생성자
     public Visitor(UserAccount user, String visitorUsername) {
         this.user = user;
         this.visitorUsername = visitorUsername;

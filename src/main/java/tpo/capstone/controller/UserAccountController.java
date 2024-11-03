@@ -50,7 +50,7 @@ public class UserAccountController {
 
     // 회원가입 처리
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@RequestBody UserAccountRequest userAccountRequest) {
+    public ResponseEntity<String> registerUser(@RequestBody UserAccountRequest userAccountRequest) {
         if (userAccountService.isUserIdExists(userAccountRequest.getUserId())) {
             return ResponseEntity.status(409).body("아이디가 이미 존재합니다.");
         }
@@ -59,130 +59,83 @@ public class UserAccountController {
         return ResponseEntity.ok("회원가입이 완료되었습니다.");
     }
 
-    // 사용자 정보 조회
+    // 특정 사용자 정보 조회
     @GetMapping("/users/{id}")
     public ResponseEntity<UserAccount> getUserAccount(@PathVariable Long id) {
-        UserAccount user = userAccountService.getUserAccount(id);
+        UserAccount user = userAccountService.getUserAccountById(id);
         return ResponseEntity.ok(user);
     }
 
     // 로그인 처리 및 JWT 발급
     @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+    public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
         log.debug("Login request received for userId: {}", loginRequest.getUserId());
 
         try {
             JwtResponse jwtResponse = userAccountService.login(loginRequest);
             log.debug("Login successful, JWT token generated for userId: {}", loginRequest.getUserId());
-
-            // 세션에 userId 저장
-            HttpSession session = request.getSession();
-            session.setAttribute("userId", loginRequest.getUserId());
-
-            // 세션에 저장된 userId 확인
-            String sessionUserId = (String) session.getAttribute("userId");
-            if (sessionUserId != null) {
-                log.debug("Session userId stored: {}", sessionUserId);
-            } else {
-                log.warn("Failed to store userId in session.");
-            }
-
             return ResponseEntity.ok(jwtResponse);
         } catch (IllegalArgumentException ex) {
             log.error("Login failed for userId: {}", loginRequest.getUserId(), ex);
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid login credentials");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new JwtResponse("Invalid login credentials"));
         }
     }
 
     // 소셜 로그인 처리 및 JWT 발급
     @GetMapping("/oauth2/callback")
-    public ResponseEntity<?> handleOAuth2Callback(Principal principal) {
+    public ResponseEntity<JwtResponse> handleOAuth2Callback(Principal principal) {
         if (principal instanceof OAuth2AuthenticationToken) {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
-
-            // 소셜 로그인 성공 시 사용자 정보 저장
             UserAccount user = userAccountService.processOAuthPostLogin(oauthToken.getPrincipal());
-
-            // CustomUserDetails 객체로 변환
-            CustomUserDetails userDetails = new CustomUserDetails(user);
-
-            // JWT 생성
-            String jwt = jwtTokenProvider.createToken(userDetails);
+            String jwt = jwtTokenProvider.createToken(new CustomUserDetails(user));
             log.info("소셜 로그인 성공: {}", user.getEmail());
-
             return ResponseEntity.ok(new JwtResponse(jwt));
         }
-        return ResponseEntity.status(401).body("소셜 로그인 실패");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new JwtResponse("소셜 로그인 실패"));
     }
 
     // 전체 랭킹 조회
     @GetMapping("/rankings/total")
-    public List<UserAccount> getTotalRankings() {
-        return userAccountService.getTotalRankings();
+    public ResponseEntity<List<UserAccount>> getTotalRankings() {
+        return ResponseEntity.ok(userAccountService.getTotalRankings());
     }
 
     // 주간 랭킹 조회
     @GetMapping("/rankings/weekly")
-    public List<UserAccount> getWeeklyRankings() {
-        return userAccountService.getWeeklyRankings();
+    public ResponseEntity<List<UserAccount>> getWeeklyRankings() {
+        return ResponseEntity.ok(userAccountService.getWeeklyRankings());
     }
 
     // 월간 랭킹 조회
     @GetMapping("/rankings/monthly")
-    public List<UserAccount> getMonthlyRankings() {
-        return userAccountService.getMonthlyRankings();
+    public ResponseEntity<List<UserAccount>> getMonthlyRankings() {
+        return ResponseEntity.ok(userAccountService.getMonthlyRankings());
     }
 
     // 아이디 중복 체크
     @GetMapping("/check-userId")
-    public ResponseEntity<?> checkUserId(@RequestParam String userId) {
-        boolean isTaken = userAccountService.isUserIdExists(userId);
-        if (isTaken) {
-            return ResponseEntity.badRequest().body("이미 사용 중인 아이디입니다.");
-        }
-        return ResponseEntity.ok("사용 가능한 아이디입니다.");
+    public ResponseEntity<String> checkUserId(@RequestParam String userId) {
+        return userAccountService.isUserIdExists(userId) ?
+                ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 아이디입니다.") :
+                ResponseEntity.ok("사용 가능한 아이디입니다.");
     }
 
     // 닉네임 중복 체크
     @GetMapping("/check-nickname")
-    public ResponseEntity<?> checkNickname(@RequestParam String nickname) {
-        boolean isTaken = userAccountService.isNicknameTaken(nickname);
-        if (isTaken) {
-            return ResponseEntity.badRequest().body("이미 사용 중인 닉네임입니다.");
-        }
-        return ResponseEntity.ok("사용 가능한 닉네임입니다.");
+    public ResponseEntity<String> checkNickname(@RequestParam String nickname) {
+        return userAccountService.isNicknameTaken(nickname) ?
+                ResponseEntity.status(HttpStatus.CONFLICT).body("이미 사용 중인 닉네임입니다.") :
+                ResponseEntity.ok("사용 가능한 닉네임입니다.");
     }
 
-    // 사용자 포인트 조회 메서드 추가
-    @GetMapping("/users/{id}/points")
-    public ResponseEntity<Integer> getUserPoints(@PathVariable Long id) {
-        UserAccount user = userAccountService.getUserAccount(id);
-        return ResponseEntity.ok(user.getPoints());
-    }
-
-    // 현재 로그인한 사용자의 포인트 조회
-    @GetMapping("/user/points")
-    public ResponseEntity<Integer> getCurrentUserPoints(Principal principal) {
-        String userId = principal.getName(); // 로그인한 사용자의 ID 가져오기
-        UserAccount user = userAccountService.getUserByUserId(userId); // 사용자 정보 조회
-        return ResponseEntity.ok(user.getPoints()); // 포인트 반환
-    }
-
-    // userId로 사용자 정보 조회
+    // 특정 userId로 사용자 정보 조회 메서드
     @GetMapping("/users/by-userId/{userId}")
     public ResponseEntity<UserAccount> getUserByUserId(@PathVariable String userId) {
         UserAccount user = userAccountService.getUserByUserId(userId);
         return ResponseEntity.ok(user);
     }
 
-   @GetMapping("/users/current")
-    public ResponseEntity<UserAccount> getCurrentUser(Principal principal) {
-        String userId = principal.getName();
-        UserAccount user = userAccountService.getUserByUserId(userId);
-        return ResponseEntity.ok(user);
-    }
-
-    // 닉네임 클릭시 닉네임, 아이디, 포인트 만 응답
+    // 닉네임 클릭 시 사용자 요약 정보 반환
     @GetMapping("/users/{id}/summary")
     public ResponseEntity<UserSummaryDTO> getUserSummary(@PathVariable Long id) {
         UserSummaryDTO userSummary = userAccountService.getUserSummaryById(id);
@@ -191,7 +144,7 @@ public class UserAccountController {
 
     // 사용자 차단
     @PostMapping("/{userId}/block")
-    public ResponseEntity<?> blockUser(@PathVariable Long userId, Principal principal) {
+    public ResponseEntity<String> blockUser(@PathVariable Long userId, Principal principal) {
         Long blockerId = userAccountService.getUserIdFromPrincipal(principal);
         blockService.blockUser(blockerId, userId);
         return ResponseEntity.ok("사용자가 차단되었습니다.");
@@ -199,7 +152,7 @@ public class UserAccountController {
 
     // 차단 해제
     @DeleteMapping("/{userId}/unblock")
-    public ResponseEntity<?> unblockUser(@PathVariable Long userId, Principal principal) {
+    public ResponseEntity<String> unblockUser(@PathVariable Long userId, Principal principal) {
         Long blockerId = userAccountService.getUserIdFromPrincipal(principal);
         blockService.unblockUser(blockerId, userId);
         return ResponseEntity.ok("사용자 차단이 해제되었습니다.");
@@ -213,48 +166,63 @@ public class UserAccountController {
         return ResponseEntity.ok(isBlocked);
     }
 
+    // 사용자 포인트 조회
+    @GetMapping("/users/{id}/points")
+    public ResponseEntity<Integer> getUserPoints(@PathVariable Long id) {
+        UserAccount user = userAccountService.getUserAccountById(id);
+        return ResponseEntity.ok(user.getPoints());
+    }
+
+    // 현재 로그인한 사용자의 포인트 조회
+    @GetMapping("/user/points")
+    public ResponseEntity<Integer> getCurrentUserPoints(Principal principal) {
+        String userId = principal.getName();
+        UserAccount user = userAccountService.getUserByUserId(userId);
+        return ResponseEntity.ok(user.getPoints());
+    }
+
     // 사용자 설정 조회
     @GetMapping("/users/{id}/settings")
     public ResponseEntity<UserSettings> getUserSettings(@PathVariable Long id) {
-        UserAccount user = userAccountService.getUserAccount(id);
+        UserAccount user = userAccountService.getUserAccountById(id);
         UserSettings settings = userSettingsService.getUserSettings(user);
         return ResponseEntity.ok(settings);
     }
 
     // 사용자 설정 업데이트
     @PutMapping("/users/{id}/settings")
-    public ResponseEntity<?> updateUserSettings(@PathVariable Long id, @RequestBody UserSettings settings) {
-        UserAccount user = userAccountService.getUserAccount(id);
+    public ResponseEntity<String> updateUserSettings(@PathVariable Long id, @RequestBody UserSettings settings) {
+        UserAccount user = userAccountService.getUserAccountById(id);
         userSettingsService.updateUserSettings(user, settings);
         return ResponseEntity.ok("User settings updated successfully.");
     }
 
     // 닉네임 변경 API
     @PutMapping("/settings/nickname")
-    public ResponseEntity<?> changeNickname(@RequestParam Long userId, @RequestParam String newNickname) {
+    public ResponseEntity<String> changeNickname(@RequestParam Long userId, @RequestParam String newNickname) {
         userSettingsService.changeNickname(userId, newNickname);
         return ResponseEntity.ok("닉네임이 변경되었습니다.");
     }
 
     // 이메일 변경 API
     @PutMapping("/settings/email")
-    public ResponseEntity<?> changeEmail(@RequestParam Long userId, @RequestParam String newEmail) {
+    public ResponseEntity<String> changeEmail(@RequestParam Long userId, @RequestParam String newEmail) {
         userSettingsService.changeEmail(userId, newEmail);
         return ResponseEntity.ok("이메일이 변경되었습니다.");
     }
 
     // 아이디 변경 API
     @PutMapping("/settings/userId")
-    public ResponseEntity<?> changeUserId(@RequestParam Long userId, @RequestParam String newUserId) {
+    public ResponseEntity<String> changeUserId(@RequestParam Long userId, @RequestParam String newUserId) {
         userSettingsService.changeUserId(userId, newUserId);
         return ResponseEntity.ok("아이디가 변경되었습니다.");
     }
 
     // 비밀번호 변경 API
     @PutMapping("/settings/password")
-    public ResponseEntity<?> changePassword(@RequestParam Long userId,
-                                            @RequestParam String oldPassword,
-                                            @RequestParam String newPassword) {
+    public ResponseEntity<String> changePassword(@RequestParam Long userId,
+                                                 @RequestParam String oldPassword,
+                                                 @RequestParam String newPassword) {
         userSettingsService.changePassword(userId, oldPassword, newPassword);
         return ResponseEntity.ok("비밀번호가 변경되었습니다.");
     }
@@ -268,14 +236,14 @@ public class UserAccountController {
 
     // 차단 추가 API
     @PostMapping("/settings/block")
-    public ResponseEntity<?> blockUser(@RequestParam Long blockerId, @RequestParam Long blockedId) {
+    public ResponseEntity<String> blockUserInSettings(@RequestParam Long blockerId, @RequestParam Long blockedId) {
         userSettingsService.blockUser(blockerId, blockedId);
         return ResponseEntity.ok("사용자가 차단되었습니다.");
     }
 
     // 차단 해제 API
     @DeleteMapping("/settings/unblock")
-    public ResponseEntity<?> unblockUser(@RequestParam Long blockerId, @RequestParam Long blockedId) {
+    public ResponseEntity<String> unblockUserInSettings(@RequestParam Long blockerId, @RequestParam Long blockedId) {
         userSettingsService.unblockUser(blockerId, blockedId);
         return ResponseEntity.ok("차단이 해제되었습니다.");
     }

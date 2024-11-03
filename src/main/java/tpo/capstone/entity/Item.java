@@ -13,8 +13,26 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name; // 아이템 이름
-    private int price;   // 포인트로 가격
+    @Column(nullable = false)
+    private String name; // 아이템 이름 (필수값으로 지정)
 
-    // 추가 필드가 필요하다면 여기에 추가
+    @Column(nullable = false)
+    private int price; // 아이템 가격 (포인트로)
+
+    @Column(length = 255)
+    private String description; // 아이템 설명 (선택 사항)
+
+    private String imageUrl; // 아이템 이미지 URL (선택 사항)
+
+    // 기본 생성자
+    public Item() {
+    }
+
+    // 모든 필드를 초기화하는 생성자
+    public Item(String name, int price, String description, String imageUrl) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.imageUrl = imageUrl;
+    }
 }

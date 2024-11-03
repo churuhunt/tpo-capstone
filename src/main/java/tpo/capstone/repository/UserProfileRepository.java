@@ -7,5 +7,12 @@ import tpo.capstone.entity.UserProfile;
 import java.util.Optional;
 
 public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
-    Optional<UserProfile> findByUserId(Long userId);
+
+    /**
+     * 특정 UserAccount ID로 UserProfile을 찾는 메서드
+     *
+     * @param userAccountId - UserAccount의 ID
+     * @return 해당 UserAccount ID에 매핑된 UserProfile을 Optional로 반환
+     */
+    Optional<UserProfile> findByUserAccountId(Long userAccountId);
 }

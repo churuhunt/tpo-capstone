@@ -17,14 +17,20 @@ public class UserSettings {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @OneToOne(fetch = FetchType.LAZY, optional = false) // 지연 로딩 적용 및 user 필드 필수 값 설정
+    @JoinColumn(name = "user_id", nullable = false)
     private UserAccount user;
 
+    @Column(nullable = false)
     private boolean allowCommentNotifications = true;
+
+    @Column(nullable = false)
     private boolean allowReplyNotifications = true;
 
+    @Column(nullable = false)
     private LocalDateTime nicknameLastChanged = LocalDateTime.now();
+
+    @Column(nullable = false)
     private boolean emailChanged = false;
 
     // 특정 필드를 초기화하는 생성자

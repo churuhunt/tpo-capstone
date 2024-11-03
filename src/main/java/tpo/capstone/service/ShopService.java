@@ -16,20 +16,29 @@ import java.util.List;
 @Service
 public class ShopService {
 
-    @Autowired
-    private ShopItemRepository shopItemRepository;
+    private final ShopItemRepository shopItemRepository;
+    private final PurchaseHistoryRepository purchaseHistoryRepository;
+    private final UserAccountRepository userAccountRepository;
 
     @Autowired
-    private PurchaseHistoryRepository purchaseHistoryRepository;
+    public ShopService(ShopItemRepository shopItemRepository,
+                       PurchaseHistoryRepository purchaseHistoryRepository,
+                       UserAccountRepository userAccountRepository) {
+        this.shopItemRepository = shopItemRepository;
+        this.purchaseHistoryRepository = purchaseHistoryRepository;
+        this.userAccountRepository = userAccountRepository;
+    }
 
-    @Autowired
-    private UserAccountRepository userAccountRepository;
-
+    /**
+     * 아이템 구매 처리
+     * @param userId 사용자 ID
+     * @param itemId 구매할 아이템 ID
+     * @return PurchaseHistory 구매 내역 객체
+     */
     @Transactional
     public PurchaseHistory purchaseItem(Long userId, Long itemId) {
         UserAccount user = userAccountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-
         ShopItem item = shopItemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid item ID"));
 
@@ -38,7 +47,7 @@ public class ShopService {
             throw new IllegalArgumentException("Insufficient points for purchase");
         }
 
-        // 포인트 차감
+        // 포인트 차감 및 사용자 정보 저장
         user.setPoints(user.getPoints() - item.getPrice());
         userAccountRepository.save(user);
 
@@ -47,25 +56,40 @@ public class ShopService {
         purchase.setUser(user);
         purchase.setItem(item);
         purchase.setPurchaseDate(LocalDateTime.now());
+
         return purchaseHistoryRepository.save(purchase);
     }
 
+    /**
+     * 모든 상점 아이템 목록 반환
+     * @return List<ShopItem> 아이템 목록
+     */
     public List<ShopItem> getAllItems() {
         return shopItemRepository.findAll();
     }
 
-    // 가격순 정렬 (오름차순)
+    /**
+     * 가격 오름차순 정렬된 아이템 목록 반환
+     * @return List<ShopItem> 오름차순으로 정렬된 아이템 목록
+     */
     public List<ShopItem> getItemsByAscendingPrice() {
         return shopItemRepository.findAllByOrderByPriceAsc();
     }
 
-    // 가격순 정렬 (내림차순)
+    /**
+     * 가격 내림차순 정렬된 아이템 목록 반환
+     * @return List<ShopItem> 내림차순으로 정렬된 아이템 목록
+     */
     public List<ShopItem> getItemsByDescendingPrice() {
         return shopItemRepository.findAllByOrderByPriceDesc();
     }
 
-    // 특정 사용자의 구매 내역 조회
+    /**
+     * 특정 사용자의 구매 내역 반환
+     * @param userId 사용자 ID
+     * @return List<PurchaseHistory> 구매 내역 목록
+     */
     public List<PurchaseHistory> getPurchaseHistory(Long userId) {
-        return purchaseHistoryRepository.findByUserIdOrderByPurchaseDateDesc(userId);
+        return purchaseHistoryRepository.findByUser_IdOrderByPurchaseDateDesc(userId);
     }
 }

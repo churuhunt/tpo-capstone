@@ -10,5 +10,12 @@ import java.util.List;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
+    // 읽지 않은 알림 조회
     List<Notification> findByUserAndIsReadFalse(UserAccount user);
+
+    // 모든 알림 조회
+    List<Notification> findByUser(UserAccount user);
+
+    // 읽은 알림만 조회
+    List<Notification> findByUserAndIsReadTrue(UserAccount user);
 }

@@ -1,8 +1,11 @@
 package tpo.capstone.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import tpo.capstone.entity.Report;
 
 public interface ReportRepository extends JpaRepository<Report, Long> {
-    // 관리자가 신고 내역을 조회할 수 있는 추가적인 메서드를 정의할 수 있습니다.
+    // targetType으로 필터링하여 페이징된 결과를 반환하는 메서드 정의
+    Page<Report> findByTargetType(String targetType, Pageable pageable);
 }
