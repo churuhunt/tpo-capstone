@@ -164,4 +164,12 @@ public class PostService {
 
         reportRepository.save(report);
     }
+    public List<Post> getUserPosts(Long userId) {
+        return postRepository.findByAuthor_Id(userId);
+    }
+
+    public List<Post> getUserPostsByCategory(Long userId, String category) {
+        return postRepository.findByAuthor_IdAndCategory(userId, category);
+    }
+
 }

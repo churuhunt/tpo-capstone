@@ -12,4 +12,9 @@ import java.util.List;
 public interface UserActivityRepository extends JpaRepository<UserActivity, Long> {
     @Query("SELECT ua FROM UserActivity ua WHERE ua.user.id IN :userIds ORDER BY ua.activityDate DESC")
     List<UserActivity> findTopPostsByUserIds(List<Long> userIds);
+
+    // 특정 사용자의 활동을 최근 순으로 가져오는 메서드
+    @Query("SELECT u FROM UserActivity u WHERE u.user.id = :userId ORDER BY u.activityDate DESC")
+    List<UserActivity> findByUserIdOrderByActivityDateDesc(@Param("userId") Long userId);
+
 }
