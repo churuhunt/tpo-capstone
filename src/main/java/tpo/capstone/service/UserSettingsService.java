@@ -118,9 +118,10 @@ public class UserSettingsService {
      * @return 차단된 사용자 목록
      */
     public List<Block> getBlockedUsers(Long userId) {
-        return blockRepository.findByBlocker_Id(userId);
+        UserAccount user = userAccountRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+        return blockRepository.findByBlocker(user);
     }
-
     /**
      * 사용자 차단
      *
@@ -151,7 +152,12 @@ public class UserSettingsService {
      * @return 차단 해제 성공 여부
      */
     public boolean unblockUser(Long blockerId, Long blockedId) {
-        Block block = blockRepository.findByBlocker_IdAndBlocked_Id(blockerId, blockedId)
+        UserAccount blocker = userAccountRepository.findById(blockerId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
+        UserAccount blocked = userAccountRepository.findById(blockedId)
+                .orElseThrow(() -> new IllegalArgumentException("차단할 사용자를 찾을 수 없습니다."));
+
+        Block block = blockRepository.findByBlockerAndBlocked(blocker, blocked)
                 .orElseThrow(() -> new IllegalArgumentException("차단 관계가 없습니다."));
 
         blockRepository.delete(block);
@@ -168,7 +174,7 @@ public class UserSettingsService {
         UserAccount user = userAccountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
 
-        return userSettingsRepository.findByUserAccount(user)
+        return userSettingsRepository.findByUser(user)
                 .orElseGet(() -> {
                     UserSettings newSettings = new UserSettings(user);
                     return userSettingsRepository.save(newSettings);
@@ -182,7 +188,7 @@ public class UserSettingsService {
      * @return 사용자 설정 정보
      */
     public UserSettings getUserSettings(UserAccount user) {
-        return userSettingsRepository.findByUserAccount(user)
+        return userSettingsRepository.findByUser(user)
                 .orElseGet(() -> new UserSettings(user, true, true));
     }
 
@@ -193,7 +199,7 @@ public class UserSettingsService {
      * @param settings 업데이트할 사용자 설정
      */
     public void updateUserSettings(UserAccount user, UserSettings settings) {
-        UserSettings userSettings = userSettingsRepository.findByUserAccount(user)
+        UserSettings userSettings = userSettingsRepository.findByUser(user)
                 .orElseGet(() -> {
                     settings.setUser(user);
                     return userSettingsRepository.save(settings);

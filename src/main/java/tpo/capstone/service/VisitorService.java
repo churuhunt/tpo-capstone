@@ -41,7 +41,7 @@ public class VisitorService {
      */
     public long getVisitorCount(Long userId) {
         UserAccount user = getUserById(userId);
-        return visitorRepository.countByUserAccount(user);
+        return visitorRepository.countByUser(user);
     }
 
     /**

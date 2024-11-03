@@ -2,6 +2,7 @@ package tpo.capstone.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final UserDetailsService customUserDetailsService;
 
     // JwtTokenProvider와 UserDetailsService를 주입받아 필터 초기화
+    @Autowired
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider, UserDetailsService customUserDetailsService) {
         this.jwtTokenProvider = jwtTokenProvider;
         this.customUserDetailsService = customUserDetailsService;
@@ -37,10 +39,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         try {
             // 요청에서 JWT 토큰을 추출
             String token = getJwtFromRequest(request);
+            if (token == null) {
+                logger.debug("No JWT token found in request headers");
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             logger.debug("Extracted token: {}", token);
 
             // 토큰 유효성 검증
-            if (token != null && jwtTokenProvider.validateToken(token)) {
+            if (jwtTokenProvider.validateToken(token)) {
                 // 토큰에서 사용자 이름 추출
                 String username = jwtTokenProvider.getUsernameFromToken(token);
                 logger.debug("Username extracted from token: {}", username);
@@ -72,7 +80,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String requestURI = request.getRequestURI();
-        return requestURI.equals("/api/login") || requestURI.equals("/api/signup");
+        return requestURI.startsWith("/api/login") || requestURI.startsWith("/api/signup");
     }
 
     /**

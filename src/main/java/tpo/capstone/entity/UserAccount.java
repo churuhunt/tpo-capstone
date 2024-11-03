@@ -50,14 +50,6 @@ public class UserAccount implements UserDetails {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastActiveDate;
 
-    // UserAccount와 LikedPost의 일대다 관계 설정
-    /*@OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<LikedPost> likedPosts = new ArrayList<>();
-
-    // UserAccount와 DislikedPost의 일대다 관계 설정
-    @OneToMany(mappedBy = "userAccount", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<DislikedPost> dislikedPosts = new ArrayList<>();*/
-
     @Override
     public String toString() {
         return "UserAccount{" +

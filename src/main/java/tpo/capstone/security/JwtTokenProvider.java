@@ -1,5 +1,6 @@
 package tpo.capstone.security;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,11 +17,14 @@ public class JwtTokenProvider {
 
     private static final Logger logger = LoggerFactory.getLogger(JwtTokenProvider.class);
 
-    @Value("${jwt.secret}")
-    private String JWT_SECRET;
+    private final String JWT_SECRET;
+    private final long JWT_EXPIRATION;
 
-    @Value("${jwt.expiration}")
-    private long JWT_EXPIRATION;
+    public JwtTokenProvider() {
+        Dotenv dotenv = Dotenv.configure().load();
+        this.JWT_SECRET = dotenv.get("JWT_SECRET");
+        this.JWT_EXPIRATION = Long.parseLong(dotenv.get("JWT_EXPIRATION"));
+    }
 
     /**
      * 주어진 사용자 정보로 JWT 토큰을 생성

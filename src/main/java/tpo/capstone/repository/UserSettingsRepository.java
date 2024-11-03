@@ -14,5 +14,5 @@ public interface UserSettingsRepository extends JpaRepository<UserSettings, Long
      * @param userAccount - UserAccount 객체
      * @return 해당 UserAccount에 매핑된 UserSettings를 Optional로 반환
      */
-    Optional<UserSettings> findByUserAccount(UserAccount userAccount);
+    Optional<UserSettings> findByUser(UserAccount userAccount);
 }

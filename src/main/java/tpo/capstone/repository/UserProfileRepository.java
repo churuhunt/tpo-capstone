@@ -11,8 +11,7 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Long> 
     /**
      * 특정 UserAccount ID로 UserProfile을 찾는 메서드
      *
-     * @param userAccountId - UserAccount의 ID
      * @return 해당 UserAccount ID에 매핑된 UserProfile을 Optional로 반환
      */
-    Optional<UserProfile> findByUserAccountId(Long userAccountId);
+    Optional<UserProfile> findByUser_Id(Long userId);
 }

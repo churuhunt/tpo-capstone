@@ -11,10 +11,9 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
     /**
      * 특정 UserAccount ID에 해당하는 모든 Visitor를 조회
      *
-     * @param userAccountId - UserAccount의 ID
      * @return 해당 UserAccount ID에 매핑된 모든 Visitor 목록
      */
-    List<Visitor> findByUserAccountId(Long userAccountId);
+    List<Visitor> findByUser_Id(Long userId);
 
     /**
      * 특정 UserAccount에 대한 방문자 수를 계산
@@ -22,5 +21,5 @@ public interface VisitorRepository extends JpaRepository<Visitor, Long> {
      * @param userAccount - UserAccount 객체
      * @return 해당 UserAccount의 방문자 수
      */
-    long countByUserAccount(UserAccount userAccount);
+    long countByUser(UserAccount userAccount);
 }
