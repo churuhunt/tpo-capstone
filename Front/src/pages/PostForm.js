@@ -18,6 +18,7 @@ const PostForm = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [category, setCategory] = useState('커뮤니티');
+    const [author, setAuthor] = useState(''); // 서버에서 가져온 닉네임 저장
     const [fontColor, setFontColor] = useState('#000000');
     const [fontBackColor, setFontBackColor] = useState('#ffffff');
     const [tags, setTags] = useState('');
@@ -26,6 +27,21 @@ const PostForm = () => {
     const underlineRef = useRef(null);
     const navigate = useNavigate();
     const contentRef = useRef(null);
+
+
+  /*  // 컴포넌트가 처음 렌더링될 때 서버에서 닉네임을 가져옴
+    useEffect(() => {
+        const fetchNickname = async () => {
+            try {
+                const response = await api.get('/users/me'); // 사용자 정보를 가져오는 API 엔드포인트
+                setAuthor(response.data.userId); // 닉네임 설정
+            } catch (error) {
+                console.error('닉네임을 가져오는 중 오류가 발생했습니다:', error);
+            }
+        };
+        fetchNickname();
+    }, []);
+*/
 
     useEffect(() => {
         const menuItem = document.querySelectorAll('.post-form-sub-menu li')[hoverIndex ?? activeIndex];
@@ -42,8 +58,7 @@ const PostForm = () => {
             title,
             content,
             category,
-            tags,
-            author: '현재 사용자 이름',
+            author,
             date: new Date(),
             views: 0,
             likes: 0,
@@ -199,19 +214,18 @@ const PostForm = () => {
                     onInput={(e) => setContent(e.currentTarget.innerHTML)}
                 ></div>
 
-                <div className="tag-container">
+                {/* <div className="tag-container">
                     <input
                         type="text"
                         value={tags}
                         onChange={(e) => setTags(e.target.value)}
                         placeholder="본문에 #을 이용하여 태그를 사용해보세요! (최대 10개)"
                     />
-                </div>
+                </div> */}
 
-                <div className="buttons-container">
                     <button type="submit" className="submit-button">등록</button>
                     <button type="button" className="list-button" onClick={() => navigate(-1)}>취소</button>
-                </div>
+
             </form>
         </div>
     );

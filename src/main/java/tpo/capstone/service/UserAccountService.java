@@ -14,6 +14,8 @@ import tpo.capstone.entity.UserAccount;
 import tpo.capstone.repository.UserAccountRepository;
 import tpo.capstone.security.JwtTokenProvider;
 import org.springframework.transaction.annotation.Transactional;
+import tpo.capstone.entity.Item;
+import tpo.capstone.repository.ItemRepository;
 
 
 import java.security.Principal;
@@ -29,12 +31,15 @@ public class UserAccountService {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final UserAccountRepository userAccountRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final ItemRepository itemRepository;
+
 
     @Autowired
-    public UserAccountService(BCryptPasswordEncoder bCryptPasswordEncoder, UserAccountRepository userAccountRepository, JwtTokenProvider jwtTokenProvider) {
+    public UserAccountService(BCryptPasswordEncoder bCryptPasswordEncoder, UserAccountRepository userAccountRepository, JwtTokenProvider jwtTokenProvider, ItemRepository itemRepository) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
         this.userAccountRepository = userAccountRepository;
         this.jwtTokenProvider = jwtTokenProvider;
+        this.itemRepository = itemRepository;
     }
 
     // 일반 회원가입 로직
@@ -57,6 +62,7 @@ public class UserAccountService {
         return userAccountRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + id));
     }
+
 
     // 일반 로그인 로직
     public JwtResponse login(LoginRequest request) {

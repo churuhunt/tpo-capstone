@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';  // Import from 'react-dom/client' instead of 'react-dom'
 import './index.css';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
@@ -16,7 +16,7 @@ import PostForm from './pages/PostForm';
 import Community from './pages/community';
 import Informationboard from './pages/Informationboard';
 import Recommendedboard from './pages/Recommendedboard';
-import PageView from './pages/PageView';
+import PostView from './pages/PostView';
 import ScrollToTop from './components/ScrollToTop';
 
 const App = () => {
@@ -40,7 +40,7 @@ const App = () => {
             <Route path="/store" element={<Store />} />
             <Route path="/mymenu" element={<MyMenu />} />
             <Route path="/write" element={<PostForm />} />
-            <Route path="/postview/:postId" element={<PageView />} />
+            <Route path="/postview/:postId" element={<PostView />} />
           </Routes>
         </div>
       </Router>
@@ -48,11 +48,10 @@ const App = () => {
   );
 };
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+const root = ReactDOM.createRoot(document.getElementById('root'));  // Use createRoot instead of render
+root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
 );
-
 reportWebVitals();

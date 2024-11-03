@@ -134,7 +134,7 @@ public class PostService {
 
     }
 
-    // 메인 화면 데이터 가져오기 (공지사항 및 인기 게시물)
+ /*   // 메인 화면 데이터 가져오기 (공지사항 및 인기 게시물)
     public Map<String, Object> getMainPageData(int page, int size) {
         List<Post> popularPosts = getPopularPosts();
         Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
@@ -147,7 +147,7 @@ public class PostService {
 
         return response;
     }
-
+*/
     // 신고 처리 메서드
     public void reportPost (Long postId, String userId, String reason){
         Post post = postRepository.findById(postId)

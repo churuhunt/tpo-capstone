@@ -7,7 +7,7 @@ import BubblyButton from '../components/BubblyButton';
 const Popularity = () => {
   const [posts, setPosts] = useState([]);
   const [popularPosts, setPopularPosts] = useState([]); // 인기 게시물 상태 추가
-  const [sortBy, setSortBy] = useState('date-rise');
+  const [sortBy, setSortBy] = useState('likes-rise');
   const [sortAscending, setSortAscending] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,13 +33,17 @@ const Popularity = () => {
             category: '인기게시판',
             searchTerm: searchTerm,
             categoryFilter: filteredCategory,
-            sortBy: sortBy,
+            sortBy: sortMapping[sortBy] !== undefined && sortBy ? sortMapping[sortBy] : 'likes',
             page: currentPage - 1,
             size: postsPerPage
           }
         });
         setPosts(response.data.content);
         setTotalPages(response.data.totalPages);
+
+        // 인기 게시물 필터링
+        const popular = response.data.content.filter(post => post.likes >= 10);
+        setPopularPosts(popular);
       } catch (error) {
         console.error('게시물 데이터를 가져오는 데 실패했습니다:', error);
       } finally {
@@ -48,16 +52,44 @@ const Popularity = () => {
     };
 
     fetchPosts();
-  }, [searchTerm, sortBy, currentPage, filteredCategory]);
+  }, [searchTerm, currentPage, filteredCategory]);
+
+
 
   const sortPosts = (sortByKey) => {
+    let sortedPosts = [...posts];
+    switch (sortByKey) {
+      case 'date-rise':
+        sortedPosts.sort((a, b) => new Date(a.date) - new Date(b.date));
+        break;
+      case 'date-fall':
+        sortedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        break;
+      case 'likes-rise':
+        sortedPosts.sort((a, b) => a.likes - b.likes);
+        break;
+      case 'likes-fall':
+        sortedPosts.sort((a, b) => b.likes - a.likes);
+        break;
+      case 'views-rise':
+        sortedPosts.sort((a, b) => a.views - b.views);
+        break;
+      case 'views-fall':
+        sortedPosts.sort((a, b) => b.views - a.views);
+        break;
+      default:
+        break;
+    }
     if (sortByKey === sortBy) {
-      setSortAscending(!sortAscending);  // 동일 정렬 기준 클릭 시 방향 전환
+      sortedPosts.reverse();
+      setSortAscending(!sortAscending);
     } else {
       setSortBy(sortByKey);
-      setSortAscending(true); // 새 정렬 기준 설정 시 오름차순으로 시작
+      setSortAscending(true);
     }
+    setPosts(sortedPosts);
   };
+
 
   const handleCategoryClick = (category) => {
     setFilteredCategory(category);
@@ -137,14 +169,14 @@ const Popularity = () => {
           </thead>
           <tbody>
           {currentPosts.map((post, index) => (
-              <tr key={index}>
+              <tr key={index} className={post.likes >= 10 ? 'popular-post' : ''}> {/* 인기 게시물에 클래스 적용 */}
                 <td>{post.category}</td>
                 <td>{post.id}</td>
                 <td>
-                  <Link to="/postview" style={{color: 'black'}}>{post.title}</Link>
+                  <Link to={`/postview/${post.id}`} style={{color: 'black'}}>{post.title}</Link>
                 </td>
                 <td>{post.author}</td>
-                <td>{post.date}</td>
+                <td>{new Date(post.date).toLocaleDateString()}</td> {/* 작성일자 포맷 변경 */}
                 <td>{post.views}</td>
                 <td>{post.likes}</td>
               </tr>

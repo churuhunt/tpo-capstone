@@ -16,7 +16,7 @@ const Community = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [postsPerPage] = useState(15);
-  const [viewMode, setViewMode] = useState('card');
+  const [viewMode, setViewMode] = useState('list');
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
   const [filteredCategory, setFilteredCategory] = useState(''); // 카테고리 필터링 상태
@@ -56,17 +56,46 @@ const Community = () => {
     };
 
     fetchPosts();
-  }, [filteredCategory, searchTerm, sortBy, currentPage]);
+  }, [filteredCategory, searchTerm, currentPage]);
+
+
+
 
 
   const sortPosts = (sortByKey) => {
-    if (sortBy === sortByKey) {
+    let sortedPosts = [...posts];
+    switch (sortByKey) {
+      case 'date-rise':
+        sortedPosts.sort((a, b) => new Date(a.date) - new Date(b.date));
+        break;
+      case 'date-fall':
+        sortedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+        break;
+      case 'likes-rise':
+        sortedPosts.sort((a, b) => a.likes - b.likes);
+        break;
+      case 'likes-fall':
+        sortedPosts.sort((a, b) => b.likes - a.likes);
+        break;
+      case 'views-rise':
+        sortedPosts.sort((a, b) => a.views - b.views);
+        break;
+      case 'views-fall':
+        sortedPosts.sort((a, b) => b.views - a.views);
+        break;
+      default:
+        break;
+    }
+    if (sortByKey === sortBy) {
+      sortedPosts.reverse();
       setSortAscending(!sortAscending);
     } else {
       setSortBy(sortByKey);
       setSortAscending(true);
     }
+    setPosts(sortedPosts);
   };
+
 
 
   const indexOfLastPost = currentPage * postsPerPage;
@@ -74,6 +103,7 @@ const Community = () => {
   const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
 
   const handleCategoryClick = (category) => {
+    setFilteredCategory(category);
     setCurrentPage(1);
   };
 
@@ -82,6 +112,7 @@ const Community = () => {
   };
 
   const handleResetFilter = () => {
+    setFilteredCategory('');
     setSearchTerm('');
     setSortBy('date-rise');
     setCurrentPage(1);
@@ -90,6 +121,10 @@ const Community = () => {
   const paginate = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
+
+  if (loading) {
+    return <div>로딩 중...</div>;
+  }
 
   return (
     <div className="board4-container">
@@ -166,25 +201,31 @@ const Community = () => {
                   <Link to={`/postview/${post.id}`} style={{ color: 'black' }}>{post.title}</Link>
                 </td>
                 <td>{post.author}</td>
-                <td>{post.date}</td>
+                <td>{new Date(post.date).toLocaleDateString()}</td> {/* 작성일자 포맷 변경 */}
                 <td>{post.views}</td>
                 <td>{post.likes}</td>
               </tr>
             ))}
             {currentPosts.length < postsPerPage &&
               [...Array(postsPerPage - currentPosts.length)].map((_, index) => (
-                <tr key={`empty-${index}`}>
-                  <td colSpan="7" className="empty-row"></td>
-                </tr>
+                  <tr key={`empty-${index}`} className="board6-container empty-row">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
               ))}
           </tbody>
         </table>
       ) : (
-        <div className="card-view">
-          {currentPosts.map((post, index) => (
-            <Link to={`/postview/${post.id}`} key={index}> {/* Link 추가 */}
-              <div className="card">
-                <img src={post.thumbnailUrl} alt={`${post.title} 썸네일`} className="thumbnail" />
+          <div className="card-view">
+            {currentPosts.map((post, index) => (
+                <Link to={`/postview/${post.id}`} key={index}> {/* Link 추가 */}
+                  <div className="card">
+                    <img src={post.thumbnailUrl} alt={`${post.title} 썸네일`} className="thumbnail" />
                 <div className="card-info">
                   <h3>{post.title}</h3>
                   <div className="details">

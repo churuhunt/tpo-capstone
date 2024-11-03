@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './Signup.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const Signup = () => {
@@ -82,14 +82,14 @@ const Signup = () => {
         <div className='btndiv'>
           <label htmlFor="userId">아이디:</label>
           <input
-            type="text"
-            id="userId"
-            className='input1'
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            required
+              type="text"
+              id="userId"
+              className='input1'
+              value={userId}
+              onChange={(e) => setUserId(e.target.value)}
+              required
           />
-          <button className="button1" type="button">중복확인</button>
+          <button type="button" onClick={handleUserIdCheck}>아이디 중복확인</button>
         </div>
         <div>
           <label htmlFor="password">비밀번호:</label>
@@ -124,14 +124,14 @@ const Signup = () => {
         <div className='btndiv'>
           <label htmlFor="nickname">닉네임:</label>
           <input
-            type="text"
-            id="nickname"
-            className='input1'
-            value={nickname}
-            onChange={(e) => setNickname(e.target.value)}
-            required
+              type="text"
+              id="nickname"
+              className='input1'
+              value={nickname}
+              onChange={(e) => setNickname(e.target.value)}
+              required
           />
-          <button type="button" className='button1'>중복확인</button>
+          <button type="button" onClick={handleNicknameCheck}>닉네임 중복확인</button>
         </div>
         <button className="button2" type="submit">가입하기</button>
       </form>
