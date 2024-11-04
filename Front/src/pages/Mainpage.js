@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css';
 import './Mainpage.css';
@@ -11,6 +11,8 @@ import mainimg3 from '../image/mainimg3.jpg';
 import mainbanner1 from '../image/mainpage-banner1.jpg';
 import mainbanner2 from '../image/mainpage-banner2.jpg';
 import mainbanner3 from '../image/mainpage-banner3.jpg';
+
+import PageSubMenu from '../components/PageSubMenu'; /*sub*/
 
 const slideImages = [mainimg1, mainimg2, mainimg3];
 const slideBanners = [mainbanner1, mainbanner2, mainbanner3];
@@ -55,6 +57,8 @@ const popularPostsData = {
 };
 
 const Mainpage = () => {
+  const [activeIndex, setActiveIndex] = useState(0); /*sub */
+  const menuItems = []; /*sub */
   const [selectedPeriod, setSelectedPeriod] = useState('daily');
 
   const handlePeriodChange = (period) => {
@@ -72,15 +76,11 @@ const Mainpage = () => {
         </Slide>
       </div>
       <div className="content">
-        {/*<div className="slideshow-container">
-          <Slide easing="ease">
-            {slideImages.map((image, index) => (
-              <div className="each-slide" key={index}>
-                <img src={image} alt={`Slide ${index + 1}`} />
-              </div>
-            ))}
-          </Slide>
-        </div>*/}
+        
+      <div className="post-form-container"> {/*sub*/}
+          <PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
+      </div>
+
         <div className="sections-container">
           {/* 첫 번째 영역 - 공지사항 */}
           <div className="section">

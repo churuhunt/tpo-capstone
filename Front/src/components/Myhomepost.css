@@ -1,0 +1,181 @@
+.myhomepost-container {
+    width: 90%; /* 화면 전체 너비 */
+    margin: 0; /* 외부 여백 제거 */
+    padding: 0; /* 내부 여백 제거 */
+    box-sizing: border-box; /* 패딩 포함 너비 조정 */
+}
+
+.myhomepost {
+    background-color: #f9f9f9;
+    padding: 20px; /* 필요한 경우 패딩을 줄이거나 없앨 수 있음 */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* 아래쪽 여백만 유지 */
+    width: 100%; /* 부모 컨테이너 너비에 맞추기 */
+}
+
+.myhomepost-title {
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    color: black;
+}
+
+.myhomepost-title:hover {
+    text-decoration: underline;
+}
+
+.myhomepost-date {
+    color: #888;
+    font-size: 12px;
+}
+
+.myhomepost-content {
+    margin-top: 10px;
+    line-height: 1.5;
+}
+
+.myhomepost-show-more {
+    color: black;
+    background: none;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* Dynamic image layout */
+.myhomepost-images {
+    display: grid;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.myhomepost-images.layout-1 img {
+    width: 100%;
+    height: auto;
+}
+
+.myhomepost-images.layout-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.myhomepost-images.layout-3 {
+    grid-template-areas: 
+        "big big"
+        "small small";
+}
+
+.myhomepost-images.layout-3 img:nth-child(1) {
+    grid-area: big;
+    width: 100%;
+    height: 100%;
+}
+
+.myhomepost-images.layout-3 img:nth-child(2),
+.myhomepost-images.layout-3 img:nth-child(3) {
+    width: 100%;
+    height: 100px;
+}
+
+.myhomepost-images.layout-4 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.myhomepost-images.layout-5 {
+    grid-template-areas:
+        "big big"
+        "small small small";
+}
+
+.myhomepost-images.layout-5 img:nth-child(1),
+.myhomepost-images.layout-5 img:nth-child(2) {
+    grid-area: big;
+    height: 150px;
+}
+
+.myhomepost-images.layout-5 img:nth-child(3),
+.myhomepost-images.layout-5 img:nth-child(4),
+.myhomepost-images.layout-5 img:nth-child(5) {
+    width: 100%;
+    height: 100px;
+}
+
+/* Additional styling */
+.myhomepost-more-images {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.myhomepost-stats {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    color: #666;
+}
+
+.myhomepost-comments {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.myhomepost-comment {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.myhomepost-comment-profile {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.myhomepost-comment-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.myhomepost-comment-name {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.myhomepost-comment-date {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.myhomepost-comment-text {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.myhomepost-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.myhomepost-modal-image {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}

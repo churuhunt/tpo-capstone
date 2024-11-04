@@ -132,3 +132,8 @@
     background-size: 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%, 0% 0%;
   }
 }
+
+.bubbly-link {
+  color: #fff; /* 흰색으로 텍스트 색상 설정 */
+  text-decoration: none; /* 링크 밑줄 제거 */
+}

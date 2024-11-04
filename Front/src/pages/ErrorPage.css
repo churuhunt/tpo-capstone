@@ -6,7 +6,7 @@
     justify-content: center;
     font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
     color: #ffffff;
-    background-image: linear-gradient(to top, #9795f0 0%, #fbc8d4 100%);
+    /*background-image: linear-gradient(to top, #9795f0 0%, #fbc8d4 100%);*/
     top: -80px;
     padding-bottom: 80px;
 }

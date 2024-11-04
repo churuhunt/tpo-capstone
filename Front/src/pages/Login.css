@@ -14,7 +14,7 @@
   display: flex;
   font-family: 'Helvetica Neue', sans-serif;
   letter-spacing: 0.5px;
-  background-image: linear-gradient(to top, #9795f0 0%, #fbc8d4 100%);
+  background-color: #F0F2F5;
   position: relative;
   margin-top: -80px;
 }

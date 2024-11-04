@@ -1,0 +1,51 @@
+.visit-history-container {
+    padding: 20px;
+    width: 100%;
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.visit-history-intro-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.visit-history-intro-section h3 {
+    font-size: 1.2em;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+.visit-history-intro-section p {
+    font-size: 1em;
+    color: #666;
+}
+
+
+.visit-history-chart {
+    width: 80%; /* 부모 요소의 80%로 설정 */
+    max-width: 700px; 
+    height: 400px; 
+    margin: 0 auto;
+}
+
+
+.visit-history-chart h4 {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.visit-history-intro {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+
+.visit-history-divider {
+    border: none;
+    border-top: 1px solid #ddd;
+    margin: 10px 0;
+}

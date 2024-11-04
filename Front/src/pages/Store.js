@@ -36,105 +36,33 @@ const Store = () => {
 
   const tabItems = {
     "프로필": [
-      { text: "프로필 아이템1", image: "https://media.tenor.com/m-5kVE1gidsAAAAj/homer-simpson-bush-transparent.gif" },
-      { text: "프로필 아이템2", image: "https://media.fmkorea.com/files/attach/new/20200728/2978469841/2984528844/3010242160/1021e5f1017ff36b298d393574c9ce1c.gif" },
-      { text: "프로필 아이템3", image: "https://mblogthumb-phinf.pstatic.net/MjAyMDEyMDNfODEg/MDAxNjA2OTYwMTMwMDIz.CH0wwi3vq1NRbCMo4vSD2DxwqUjWhLAfGK3vs_HYAVMg.ew3TvMIDK86UJADD7363U3K2eQwi4TOwoG__QRwLgCUg.GIF.bidsh/01.gif?type=w800" },
-      { text: "프로필 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "프로필 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "프로필 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "프로필 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "프로필 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "프로필 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "프로필 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "프로필 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "프로필 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
+      { name: "살려주세요", price:"50,000", image: "https://ogq-sticker-global-cdn-z01.afreecatv.com/sticker/16f23ce594d55f6/main.png" },
+      { name: "심슨", price:"50,000", image: "https://media.tenor.com/m-5kVE1gidsAAAAj/homer-simpson-bush-transparent.gif" },
+      { name: "개구리", price:"50,000", image: "https://media.fmkorea.com/files/attach/new/20200728/2978469841/2984528844/3010242160/1021e5f1017ff36b298d393574c9ce1c.gif" },
+      { name: "농담곰", price:"50,000", image: "https://mblogthumb-phinf.pstatic.net/MjAyMDEyMDNfODEg/MDAxNjA2OTYwMTMwMDIz.CH0wwi3vq1NRbCMo4vSD2DxwqUjWhLAfGK3vs_HYAVMg.ew3TvMIDK86UJADD7363U3K2eQwi4TOwoG__QRwLgCUg.GIF.bidsh/01.gif?type=w800" },
     ],
     "테두리": [
-      { text: "테두리 아이템1", image: "https://png.pngtree.com/png-clipart/20220706/ourmid/pngtree-elegant-simple-black-lace-border-icon-png-yuri-png-image_5709541.png" },
-      { text: "테두리 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "테두리 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "테두리 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "테두리 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "테두리 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "테두리 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "테두리 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "테두리 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "테두리 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "테두리 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "테두리 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      
+      { name: "검정 테두리", price:"50,000", image: "https://png.pngtree.com/png-clipart/20220706/ourmid/pngtree-elegant-simple-black-lace-border-icon-png-yuri-png-image_5709541.png" },      
     ],
     "배경": [
-      { text: "배경 아이템1", image: "https://i.namu.wiki/i/w11dbZZeomJI4bD3_KItw3vq7tgglcM1YQA_xHULxMsixPpY1S7KcB8WrEFhJNuSuejiiQkicGKMH12JvpUqBQ.webp" },
-      { text: "배경 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
+      { name: "윈도우", price:"50,000", image: "https://i.namu.wiki/i/w11dbZZeomJI4bD3_KItw3vq7tgglcM1YQA_xHULxMsixPpY1S7KcB8WrEFhJNuSuejiiQkicGKMH12JvpUqBQ.webp" },
     ],
     "폰트": [
-      { text: "폰트 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "폰트 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "폰트 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "폰트 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "폰트 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "폰트 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "폰트 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "폰트 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "폰트 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "폰트 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "폰트 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "폰트 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
+      { name: "이겨책읽", price:"50,000", image: "https://noonnucc-production.sfo2.cdn.digitaloceanspaces.com/202410/1730105823907507.png" },
+      { name: "몸튼튼마음튼튼", price:"50,000", image: "https://noonnucc-production.sfo2.cdn.digitaloceanspaces.com/202408/1723017459633777.jpeg" },
     ],
     "이모티콘": [
-      { text: "이모티콘 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이모티콘 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이모티콘 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이모티콘 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이모티콘 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이모티콘 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이모티콘 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이모티콘 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이모티콘 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이모티콘 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이모티콘 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이모티콘 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
+      { name: "라이언힘", price:"50,000", image: "https://t1.kakaocdn.net/estoreweb/images/20240902172018/img_completed.png" },
+      { name: "라이언등장", price:"50,000", image: "https://item.kakaocdn.net/do/30cef086c8778d80e1487385bd5efe7b8f324a0b9c48f77dbce3a43bd11ce785" },
     ],
     "이펙트": [
-      { text: "이펙트 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이펙트 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이펙트 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이펙트 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이펙트 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이펙트 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이펙트 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이펙트 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이펙트 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이펙트 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이펙트 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "이펙트 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
+      { name: "눈", price:"50,000", image: "https://i.pinimg.com/originals/57/80/a4/5780a47067fb3e7a3fdd069465ac0f2f.gif" },
+      { name: "하트", price:"50,000", image: "https://i.pinimg.com/originals/eb/5a/84/eb5a84fe13c6bf73285c4afe994297a5.gif" },
+      { name: "꽃가루", price:"50,000", image: "https://i.pinimg.com/originals/52/f2/07/52f207b309cbdb9faa6e627ad3ffe95f.gif" },
     ],
     "기타": [
-      { text: "배경 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템1", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템2", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
-      { text: "배경 아이템3", image: "https://cdn-icons-png.flaticon.com/512/159/159833.png" },
+      { name: "기타", price:"50,000", image: "https://cdn-icons-png.flaticon.com/512/8332/8332396.png" },
     ],
-    // 나머지 탭들도 유사한 방식으로 추가
   };
 
   return (
@@ -145,11 +73,11 @@ const Store = () => {
       </div>
       <div className="store-container2">
         <div className="store-header">
-          <div className="store-search">
+        <div className="store-points">💰 100</div>
+          {/*<div className="store-search">
             <input type="text" placeholder="검색어를 입력하세요..." />
-            <button>검색</button>
-          </div>
-          <div className="store-points">💰 : 100</div>
+            <button className="store-search-button">검색</button>
+          </div>*/}
         </div>
         <Slider {...settings} className="image-slider">
           <div>
@@ -179,7 +107,8 @@ const Store = () => {
             </button>
           ))}
         </div>
-        <ItemList items={tabItems[activeTab]} /> {/* ItemList 컴포넌트에 데이터 전달 */}
+        <div className='itemlist-container'>
+        <ItemList items={tabItems[activeTab]} /></div>
       </div>
     </div>
   );
