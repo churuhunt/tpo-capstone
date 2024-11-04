@@ -13,8 +13,13 @@ import imageIcon from '../image/image.png';
 import strikethroughIcon from '../image/strikethrough.png';
 import fontcolorIcon from '../image/fontcolor.png';
 import fontbackcolorIcon from '../image/fontbackcolor.png';
+import banner1 from '../image/banner1.jpg';
+import PageSubMenu from '../components/PageSubMenu'; /*sub*/
+import Banner from '../components/Banner';
+
 
 const PostForm = () => {
+    const menuItems = ["🗽자유게시판", "👖데일리룩게시판", "❔질문게시판"]; /*sub */
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [category, setCategory] = useState('커뮤니티');
@@ -29,19 +34,19 @@ const PostForm = () => {
     const contentRef = useRef(null);
 
 
-  /*  // 컴포넌트가 처음 렌더링될 때 서버에서 닉네임을 가져옴
     useEffect(() => {
-        const fetchNickname = async () => {
+        const fetchCurrentUser = async () => {
             try {
-                const response = await api.get('/users/me'); // 사용자 정보를 가져오는 API 엔드포인트
-                setAuthor(response.data.userId); // 닉네임 설정
+                const response = await api.get('/users/current');  // 현재 사용자 정보를 가져오는 API 호출
+                setAuthor(response.data.userId); // 서버에서 가져온 닉네임 설정
             } catch (error) {
-                console.error('닉네임을 가져오는 중 오류가 발생했습니다:', error);
+                console.error('사용자 정보를 가져오는 중 오류 발생:', error);
             }
         };
-        fetchNickname();
+
+        fetchCurrentUser(); // 컴포넌트가 마운트될 때 사용자 정보를 가져옴
     }, []);
-*/
+
 
     useEffect(() => {
         const menuItem = document.querySelectorAll('.post-form-sub-menu li')[hoverIndex ?? activeIndex];

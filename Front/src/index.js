@@ -17,6 +17,9 @@ import Community from './pages/community';
 import Informationboard from './pages/Informationboard';
 import Recommendedboard from './pages/Recommendedboard';
 import PostView from './pages/PostView';
+import ProfileManagement from './pages/ProfileManagement';
+import ErrorPage from './pages/ErrorPage';
+
 import ScrollToTop from './components/ScrollToTop';
 
 const App = () => {
@@ -41,6 +44,8 @@ const App = () => {
             <Route path="/mymenu" element={<MyMenu />} />
             <Route path="/write" element={<PostForm />} />
             <Route path="/postview/:postId" element={<PostView />} />
+            <Route path="/profile" element={<ProfileManagement />} />
+            <Route path="/error" element={<ErrorPage />} />
           </Routes>
         </div>
       </Router>

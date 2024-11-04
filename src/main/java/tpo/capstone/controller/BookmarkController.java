@@ -18,7 +18,7 @@ public class BookmarkController {
     private BookmarkService bookmarkService;
 
     // 북마크한 게시글 조회
-    @GetMapping
+    @GetMapping()
     public ResponseEntity<List<Post>> getBookmarkedPosts(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getId(); // 인증된 사용자 ID 가져오기
         List<Post> bookmarkedPosts = bookmarkService.getBookmarkedPosts(userId);

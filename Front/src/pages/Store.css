@@ -2,6 +2,15 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
+  background-color: #f4f4f9; /* 배경색 추가로 아이템이 더 돋보이게 함 */
+  color: #333; /* 더 어두운 텍스트 색상으로 가독성 향상 */
+}
+
+.store-container2{
+  width: 60%;
+  margin: 0 auto;
+  position: relative;
+  top:-150px;
 }
 
 .store-header {
@@ -24,9 +33,10 @@
 }
 
 
-
 .store-points {
   font-weight: bold;
+  font-size: 16px;
+
 }
 
 .image-slider {
@@ -38,6 +48,7 @@
 .image-slider img {
   width: 100%;
   height: 350px;
+  object-fit: cover; /* 이미지 비율을 유지하면서 슬라이더 영역을 꽉 채움 */
 }
 
 .menu-tabs {
@@ -65,10 +76,19 @@
 
 .item-sale .aa {
   background-color: #fff;
-  border: 1px solid #000;
-  padding: 20px;
-  width: 100px;
-  height: 100px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.item-sale .aa button {
+  background-color: #28a745;
+  color: #fff;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .store-container h2{

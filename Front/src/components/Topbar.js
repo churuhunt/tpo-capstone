@@ -40,28 +40,28 @@ const Topbar = () => {
             <Link to="/community">💬커뮤니티</Link>
             <ul className="submenu">
               <li><Link to="/community/free">🗽자유 게시판</Link></li>
-              <li><Link to="/community/questions">👖데일리룩 게시판</Link></li>
+              <li><Link to="/community/DailyLook">👖데일리룩 게시판</Link></li>
               <li><Link to="/community/questions">❔질문 게시판</Link></li>
             </ul>
           </li>
           <li>
             <Link to="/recommendedboard">👍추천</Link>
             <ul className="submenu">
-              <li><Link to="/recommendedboard/top">👍추천 게시판</Link></li>
+              <li><Link to="/recommendedboard">👍추천 게시판</Link></li>
             </ul>
           </li>
           <li>
             <Link to="/informationboard">ℹ️정보</Link>
             <ul className="submenu">
               <li><Link to="/informationboard/articles">🕺패션정보</Link></li>
-              <li><Link to="/informationboard/tutorials">💲세일정보</Link></li>
+              <li><Link to="/informationboard/sales">💲세일정보</Link></li>
               <li><Link to="/informationboard/tutorials">🎸기타정보</Link></li>
             </ul>
           </li>
           <li>
             <Link to="/ranking">🏆랭킹</Link>
             <ul className="submenu">
-              <li><Link to="/ranking/world">레벨 랭킹</Link></li>
+              <li><Link to="/ranking">레벨 랭킹</Link></li>
             </ul>
           </li>
           <li>
@@ -73,8 +73,8 @@ const Topbar = () => {
           <li>
             <Link to="/mymenu">⭐마이메뉴</Link>
             <ul className="submenu">
-              <li><Link to="/mymenu/profile">👤프로필</Link></li>
-              <li><Link to="/mymenu/settings">⚙️설정</Link></li>
+              <li><Link to="/profile">👤프로필</Link></li>
+              <li><Link to="/settings">⚙️설정</Link></li>
             </ul>
           </li>
         </ul>

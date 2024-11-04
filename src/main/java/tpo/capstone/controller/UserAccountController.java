@@ -135,6 +135,8 @@ public class UserAccountController {
         return ResponseEntity.ok(user);
     }
 
+
+
     // 닉네임 클릭 시 사용자 요약 정보 반환
     @GetMapping("/users/{id}/summary")
     public ResponseEntity<UserSummaryDTO> getUserSummary(@PathVariable Long id) {
@@ -225,6 +227,14 @@ public class UserAccountController {
                                                  @RequestParam String newPassword) {
         userSettingsService.changePassword(userId, oldPassword, newPassword);
         return ResponseEntity.ok("비밀번호가 변경되었습니다.");
+    }
+
+    //현재 사용자의 userid
+    @GetMapping("/users/current")
+    public ResponseEntity<UserAccount> getCurrentUser(Principal principal) {
+        String userId = principal.getName();
+        UserAccount user = userAccountService.getUserByUserId(userId);
+        return ResponseEntity.ok(user);
     }
 
     // 차단 목록 조회

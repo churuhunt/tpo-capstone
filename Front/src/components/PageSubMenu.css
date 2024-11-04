@@ -1,0 +1,48 @@
+.page-sub-menu {
+    background-color: #f9f9f9;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    position: relative;
+    padding: 20px 0;
+    top:-80px;
+}
+
+.page-sub-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    position: relative;
+}
+
+.page-sub-menu li {
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    font-weight: bold;
+    padding: 5px 10px;
+    position: relative;
+}
+
+.page-sub-menu li.active {
+    color: #000;
+    background-color: transparent;
+}
+
+.page-sub-menu li:hover {
+    color: gray;
+}
+
+.page-sub-menu li:visited {
+    color: red;
+}
+
+.underline {
+    position: absolute;
+    bottom: 0;
+    height: 2px;
+    background-color: black;
+    transition: left 0.3s ease, width 0.3s ease;
+}

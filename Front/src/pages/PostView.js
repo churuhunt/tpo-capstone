@@ -22,14 +22,31 @@ const PostView = () => {
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);  // 신고 모달 상태
   const [editingCommentId, setEditingCommentId] = useState(null);  // 댓글 수정 상태
   const [commentEditText, setCommentEditText] = useState('');  // 댓글 수정 텍스트
-
+  const [isBookmarked, setIsBookmarked] = useState(false); // 북마크 여부 상태
+  const [userId, setuserId] = useState(null); // 현재 사용자 ID
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await api.get('/users/current');
+        setuserId(response.data.id); // Set the current user's ID
+      } catch (error) {
+        console.error('현재 사용자 정보를 불러오는 중 오류가 발생했습니다:', error);
+      }
+    };
+
+
     const fetchPost = async () => {
       try {
         const response = await api.get(`/posts/${postId}`); // axios 인스턴스 사용
         setPost(response.data);
-        setComments(response.data.comments || []);
+        // setComments(response.data.comments || []);
+        // 현재 게시물이 북마크 상태인지 확인합니다.
+        // 북마크 상태 확인 로직을 분리
+        const bookmarkStatus = await checkBookmarkStatus();
+        setIsBookmarked(bookmarkStatus);
         if (response.data.isBlind) {
           setIsBlind(true);
         }
@@ -38,8 +55,20 @@ const PostView = () => {
       }
     };
 
+    const checkBookmarkStatus = async () => {
+      try {
+        const bookmarkResponse = await api.get(`/bookmarks`);
+        const bookmarkedPosts = bookmarkResponse.data;
+        return bookmarkedPosts.some(bookmarkedPost => bookmarkedPost.id === postId);
+      } catch (error) {
+        console.error("북마크 상태를 확인하는 중 오류가 발생했습니다:", error);
+        return false; // 오류 발생 시 기본값 반환
+      }
+    };
+
+    fetchCurrentUser(); // Fetch current user
     fetchPost();
-  }, [postId]);
+  }, [postId, userId]);
 
   const handleLike = async () => {
     await api.post(`/posts/${postId}/like`); // axios 인스턴스 사용
@@ -89,7 +118,8 @@ const PostView = () => {
     }
   };
 
-  const handleOpenReportModal = () => {
+  const handleOpenReportModal = (commentId = null) => {
+    setEditingCommentId(commentId); // 수정할 댓글 ID 설정
     setIsReportModalOpen(true);  // 신고 모달 열기
   };
 
@@ -183,10 +213,19 @@ const PostView = () => {
     }
   };
 
+  //북마크
+  const toggleBookmark = async () => {
+    try {
+      await api.post(`/bookmarks/toggle/${postId}`);
+      setIsBookmarked((prev) => !prev);
+    } catch (error) {
+      console.error("북마크 토글 중 오류가 발생했습니다:", error);
+    }
+  };
+
   if (!post) {
     return <div>게시물을 불러오는 중입니다...</div>;
   }
-
 
 
   if (isBlind) {
@@ -235,6 +274,9 @@ const PostView = () => {
           </button>
           <button onClick={handleOpenReportModal}>
             <FontAwesomeIcon icon={faExclamationTriangle}/> 신고
+          </button>
+          <button onClick={toggleBookmark}>
+            {isBookmarked ? '북마크 해제' : '북마크'}
           </button>
           <button onClick={() => navigate(`/posts/${postId}/edit`)}>글 수정</button>
           <button onClick={handleDeletePost}>글 삭제</button>
@@ -320,3 +362,4 @@ const PostView = () => {
 
 
 export default PostView;
+

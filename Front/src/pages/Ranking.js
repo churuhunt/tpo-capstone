@@ -4,11 +4,16 @@ import './Ranking.css';
 import profileImage from '../image/profile.png';
 import api from '../axios';  // axios.js에서 만든 api 인스턴스를 가져옵니다.
 
+import PageSubMenu from '../components/PageSubMenu'; /*sub*/
+import Banner from '../components/Banner';
+import banner1 from '../image/rankingbanner.jpg';
 
 const Rankings = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rankings, setRankings] = useState([]);
   const [rankingType, setRankingType] = useState('total'); // 기본 랭킹 타입은 '전체'
+  const [userSummary, setUserSummary] = useState(null); // 사용자 요약 정보 상태 추가
+  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
 
   const itemsPerPage = 15;
 
@@ -25,6 +30,16 @@ const Rankings = () => {
 
     fetchRankings();
   }, [rankingType]);
+
+  const handleNicknameClick = async (id) => {
+    try {
+      const response = await api.get(`/users/${id}/summary`);
+      setUserSummary(response.data);
+      setIsModalOpen(true); // 모달을 열기
+    } catch (error) {
+      console.error('사용자 요약 정보를 불러오는 중 오류가 발생했습니다:', error);
+    }
+  };
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -61,7 +76,10 @@ const Rankings = () => {
                     <img src={profileImage} alt="기본 프로필 사진" style={{ width: '50px', height: '50px' }} />
                   )}
                 </td>
-                <td>{rank.nickname}</td>
+                {/* 닉네임에 클릭 이벤트 추가 */}
+                <td onClick={() => handleNicknameClick(rank.id)} style={{ cursor: 'pointer', color: 'blue' }}>
+                  {rank.nickname}
+                </td>
                 <td>{rank.points}</td>
               </tr>
             );
@@ -86,6 +104,27 @@ const Rankings = () => {
           다음
         </button>
       </div>
+
+      {/* 모달 창 */}
+      {isModalOpen && (
+          <div className="modal">
+            <div className="modal-content">
+            <span className="close" onClick={() => setIsModalOpen(false)}>
+              &times;
+            </span>
+              <h3>사용자 요약 정보</h3>
+              {userSummary ? (
+                  <div>
+                    <p>닉네임: {userSummary.nickname}</p>
+                    <p>포인트: {userSummary.points}</p>
+                    <p>아이디: {userSummary.userId}</p>
+                  </div>
+              ) : (
+                  <p>요약 정보를 불러오는 중입니다...</p>
+              )}
+            </div>
+          </div>
+      )}
     </div>
   );
 };

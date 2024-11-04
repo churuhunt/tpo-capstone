@@ -12,6 +12,7 @@ import tpo.capstone.entity.Comment;
 import tpo.capstone.service.CommentService;
 import tpo.capstone.dto.CommentRequest;
 
+
 @Slf4j
 @RestController
 @RequestMapping("/api")
@@ -47,6 +48,9 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
+
+
 
     /**
      * 댓글 추천 API
@@ -113,4 +117,5 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 신고 실패: " + e.getMessage());
         }
     }
+
 }

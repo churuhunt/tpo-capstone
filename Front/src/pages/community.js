@@ -60,8 +60,6 @@ const Community = () => {
 
 
 
-
-
   const sortPosts = (sortByKey) => {
     let sortedPosts = [...posts];
     switch (sortByKey) {

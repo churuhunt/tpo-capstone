@@ -66,6 +66,7 @@ public class CommentService {
         return savedComment;
     }
 
+
     /**
      * 댓글 추천 기능
      *
@@ -130,6 +131,8 @@ public class CommentService {
 
         reportRepository.save(report);
     }
+
+
 
     /**
      * 게시물에 댓글 추가 시 알림 생성
