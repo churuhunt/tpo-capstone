@@ -3,6 +3,7 @@ package tpo.capstone.auth;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import tpo.capstone.dto.UserAccountDto;
 import tpo.capstone.entity.UserAccount;
 
 import java.util.Collection;
@@ -66,5 +67,10 @@ public class CustomUserDetails implements UserDetails {
 
     public Long getId() {
         return user.getId(); // 사용자 ID 반환
+    }
+
+    // UserAccountDto 반환 메서드
+    public UserAccountDto getUserAccountDto() {
+        return UserAccountDto.fromEntity(this.user);
     }
 }

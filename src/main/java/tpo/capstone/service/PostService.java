@@ -33,22 +33,17 @@ public class PostService {
         this.reportRepository = reportRepository;
     }
 
-    /**
-     * 게시물 저장 및 작성자 포인트 업데이트.
-     * @param post 저장할 게시물 객체
-     * @param userId 게시물 작성자의 사용자 ID
-     * @return 저장된 게시물 객체
-     */
     @Transactional
     public Post savePost(Post post, String userId) {
+        UserAccount author = userAccountRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userId")); // 유효한 사용자 확인
+        post.setAuthor(author); // Author 설정
         post.setDate(new Date()); // 현재 날짜로 설정
         Post savedPost = postRepository.save(post); // 게시물 저장
 
         // 사용자 포인트 업데이트
-        userAccountRepository.findByUserId(userId).ifPresent(user -> {
-            user.setPoints(user.getPoints() + 10); // 글 작성 시 10포인트 증가
-            userAccountRepository.save(user);
-        });
+        author.setPoints(author.getPoints() + 10); // 글 작성 시 10포인트 증가
+        userAccountRepository.save(author);
 
         return savedPost;
     }

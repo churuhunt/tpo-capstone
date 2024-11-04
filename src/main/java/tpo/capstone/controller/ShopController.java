@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import tpo.capstone.auth.CustomUserDetails;
 import tpo.capstone.entity.PurchaseHistory;
 import tpo.capstone.entity.ShopItem;
 import tpo.capstone.service.ShopService;
@@ -33,15 +35,16 @@ public class ShopController {
 
     /**
      * 아이템 구매 처리
-     * @param userId 사용자 ID
+     * @param userDetails 인증된 사용자 정보
      * @param itemId 아이템 ID
      * @return 구매 결과
      */
     @PostMapping("/purchase")
-    public ResponseEntity<String> purchaseItem(@RequestParam Long userId, @RequestParam Long itemId) {
+    public ResponseEntity<String> purchaseItem(@RequestParam Long itemId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
+            Long userId = userDetails.getId(); // 인증된 사용자 ID 가져오기
             PurchaseHistory purchase = shopService.purchaseItem(userId, itemId);
-            return ResponseEntity.ok("Purchase successful: " + purchase.getItem().getItemName());
+            return ResponseEntity.ok("Purchase successful: " + purchase.getItem().getName()); // getItemName() -> getName()
         } catch (IllegalArgumentException e) {
             log.error("Error during purchase: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -69,11 +72,12 @@ public class ShopController {
 
     /**
      * 특정 사용자의 구매 내역 조회
-     * @param userId 사용자 ID
+     * @param userDetails 인증된 사용자 정보
      * @return 구매 내역 리스트
      */
-    @GetMapping("/purchase-history/{userId}")
-    public ResponseEntity<List<PurchaseHistory>> getPurchaseHistory(@PathVariable Long userId) {
+    @GetMapping("/purchase-history")
+    public ResponseEntity<List<PurchaseHistory>> getPurchaseHistory(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getId(); // 인증된 사용자 ID 가져오기
         return ResponseEntity.ok(shopService.getPurchaseHistory(userId));
     }
 }

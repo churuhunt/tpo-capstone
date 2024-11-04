@@ -91,9 +91,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
      */
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7); // "Bearer " 접두사 제거
+        logger.debug("Received Authorization header: {}", bearerToken); // 토큰 로그 추가
+        if (bearerToken != null) {
+            // "Bearer " 접두사가 있다면 제거
+            if (bearerToken.startsWith("Bearer ")) {
+                return bearerToken.substring(7);
+            } else {
+                // 접두사가 없더라도 토큰으로 인식
+                return bearerToken;
+            }
         }
         return null;
     }
+
+
 }

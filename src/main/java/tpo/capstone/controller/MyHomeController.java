@@ -3,7 +3,9 @@ package tpo.capstone.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import tpo.capstone.dto.UserAccountDto;
 import tpo.capstone.entity.Post;
 import tpo.capstone.entity.UserActivity;
 import tpo.capstone.entity.UserProfile;
@@ -39,64 +41,73 @@ public class MyHomeController {
         this.postService = postService;
     }
 
-    @GetMapping("/{userId}/profile")
-    public ResponseEntity<UserProfile> getProfile(@PathVariable Long userId) {
+    @GetMapping("/profile")
+    public ResponseEntity<UserProfile> getProfile(@AuthenticationPrincipal UserAccountDto userAccountDto) {
+        Long userId = userAccountDto.getId();
         log.info("Fetching profile for userId: {}", userId);
         UserProfile userProfile = userProfileService.getProfile(userId);
         return ResponseEntity.ok(userProfile);
     }
 
-    @PutMapping("/{userId}/profile")
-    public ResponseEntity<UserProfile> updateProfile(@PathVariable Long userId, @RequestBody UserProfile profile) {
+    @PutMapping("/profile")
+    public ResponseEntity<UserProfile> updateProfile(@AuthenticationPrincipal UserAccountDto userAccountDto, @RequestBody UserProfile profile) {
+        Long userId = userAccountDto.getId();
         log.info("Updating profile for userId: {}", userId);
         UserProfile updatedProfile = userProfileService.updateProfile(userId, profile);
         return ResponseEntity.ok(updatedProfile);
     }
 
-    @GetMapping("/{userId}/activity")
-    public ResponseEntity<Map<String, Long>> getActivityStatistics(@PathVariable Long userId) {
+    @GetMapping("/activity")
+    public ResponseEntity<Map<String, Long>> getActivityStatistics(@AuthenticationPrincipal UserAccountDto userAccountDto) {
+        Long userId = userAccountDto.getId();
         log.info("Fetching activity statistics for userId: {}", userId);
         Map<String, Long> activityStatistics = userActivityService.getActivityStatistics(userId);
         return ResponseEntity.ok(activityStatistics);
     }
 
-    @GetMapping("/{userId}/bookmarks")
-    public ResponseEntity<List<Post>> getBookmarks(@PathVariable Long userId) {
+    @GetMapping("/bookmarks")
+    public ResponseEntity<List<Post>> getBookmarks(@AuthenticationPrincipal UserAccountDto userAccountDto) {
+        Long userId = userAccountDto.getId();
         log.info("Fetching bookmarks for userId: {}", userId);
         List<Post> bookmarks = bookmarkService.getBookmarkedPosts(userId);
         return ResponseEntity.ok(bookmarks);
     }
 
-    @PostMapping("/{userId}/add-visitor")
-    public ResponseEntity<Void> addVisitor(@PathVariable Long userId, @RequestParam String visitorUsername) {
+    @PostMapping("/add-visitor")
+    public ResponseEntity<Void> addVisitor(@AuthenticationPrincipal UserAccountDto userAccountDto, @RequestParam String visitorUsername) {
+        Long userId = userAccountDto.getId();
         log.info("Adding visitor: {} for userId: {}", visitorUsername, userId);
         visitorService.addVisitor(userId, visitorUsername);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{userId}/visitor-count")
-    public ResponseEntity<Long> getVisitorCount(@PathVariable Long userId) {
+    @GetMapping("/visitor-count")
+    public ResponseEntity<Long> getVisitorCount(@AuthenticationPrincipal UserAccountDto userAccountDto) {
+        Long userId = userAccountDto.getId();
         log.info("Fetching visitor count for userId: {}", userId);
         Long visitorCount = visitorService.getVisitorCount(userId);
         return ResponseEntity.ok(visitorCount);
     }
 
-    @GetMapping("/{userId}/timeline")
-    public ResponseEntity<List<UserActivity>> getTimeline(@PathVariable Long userId) {
+    @GetMapping("/timeline")
+    public ResponseEntity<List<UserActivity>> getTimeline(@AuthenticationPrincipal UserAccountDto userAccountDto) {
+        Long userId = userAccountDto.getId();
         log.info("Fetching timeline for userId: {}", userId);
         List<UserActivity> timeline = timelineService.getUserTimeline(userId);
         return ResponseEntity.ok(timeline);
     }
 
-    @GetMapping("/{userId}/posts")
-    public ResponseEntity<List<Post>> getUserPosts(@PathVariable Long userId) {
+    @GetMapping("/posts")
+    public ResponseEntity<List<Post>> getUserPosts(@AuthenticationPrincipal UserAccountDto userAccountDto) {
+        Long userId = userAccountDto.getId();
         log.info("Fetching posts for userId: {}", userId);
         List<Post> userPosts = postService.getUserPosts(userId);
         return ResponseEntity.ok(userPosts);
     }
 
-    @GetMapping("/{userId}/posts/{category}")
-    public ResponseEntity<List<Post>> getUserPostsByCategory(@PathVariable Long userId, @PathVariable String category) {
+    @GetMapping("/posts/{category}")
+    public ResponseEntity<List<Post>> getUserPostsByCategory(@AuthenticationPrincipal UserAccountDto userAccountDto, @PathVariable String category) {
+        Long userId = userAccountDto.getId();
         log.info("Fetching posts for userId: {} in category: {}", userId, category);
         List<Post> userPostsByCategory = postService.getUserPostsByCategory(userId, category);
         return ResponseEntity.ok(userPostsByCategory);

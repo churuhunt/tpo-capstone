@@ -65,6 +65,8 @@ public class UserAccount implements UserDetails {
                 '}';
     }
 
+
+
     @Builder
     public UserAccount(String userId, String password, String name, int age, String gender, String email, String nickname) {
         this.userId = userId;

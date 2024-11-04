@@ -12,10 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import tpo.capstone.dto.LoginRequest;
-import tpo.capstone.dto.JwtResponse;
-import tpo.capstone.dto.UserAccountRequest;
-import tpo.capstone.dto.UserSummaryDTO;
+import tpo.capstone.dto.*;
 import tpo.capstone.entity.Block;
 import tpo.capstone.entity.UserAccount;
 import tpo.capstone.auth.CustomUserDetails;
@@ -61,9 +58,10 @@ public class UserAccountController {
 
     // 특정 사용자 정보 조회
     @GetMapping("/users/{id}")
-    public ResponseEntity<UserAccount> getUserAccount(@PathVariable Long id) {
+    public ResponseEntity<UserAccountDto> getUserAccount(@PathVariable Long id) {
         UserAccount user = userAccountService.getUserAccountById(id);
-        return ResponseEntity.ok(user);
+        UserAccountDto userDto = UserAccountDto.fromEntity(user);
+        return ResponseEntity.ok(userDto);
     }
 
     // 로그인 처리 및 JWT 발급
@@ -87,8 +85,9 @@ public class UserAccountController {
         if (principal instanceof OAuth2AuthenticationToken) {
             OAuth2AuthenticationToken oauthToken = (OAuth2AuthenticationToken) principal;
             UserAccount user = userAccountService.processOAuthPostLogin(oauthToken.getPrincipal());
-            String jwt = jwtTokenProvider.createToken(new CustomUserDetails(user));
-            log.info("소셜 로그인 성공: {}", user.getEmail());
+            UserAccountDto userDto = UserAccountDto.fromEntity(user);
+            String jwt = jwtTokenProvider.createToken(userDto.getUserId());
+            log.info("소셜 로그인 성공: {}", userDto.getEmail());
             return ResponseEntity.ok(new JwtResponse(jwt));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new JwtResponse("소셜 로그인 실패"));
@@ -96,20 +95,26 @@ public class UserAccountController {
 
     // 전체 랭킹 조회
     @GetMapping("/rankings/total")
-    public ResponseEntity<List<UserAccount>> getTotalRankings() {
-        return ResponseEntity.ok(userAccountService.getTotalRankings());
+    public ResponseEntity<List<UserAccountDto>> getTotalRankings() {
+        List<UserAccount> rankings = userAccountService.getTotalRankings();
+        List<UserAccountDto> rankingDtos = rankings.stream().map(UserAccountDto::fromEntity).toList();
+        return ResponseEntity.ok(rankingDtos);
     }
 
     // 주간 랭킹 조회
     @GetMapping("/rankings/weekly")
-    public ResponseEntity<List<UserAccount>> getWeeklyRankings() {
-        return ResponseEntity.ok(userAccountService.getWeeklyRankings());
+    public ResponseEntity<List<UserAccountDto>> getWeeklyRankings() {
+        List<UserAccount> rankings = userAccountService.getWeeklyRankings();
+        List<UserAccountDto> rankingDtos = rankings.stream().map(UserAccountDto::fromEntity).toList();
+        return ResponseEntity.ok(rankingDtos);
     }
 
     // 월간 랭킹 조회
     @GetMapping("/rankings/monthly")
-    public ResponseEntity<List<UserAccount>> getMonthlyRankings() {
-        return ResponseEntity.ok(userAccountService.getMonthlyRankings());
+    public ResponseEntity<List<UserAccountDto>> getMonthlyRankings() {
+        List<UserAccount> rankings = userAccountService.getMonthlyRankings();
+        List<UserAccountDto> rankingDtos = rankings.stream().map(UserAccountDto::fromEntity).toList();
+        return ResponseEntity.ok(rankingDtos);
     }
 
     // 아이디 중복 체크
@@ -130,12 +135,11 @@ public class UserAccountController {
 
     // 특정 userId로 사용자 정보 조회 메서드
     @GetMapping("/users/by-userId/{userId}")
-    public ResponseEntity<UserAccount> getUserByUserId(@PathVariable String userId) {
+    public ResponseEntity<UserAccountDto> getUserByUserId(@PathVariable String userId) {
         UserAccount user = userAccountService.getUserByUserId(userId);
-        return ResponseEntity.ok(user);
+        UserAccountDto userDto = UserAccountDto.fromEntity(user);
+        return ResponseEntity.ok(userDto);
     }
-
-
 
     // 닉네임 클릭 시 사용자 요약 정보 반환
     @GetMapping("/users/{id}/summary")
@@ -229,12 +233,13 @@ public class UserAccountController {
         return ResponseEntity.ok("비밀번호가 변경되었습니다.");
     }
 
-    //현재 사용자의 userid
+    // 현재 사용자의 userId 조회
     @GetMapping("/users/current")
-    public ResponseEntity<UserAccount> getCurrentUser(Principal principal) {
+    public ResponseEntity<UserAccountDto> getCurrentUser(Principal principal) {
         String userId = principal.getName();
         UserAccount user = userAccountService.getUserByUserId(userId);
-        return ResponseEntity.ok(user);
+        UserAccountDto userDto = UserAccountDto.fromEntity(user);
+        return ResponseEntity.ok(userDto);
     }
 
     // 차단 목록 조회
@@ -258,3 +263,4 @@ public class UserAccountController {
         return ResponseEntity.ok("차단이 해제되었습니다.");
     }
 }
+

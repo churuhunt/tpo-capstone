@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tpo.capstone.dto.ItemDto;
 import tpo.capstone.entity.Item;
 import tpo.capstone.service.ItemService;
 
@@ -28,9 +29,9 @@ public class ItemController {
      * @return 모든 아이템의 리스트
      */
     @GetMapping
-    public ResponseEntity<List<Item>> getAllItems() {
+    public ResponseEntity<List<ItemDto>> getAllItems() {
         log.info("Fetching all items from the inventory.");
-        List<Item> items = itemService.getAllItems();
+        List<ItemDto> items = itemService.getAllItems();
         return ResponseEntity.ok(items);
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tpo.capstone.auth.CustomUserDetails;
 import tpo.capstone.dto.ReportRequest;
+import tpo.capstone.dto.UserAccountDto;
 import tpo.capstone.entity.Comment;
 import tpo.capstone.service.CommentService;
 import tpo.capstone.dto.CommentRequest;
@@ -29,16 +30,16 @@ public class CommentController {
      * 댓글 작성 API
      * @param postId 게시글 ID
      * @param commentRequest 댓글 요청 DTO
-     * @param userDetails 인증된 사용자 정보
+     * @param userAccountDto 인증된 사용자 정보
      * @return 생성된 댓글 객체
      */
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<Comment> createComment(
             @PathVariable Long postId,
             @RequestBody CommentRequest commentRequest,
-            @AuthenticationPrincipal CustomUserDetails userDetails
+            @AuthenticationPrincipal UserAccountDto userAccountDto
     ) {
-        String userId = userDetails.getUsername(); // JWT에서 추출한 사용자 ID
+        String userId = userAccountDto.getUserId(); // JWT에서 추출한 사용자 ID
         try {
             Comment comment = commentService.saveComment(postId, commentRequest.getContent(), userId);
             log.info("댓글 작성 성공: postId={}, userId={}", postId, userId);
@@ -49,20 +50,17 @@ public class CommentController {
         }
     }
 
-
-
-
     /**
      * 댓글 추천 API
      * @param commentId 댓글 ID
-     * @param userDetails 인증된 사용자 정보
+     * @param userAccountDto 인증된 사용자 정보
      */
     @PostMapping("/comments/{commentId}/like")
     public ResponseEntity<String> likeComment(
             @PathVariable Long commentId,
-            @AuthenticationPrincipal CustomUserDetails userDetails
+            @AuthenticationPrincipal UserAccountDto userAccountDto
     ) {
-        String userId = userDetails.getUsername();
+        String userId = userAccountDto.getUserId();
         try {
             commentService.likeComment(commentId, userId);
             log.info("댓글 추천 성공: commentId={}, userId={}", commentId, userId);
@@ -76,14 +74,14 @@ public class CommentController {
     /**
      * 댓글 비추천 API
      * @param commentId 댓글 ID
-     * @param userDetails 인증된 사용자 정보
+     * @param userAccountDto 인증된 사용자 정보
      */
     @PostMapping("/comments/{commentId}/dislike")
     public ResponseEntity<String> dislikeComment(
             @PathVariable Long commentId,
-            @AuthenticationPrincipal CustomUserDetails userDetails
+            @AuthenticationPrincipal UserAccountDto userAccountDto
     ) {
-        String userId = userDetails.getUsername();
+        String userId = userAccountDto.getUserId();
         try {
             commentService.dislikeComment(commentId, userId);
             log.info("댓글 비추천 성공: commentId={}, userId={}", commentId, userId);
@@ -97,16 +95,16 @@ public class CommentController {
     /**
      * 댓글 신고 처리 API
      * @param commentId 댓글 ID
-     * @param userDetails 인증된 사용자 정보
+     * @param userAccountDto 인증된 사용자 정보
      * @return 신고 처리 결과 메시지
      */
     @PostMapping("/comments/{commentId}/report")
     public ResponseEntity<String> reportComment(
             @PathVariable Long commentId,
             @RequestBody ReportRequest reportRequest,
-            @AuthenticationPrincipal CustomUserDetails userDetails
+            @AuthenticationPrincipal UserAccountDto userAccountDto
     ) {
-        String userId = userDetails.getUsername();
+        String userId = userAccountDto.getUserId();
         try {
             // 신고 사유를 추가로 전달
             commentService.reportComment(commentId, userId, reportRequest.getReason());

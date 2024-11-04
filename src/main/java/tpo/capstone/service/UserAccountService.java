@@ -2,6 +2,7 @@ package tpo.capstone.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
@@ -217,5 +218,10 @@ public class UserAccountService {
         UserAccount user = userAccountRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User not found with userId: " + userId));
         return user.getId();
+    }
+
+    public UserAccount findByUserId(String userId) {
+        return userAccountRepository.findByUserId(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with userId: " + userId));
     }
 }

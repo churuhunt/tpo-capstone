@@ -7,14 +7,14 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class ShopItem {
+public class ShopItem extends Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100) // 필수값 및 문자열 길이 제한 설정
-    private String itemName;
+    @Column(nullable = false, length = 100)
+    private String itemName; // Item의 name 필드와 혼동을 피하기 위해 다른 이름 사용
 
     @Column(nullable = false) // 필수값 설정
     private int price;

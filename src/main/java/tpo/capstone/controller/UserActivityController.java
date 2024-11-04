@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tpo.capstone.dto.UserActivityDto;
 import tpo.capstone.entity.Post;
 import tpo.capstone.entity.UserAccount;
 import tpo.capstone.repository.PostRepository;
@@ -32,15 +33,15 @@ public class UserActivityController {
     /**
      * 사용자 활동 기록 API
      *
-     * @param payload 사용자 ID, 게시물 ID, 활동 타입을 포함한 요청 본문
+     * @param userActivityDto 사용자 활동 요청 DTO
      * @return 활동 기록 성공 여부
      */
     @PostMapping("/record")
-    public ResponseEntity<String> recordActivity(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<String> recordActivity(@RequestBody UserActivityDto userActivityDto) {
         try {
-            Long userId = Long.valueOf(payload.get("userId").toString());
-            Long postId = Long.valueOf(payload.get("postId").toString());
-            String activityType = payload.get("activityType").toString();
+            Long userId = userActivityDto.getUserId();
+            Long postId = userActivityDto.getPostId();
+            String activityType = userActivityDto.getActivityType();
 
             // UserAccount와 Post는 엔티티를 통해 가져옴
             UserAccount user = userAccountRepository.findById(userId)

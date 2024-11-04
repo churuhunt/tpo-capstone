@@ -41,8 +41,11 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             // 소셜 로그인 사용자 처리 (DB에 저장 또는 업데이트)
             UserAccount userAccount = userAccountService.processOAuthPostLogin(oAuth2User);
 
+            // CustomUserDetails 객체 생성
+            CustomUserDetails userDetails = new CustomUserDetails(userAccount);
+
             // JWT 토큰 생성
-            String jwt = jwtTokenProvider.createToken(new CustomUserDetails(userAccount));
+            String jwt = jwtTokenProvider.createToken(userDetails);
 
             // 응답 헤더에 JWT 토큰 추가
             response.addHeader("Authorization", "Bearer " + jwt);

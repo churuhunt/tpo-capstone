@@ -24,6 +24,8 @@ public class Item {
 
     private String imageUrl; // 아이템 이미지 URL (선택 사항)
 
+    private int stock;
+
     // 기본 생성자
     public Item() {
     }
@@ -34,5 +36,6 @@ public class Item {
         this.price = price;
         this.description = description;
         this.imageUrl = imageUrl;
+        this.stock = stock;
     }
 }
