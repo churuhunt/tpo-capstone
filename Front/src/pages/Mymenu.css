@@ -1,18 +1,14 @@
 .my-menu-container {
     position: relative;
-    height: 120vh;
+    height: 150vh;
     top:-80px;
-}
-
-.my-menu-container a {
-    color: #fff;
 }
 
 .background-image {
     background-image: url('../image/background.jpg');
     background-size: cover;
-    background-repeat: no-repeat; 
-    background-position: center; 
+    background-repeat: no-repeat;
+    background-position: center;
     height: 40%;
 }
 
@@ -23,27 +19,22 @@
     transform: translateY(-50%);
     display: flex;
     align-items: center;
+    z-index: 10;
 }
 
 .profile-picture {
-    width: 200px;
-    height: 200px;
+    width: 300px;
+    height: 300px;
     border-radius: 50%;
     box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.7);
 }
 
 .my-menu-container .nickname {
-    font-size: 24px;
-    font-weight: 200px;
+    font-size: 35px;
+    font-weight: normal;
     color: black;
-    transform: translateY(50%);
-}
-
-.my-menu-container .my-menu-follow {
-    font-size: 24px;
-    font-weight: 200px;
-    color: red;
-    transform: translateY(50%);
+    position: relative;
+    top: 30px;
 }
 
 .my-menu-container .aa {
@@ -59,26 +50,65 @@
 
 .my-menu-container .button-container {
     position: absolute;
-    top: calc(52% - 50px); 
-    right: 10%; 
-    
-  }
-  
-  .my-menu-container button1,
-  .my-menu-container button2 {
-    width: 100px;
-    height: 50px;
-    margin-right: 10px;
-    position: absolute; 
-    top: calc(52% - 50px); 
-    right: 10%; 
-  }
+    top: calc(52% - 50px);
+    right: 10%;
 
-  .my-menu-container .my-menu-follow {
-    color:red;
-  }
+}
 
-  .my-menu-container .custom-button{
+.my-menu-container .custom-button{
     position:relative;
     top:50px;
-  }
+}
+
+.my-menu-container .my-menu-submenu{
+    position:relative;
+    top:200px;
+}
+
+.my-menu-container .my-menu-submenu1{
+    background-color: #f9f9f9;
+    padding-bottom: 100px;
+}
+
+.my-menu-content {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding-top: 60px;
+    background-color: #F0F2F5;
+    gap: 20px;
+}
+
+.my-menu-content1 {
+    flex: 1;
+    background-color: #f9f9f9;
+    height: 500px;
+    border-radius: 10px;
+    margin-left: 15%;
+    border: 1px solid #ccc;
+}
+
+.my-menu-content2 {
+    flex: 2;
+    margin-right: 15%;
+    overflow-y: scroll; /* 세로 스크롤만 유지 */
+    scrollbar-width: none; /* Firefox에서 스크롤바 숨기기 */
+    max-height: 48%; /* 고정 높이 설정 */
+}
+
+.my-menu-content2::-webkit-scrollbar {
+    display: none;
+}
+
+.follow-info {
+    display: flex;
+    gap: 15px;
+    font-size: 16px;
+    color: #555;
+    margin-top: 10px;
+    justify-content: center; /* 가운데 정렬 */
+    position:relative;
+    top:70px;
+    left: -200px;
+    cursor: pointer;
+}

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import tpo.capstone.auth.CustomUserDetails;
 import tpo.capstone.dto.UserAccountDto;
 import tpo.capstone.entity.Post;
 import tpo.capstone.entity.UserActivity;
@@ -58,7 +59,8 @@ public class MyHomeController {
     }
 
     @GetMapping("/activity")
-    public ResponseEntity<Map<String, Long>> getActivityStatistics(@AuthenticationPrincipal UserAccountDto userAccountDto) {
+    public ResponseEntity<Map<String, Long>> getActivityStatistics(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         Long userId = userAccountDto.getId();
         log.info("Fetching activity statistics for userId: {}", userId);
         Map<String, Long> activityStatistics = userActivityService.getActivityStatistics(userId);
@@ -98,7 +100,8 @@ public class MyHomeController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<Post>> getUserPosts(@AuthenticationPrincipal UserAccountDto userAccountDto) {
+    public ResponseEntity<List<Post>> getUserPosts(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         Long userId = userAccountDto.getId();
         log.info("Fetching posts for userId: {}", userId);
         List<Post> userPosts = postService.getUserPosts(userId);
