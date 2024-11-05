@@ -41,7 +41,6 @@ public class S3Service {
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(bucketName)
                     .key(fileName)
-                    .acl("public-read") // 파일을 공개적으로 접근 가능하게 설정
                     .build();
 
             s3Client.putObject(putObjectRequest, RequestBody.fromBytes(imageFile.getBytes()));

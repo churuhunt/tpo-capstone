@@ -1,5 +1,6 @@
 package tpo.capstone.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,6 +9,7 @@ import tpo.capstone.entity.Post;
 import tpo.capstone.entity.UserAccount;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Objects;
@@ -22,31 +24,30 @@ public class PostDto {
     private String content;
     private String author;
     private String category;
-    private LocalDateTime date;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
+    private OffsetDateTime date;
     private int likes;
     private int dislikes;
     private int views;
-    private String imageUrl; // 새로 추가된 이미지 URL 필드
-
+    private String imageUrl;
 
     // 엔티티에서 DTO로 변환하는 메서드
     public static PostDto fromEntity(Post post) {
-        String authorId = post.getAuthor() != null ? post.getAuthor().getUserId() : "Unknown";
+        String authorNickname = post.getAuthor() != null ? post.getAuthor().getNickname() : "Unknown";
         return new PostDto(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
-                authorId,
+                authorNickname, // nickname으로 설정
                 post.getCategory(),
-                post.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),
+                post.getDate(),
                 post.getLikes(),
                 post.getDislikes(),
                 post.getViews(),
-                post.getImageUrl() // 이미지 URL 추가
+                post.getImageUrl()
         );
     }
 
-    // DTO에서 엔티티로 변환하는 메서드
     public Post toEntity(UserAccount authorAccount) {
         Post post = new Post();
         post.setId(this.id);
@@ -54,11 +55,11 @@ public class PostDto {
         post.setContent(this.content);
         post.setAuthor(authorAccount);
         post.setCategory(this.category);
-        post.setDate(Date.from(this.date.atZone(ZoneId.systemDefault()).toInstant()));
+        post.setDate(this.date); // `OffsetDateTime`을 그대로 사용
         post.setLikes(this.likes);
         post.setDislikes(this.dislikes);
         post.setViews(this.views);
-        post.setImageUrl(this.imageUrl); // 이미지 URL 설정
+        post.setImageUrl(this.imageUrl);
         return post;
     }
 

@@ -44,12 +44,14 @@ public class PostController {
     private final PostService postService;
     private final UserAccountService userAccountService;
     private final S3Service s3Service;
+    private final ObjectMapper objectMapper;
 
     @Autowired
-    public PostController(PostService postService, UserAccountService userAccountService, S3Service s3Service) {
+    public PostController(PostService postService, UserAccountService userAccountService, S3Service s3Service, ObjectMapper objectMapper) {
         this.postService = postService;
         this.userAccountService = userAccountService;
         this.s3Service = s3Service;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping("/posts")
@@ -60,6 +62,9 @@ public class PostController {
             @RequestParam(defaultValue = "15") int size,
             @RequestParam(defaultValue = "date") String sortBy
     ) {
+        log.info("Received getFilteredPosts request with category={}, searchTerm={}, page={}, size={}, sortBy={}",
+                category, searchTerm, page, size, sortBy);
+
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
         Page<Post> filteredPosts = postService.getFilteredPosts(category, searchTerm, pageable);
         List<PostDto> postDtoList = filteredPosts.stream()
@@ -81,8 +86,14 @@ public class PostController {
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             @AuthenticationPrincipal(expression = "userAccountDto") UserAccountDto userDto) throws IOException {
 
-        PostDto postDto = new ObjectMapper().readValue(postDtoString, PostDto.class);
+        log.info("Received createPost request with postDtoString={}, imageFile provided={}",
+                postDtoString, imageFile != null);
+
+        // 주입받은 ObjectMapper 사용
+        PostDto postDto = objectMapper.readValue(postDtoString, PostDto.class);
         String userId = userDto.getUserId();
+        log.info("User ID extracted from token: {}", userId);
+
         UserAccount authorAccount = userAccountService.findByUserId(userId);
 
         // 이미지 파일이 있을 경우 S3에 업로드

@@ -15,6 +15,10 @@ import tpo.capstone.repository.PostRepository;
 import tpo.capstone.repository.ReportRepository;
 import tpo.capstone.repository.UserAccountRepository;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.*;
 
 
@@ -35,15 +39,19 @@ public class PostService {
 
     @Transactional
     public Post savePost(Post post, String userId) {
-        UserAccount author = userAccountRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid userId")); // 유효한 사용자 확인
-        post.setAuthor(author); // Author 설정
-        post.setDate(new Date()); // 현재 날짜로 설정
-        Post savedPost = postRepository.save(post); // 게시물 저장
+        log.info("Saving post with title={}, content={}, userId={}", post.getTitle(), post.getContent(), userId);
 
-        // 사용자 포인트 업데이트
-        author.setPoints(author.getPoints() + 10); // 글 작성 시 10포인트 증가
+        UserAccount author = userAccountRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
+
+        post.setAuthor(author); // Author 설정
+        post.setDate(OffsetDateTime.now(ZoneOffset.UTC)); // 현재 날짜를 OffsetDateTime으로 설정
+        Post savedPost = postRepository.save(post);
+
+        author.setPoints(author.getPoints() + 10);
         userAccountRepository.save(author);
+
+        log.info("Post saved with ID={} by userId={}", savedPost.getId(), userId);
 
         return savedPost;
     }
@@ -134,6 +142,8 @@ public class PostService {
      * @return 필터링된 게시물 페이지
      */
     public Page<Post> getFilteredPosts(String category, String searchTerm, Pageable pageable) {
+        log.info("Filtering posts with category={}, searchTerm={}, pageable={}", category, searchTerm, pageable);
+
         if (category != null && searchTerm != null) {
             return postRepository.findByCategoryAndTitleContaining(category, searchTerm, pageable);
         } else if (category != null) {
