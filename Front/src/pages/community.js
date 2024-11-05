@@ -46,7 +46,8 @@ const Community = () => {
             size: postsPerPage
           }
         });
-        setPosts(response.data.content);
+        console.log(response.data); // API 응답 로그
+        setPosts(response.data.posts || []); // posts가 undefined일 경우 빈 배열로 설정
         setTotalPages(response.data.totalPages);
       } catch (error) {
         console.error('게시물 데이터를 가져오는 데 실패했습니다:', error);
@@ -56,8 +57,21 @@ const Community = () => {
     };
 
     fetchPosts();
-  }, [filteredCategory, searchTerm, currentPage]);
+  }, [filteredCategory, currentPage]);
 
+  if (loading) {
+    return <div>로딩 중...</div>;
+  }
+
+  if (!posts || posts.length === 0) {
+    return <div>게시물이 없습니다.</div>;
+  }
+
+  return (
+      <div>
+        {/* 포스트 목록을 렌더링하는 코드 */}
+      </div>
+  );
 
 
   const sortPosts = (sortByKey) => {

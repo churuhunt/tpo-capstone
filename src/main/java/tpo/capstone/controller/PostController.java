@@ -1,5 +1,6 @@
 package tpo.capstone.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -11,9 +12,11 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tpo.capstone.dto.PostDto;
 import tpo.capstone.dto.ReportRequest;
 import tpo.capstone.dto.UserAccountDto;
@@ -21,11 +24,15 @@ import tpo.capstone.entity.Post;
 import tpo.capstone.entity.UserAccount;
 import tpo.capstone.service.PostService;
 import tpo.capstone.auth.CustomUserDetails;
+import tpo.capstone.service.S3Service;
 import tpo.capstone.service.UserAccountService;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -36,39 +43,58 @@ public class PostController {
 
     private final PostService postService;
     private final UserAccountService userAccountService;
-    private final PagedResourcesAssembler<PostDto> pagedResourcesAssembler;
+    private final S3Service s3Service;
 
     @Autowired
-    public PostController(PostService postService, UserAccountService userAccountService, PagedResourcesAssembler<PostDto> pagedResourcesAssembler) {
+    public PostController(PostService postService, UserAccountService userAccountService, S3Service s3Service) {
         this.postService = postService;
         this.userAccountService = userAccountService;
-        this.pagedResourcesAssembler = pagedResourcesAssembler;
+        this.s3Service = s3Service;
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<Page<PostDto>> getFilteredPosts(
+    public ResponseEntity<Map<String, Object>> getFilteredPosts(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String searchTerm,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size,
             @RequestParam(defaultValue = "date") String sortBy
     ) {
-        Pageable pageable = "date".equals(sortBy) ?
-                PageRequest.of(page, size, Sort.by("date").descending()) :
-                PageRequest.of(page, size, Sort.by(sortBy).descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        Page<Post> filteredPosts = postService.getFilteredPosts(category, searchTerm, pageable);
+        List<PostDto> postDtoList = filteredPosts.stream()
+                .map(PostDto::fromEntity)
+                .collect(Collectors.toList());
 
-        Page<PostDto> filteredPosts = postService.getFilteredPosts(category, searchTerm, pageable)
-                .map(PostDto::fromEntity);
-        return ResponseEntity.ok(filteredPosts);
+        Map<String, Object> response = new HashMap<>();
+        response.put("posts", postDtoList);
+        response.put("currentPage", filteredPosts.getNumber());
+        response.put("totalItems", filteredPosts.getTotalElements());
+        response.put("totalPages", filteredPosts.getTotalPages());
+
+        return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/posts")
-    public ResponseEntity<PostDto> createPost(@RequestBody PostDto postDto, @AuthenticationPrincipal(expression = "userAccountDto") UserAccountDto userDto) {
+    @PostMapping(value = "/posts", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<PostDto> createPost(
+            @RequestParam("postDto") String postDtoString,
+            @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
+            @AuthenticationPrincipal(expression = "userAccountDto") UserAccountDto userDto) throws IOException {
+
+        PostDto postDto = new ObjectMapper().readValue(postDtoString, PostDto.class);
         String userId = userDto.getUserId();
         UserAccount authorAccount = userAccountService.findByUserId(userId);
+
+        // 이미지 파일이 있을 경우 S3에 업로드
+        if (imageFile != null && !imageFile.isEmpty()) {
+            String imageUrl = s3Service.uploadImage(imageFile);
+            postDto.setImageUrl(imageUrl); // S3 URL을 DTO에 설정
+        }
+
         Post savedPost = postService.savePost(postDto.toEntity(authorAccount), userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(PostDto.fromEntity(savedPost));
     }
+
 
     @PostMapping("/posts/{postId}/like")
     public ResponseEntity<String> likePost(@PathVariable Long postId, @AuthenticationPrincipal(expression = "userAccountDto") UserAccountDto userDto) {

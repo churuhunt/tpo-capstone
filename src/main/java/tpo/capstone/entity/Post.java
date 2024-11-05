@@ -25,6 +25,7 @@ public class Post {
     private String title;      // 게시글 제목
     private String content;    // 게시글 내용
     private String category;   // 게시글 카테고리
+    private String imageUrl; // 이미지 파일 URL
 
     @ManyToOne(fetch = FetchType.LAZY) // 게시글 작성자 (지연 로딩을 통해 불필요한 데이터를 지연 처리)
     @JoinColumn(name = "author_id", nullable = false)
