@@ -54,7 +54,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/signup", "/api/login", "/api/check-userId", "/api/check-nickname", "/oauth2/**",
                                 "/api/user/points", "/api/notification").permitAll() // 인증이 필요 없는 엔드포인트 설정
-                        .anyRequest().authenticated() // 나머지 요청에 대해서는 인증 필요
+                        .anyRequest().permitAll() // 나머지 요청에 대해서는 인증 필요
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {

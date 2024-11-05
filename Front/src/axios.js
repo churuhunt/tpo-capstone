@@ -1,18 +1,18 @@
 // src/axios.js
 import axios from 'axios';
 
+// axios 인스턴스 생성
 const api = axios.create({
-    baseURL: 'http://localhost:8080/api',
-    timeout: 5000,
+    baseURL: 'http://localhost:8080/api',  // API의 기본 URL
+    timeout: 5000, // 요청 타임아웃 시간 설정 (필요에 따라 조정 가능)
 });
 
 // 요청 인터셉터 설정
 api.interceptors.request.use(
     (config) => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('token'); // localStorage에서 JWT 토큰 가져오기
         if (token) {
-            console.log("토큰을 헤더에 추가합니다:", token); // 콘솔에 토큰 출력하여 확인
-            config.headers.Authorization = `Bearer ${token}`;
+            config.headers.Authorization = `Bearer ${token}`; // 토큰이 있을 때만 Authorization 헤더 추가
         }
         return config;
     },

@@ -30,8 +30,7 @@ const Notification = () => {
             size: postsPerPage
           }
         });
-        setPosts(response.data.content);
-
+        setPosts(response.data.posts || []); // posts가 undefined일 경우 빈 배열로 설정
 
       } catch (error) {
         console.error('게시물 데이터를 가져오는 데 실패했습니다:', error);

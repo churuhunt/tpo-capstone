@@ -38,7 +38,7 @@ const Popularity = () => {
             size: postsPerPage
           }
         });
-        setPosts(response.data.content);
+        setPosts(response.data.posts || []); // posts가 undefined일 경우 빈 배열로 설정
         setTotalPages(response.data.totalPages);
 
         // 인기 게시물 필터링
