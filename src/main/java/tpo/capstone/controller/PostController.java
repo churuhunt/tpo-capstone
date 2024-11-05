@@ -46,20 +46,26 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<Page<PostDto>> getFilteredPosts(
+    public ResponseEntity<Map<String, Object>> getFilteredPosts(
             @RequestParam(required = false) String category,
             @RequestParam(required = false) String searchTerm,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size,
             @RequestParam(defaultValue = "date") String sortBy
     ) {
-        Pageable pageable = "date".equals(sortBy) ?
-                PageRequest.of(page, size, Sort.by("date").descending()) :
-                PageRequest.of(page, size, Sort.by(sortBy).descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        Page<Post> filteredPosts = postService.getFilteredPosts(category, searchTerm, pageable);
+        List<PostDto> postDtoList = filteredPosts.stream()
+                .map(PostDto::fromEntity) // Post 엔티티를 PostDto로 변환
+                .collect(Collectors.toList());
 
-        Page<PostDto> filteredPosts = postService.getFilteredPosts(category, searchTerm, pageable)
-                .map(PostDto::fromEntity);
-        return ResponseEntity.ok(filteredPosts);
+        Map<String, Object> response = new HashMap<>();
+        response.put("posts", postDtoList); // 여기서 author와 category 정보가 포함됨
+        response.put("currentPage", filteredPosts.getNumber());
+        response.put("totalItems", filteredPosts.getTotalElements());
+        response.put("totalPages", filteredPosts.getTotalPages());
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/posts")

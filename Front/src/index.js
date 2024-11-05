@@ -19,8 +19,13 @@ import Recommendedboard from './pages/Recommendedboard';
 import PostView from './pages/PostView';
 import ProfileManagement from './pages/ProfileManagement';
 import ErrorPage from './pages/ErrorPage';
-
+import FreePage from './pages/FreePage';
+import DailyLookPage from "./pages/DailyLookPage";
+import QuestionPage from "./pages/QuestionPage";
+import ArticlesPage from "./pages/ArticlesPage";
+import OthersPage from "./pages/OthersPage";
 import ScrollToTop from './components/ScrollToTop';
+import SalesPage from "./pages/SalesPage";
 
 const App = () => {
   return (
@@ -46,6 +51,12 @@ const App = () => {
             <Route path="/postview/:postId" element={<PostView />} />
             <Route path="/profile" element={<ProfileManagement />} />
             <Route path="/error" element={<ErrorPage />} />
+            <Route path="/Free" element={<FreePage />} />
+            <Route path="/DailyLook" element={<DailyLookPage />} />
+            <Route path="/Questions" element={<QuestionPage />} />
+            <Route path="/Articles" element={<ArticlesPage />} />
+            <Route path="/Sales" element={<SalesPage />} />
+            <Route path="/Others" element={<OthersPage />} />
           </Routes>
         </div>
       </Router>

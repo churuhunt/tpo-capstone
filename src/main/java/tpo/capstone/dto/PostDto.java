@@ -21,6 +21,7 @@ public class PostDto {
     private String title;
     private String content;
     private String author; // UserAccount의 userId 또는 username을 저장
+    private String category; // 게시물 카테고리 추가
     private LocalDateTime date; // LocalDateTime으로 변경
     private int likes;
     private int dislikes;
@@ -34,6 +35,7 @@ public class PostDto {
                 post.getTitle(),
                 post.getContent(),
                 authorId,
+                post.getCategory(),
                 post.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(), // LocalDateTime으로 변환
                 post.getLikes(),
                 post.getDislikes(),
@@ -48,6 +50,7 @@ public class PostDto {
         post.setTitle(this.title);
         post.setContent(this.content);
         post.setAuthor(authorAccount);
+        post.setCategory(this.category);
         post.setDate(Date.from(this.date.atZone(ZoneId.systemDefault()).toInstant())); // LocalDateTime을 Date로 변환
         post.setLikes(this.likes);
         post.setDislikes(this.dislikes);

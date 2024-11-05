@@ -1,17 +1,19 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './PageSubMenu.css';
 
-const PageSubMenu = ({ items, activeIndex, setActiveIndex }) => {
+const PageSubMenu = ({ items, activeIndex, setActiveIndex, onItemClick }) => {
     const [hoverIndex, setHoverIndex] = useState(null);
     const underlineRef = useRef(null);
 
     useEffect(() => {
-        const menuItem = document.querySelectorAll('.page-sub-menu ul li')[hoverIndex ?? activeIndex];
-        if (menuItem && underlineRef.current) {
-            underlineRef.current.style.width = `${menuItem.offsetWidth}px`;
-            underlineRef.current.style.left = `${menuItem.offsetLeft}px`;
+        if (items.length > 0) {
+            const menuItem = document.querySelectorAll('.page-sub-menu ul li')[hoverIndex ?? activeIndex];
+            if (menuItem && underlineRef.current) {
+                underlineRef.current.style.width = `${menuItem.offsetWidth}px`;
+                underlineRef.current.style.left = `${menuItem.offsetLeft}px`;
+            }
         }
-    }, [hoverIndex, activeIndex]);
+    }, [hoverIndex, activeIndex, items]);
 
     return (
         <nav className="page-sub-menu">
@@ -19,7 +21,10 @@ const PageSubMenu = ({ items, activeIndex, setActiveIndex }) => {
                 {items.map((item, index) => (
                     <li
                         key={index}
-                        onClick={() => setActiveIndex(index)}
+                        onClick={() => {
+                            setActiveIndex(index);
+                            onItemClick && onItemClick(item, index); // 클릭 시 부모 콜백 호출
+                        }}
                         onMouseEnter={() => setHoverIndex(index)}
                         onMouseLeave={() => setHoverIndex(null)}
                         className={activeIndex === index ? 'active' : ''}
@@ -28,7 +33,7 @@ const PageSubMenu = ({ items, activeIndex, setActiveIndex }) => {
                     </li>
                 ))}
             </ul>
-            <div className="underline" ref={underlineRef}></div>
+            {items.length > 0 && <div className="underline" ref={underlineRef}></div>}
         </nav>
     );
 };

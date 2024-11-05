@@ -85,7 +85,7 @@ const Login = () => {
               <div>
                 <label htmlFor="userId">아이디</label>
                 <input
-                    type="email"
+                    type="text"
                     id="userId"
                     value={userId}
                     onChange={(e) => setUserId(e.target.value)}
@@ -112,7 +112,7 @@ const Login = () => {
               style={{display: isSignUp ? 'flex' : 'none'}}>
             <h1>회원가입</h1>
             <form id="Login-page-sign-up-form">
-            <input type="email" placeholder="아이디" />
+            <input type="text" placeholder="아이디" />
               <input type="text" placeholder="이름" />
               <input type="text" placeholder="닉네임" />
               <input type="password" placeholder="비밀번호" />

@@ -39,9 +39,9 @@ const Topbar = () => {
           <li>
             <Link to="/community">💬커뮤니티</Link>
             <ul className="submenu">
-              <li><Link to="/community/free">🗽자유 게시판</Link></li>
-              <li><Link to="/community/DailyLook">👖데일리룩 게시판</Link></li>
-              <li><Link to="/community/questions">❔질문 게시판</Link></li>
+              <li><Link to="/free">🗽자유 게시판</Link></li>
+              <li><Link to="/DailyLook">👖데일리룩 게시판</Link></li>
+              <li><Link to="/Questions">❔질문 게시판</Link></li>
             </ul>
           </li>
           <li>
@@ -53,9 +53,9 @@ const Topbar = () => {
           <li>
             <Link to="/informationboard">ℹ️정보</Link>
             <ul className="submenu">
-              <li><Link to="/informationboard/articles">🕺패션정보</Link></li>
-              <li><Link to="/informationboard/sales">💲세일정보</Link></li>
-              <li><Link to="/informationboard/tutorials">🎸기타정보</Link></li>
+              <li><Link to="/Articles">🕺패션정보</Link></li>
+              <li><Link to="/Sales">💲세일정보</Link></li>
+              <li><Link to="/Others">🎸기타정보</Link></li>
             </ul>
           </li>
           <li>

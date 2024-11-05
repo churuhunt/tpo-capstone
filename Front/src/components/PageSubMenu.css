@@ -5,6 +5,8 @@
     position: relative;
     padding: 20px 0;
     top:-80px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    min-height: 30px;
 }
 
 .page-sub-menu ul {
@@ -24,20 +26,34 @@
     font-weight: bold;
     padding: 5px 10px;
     position: relative;
+    z-index: 50;
 }
 
 .page-sub-menu li.active {
-    color: #000;
+    color: rgb(143, 137, 137);
     background-color: transparent;
 }
 
 .page-sub-menu li:hover {
-    color: gray;
+    background: #bbbbbb;
+    transition: transform .3s ease;
 }
 
-.page-sub-menu li:visited {
-    color: red;
-}
+/*.page-sub-menu li::before {
+    transform: scaleX(0);
+    transform-origin: bottom right;
+    content: " ";
+    display: block;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #bbbbbb;
+    z-index: 50;
+    transition: transform .3s ease;
+  }*/
+
 
 .underline {
     position: absolute;

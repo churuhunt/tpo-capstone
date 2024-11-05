@@ -26,6 +26,7 @@ const PostView = () => {
   const [userId, setuserId] = useState(null); // 현재 사용자 ID
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [commentId, setcommentId] = useState(null)
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -42,7 +43,7 @@ const PostView = () => {
       try {
         const response = await api.get(`/posts/${postId}`); // axios 인스턴스 사용
         setPost(response.data);
-        // setComments(response.data.comments || []);
+        setComments(response.data.comments || []);
         // 현재 게시물이 북마크 상태인지 확인합니다.
         // 북마크 상태 확인 로직을 분리
         const bookmarkStatus = await checkBookmarkStatus();
@@ -52,6 +53,16 @@ const PostView = () => {
         }
       } catch (error) {
         console.error('게시물을 불러오는 중 오류가 발생했습니다:', error);
+      }
+    };
+
+    const fetchComments = async () => {
+      try {
+        const response = await api.get(`/posts/${postId}/comments`);
+        setComments(response.data); // response.data는 댓글 객체 배열입니다.
+        setcommentId(response.data.id)
+      } catch (error) {
+        console.error("댓글을 불러오는 중 오류 발생:", error);
       }
     };
 
@@ -68,7 +79,8 @@ const PostView = () => {
 
     fetchCurrentUser(); // Fetch current user
     fetchPost();
-  }, [postId, userId]);
+    fetchComments();
+  }, [postId]);
 
   const handleLike = async () => {
     await api.post(`/posts/${postId}/like`); // axios 인스턴스 사용
@@ -87,8 +99,8 @@ const PostView = () => {
   const handleCommentSubmit = async () => {
     if (!commentText.trim()) return;
     try {
-      await api.post(`/posts/${postId}/comments`, { content: commentText }); // axios 인스턴스 사용
-      setComments([...comments, { content: commentText }]);
+      const response = await api.post(`/posts/${postId}/comments`, { content: commentText }); // axios 인스턴스 사용
+      setComments([...comments, { ...response.data }]); // 서버에서 반환한 댓글 데이터 추가
       setCommentText('');
     } catch (error) {
       alert("댓글 제출 중 오류가 발생했습니다. 다시 시도해 주세요.");
@@ -99,9 +111,11 @@ const PostView = () => {
   const handleLikeComment = async (commentId) => {
     try {
       await api.post(`/comments/${commentId}/like`);
-      setComments(comments.map(comment =>
-          comment.id === commentId ? { ...comment, likes: (comment.likes || 0) + 1 } : comment
-      ));
+      setComments((prevComments) =>
+          prevComments.map((comment) =>
+              comment.id === commentId ? { ...comment, likes: (comment.likes || 0) + 1 } : comment
+          )
+      );
     } catch (error) {
       console.error("댓글 추천 중 오류가 발생했습니다:", error);
     }
@@ -110,9 +124,11 @@ const PostView = () => {
   const handleDislikeComment = async (commentId) => {
     try {
       await api.post(`/comments/${commentId}/dislike`);
-      setComments(comments.map(comment =>
-          comment.id === commentId ? { ...comment, dislikes: (comment.dislikes || 0) + 1 } : comment
-      ));
+      setComments((prevComments) =>
+          prevComments.map((comment) =>
+              comment.id === commentId ? { ...comment, dislikes: (comment.dislikes || 0) + 1 } : comment
+          )
+      );
     } catch (error) {
       console.error("댓글 비추천 중 오류가 발생했습니다:", error);
     }

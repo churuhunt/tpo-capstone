@@ -1,44 +1,31 @@
 import React, { useState } from 'react';
 import './Mymenu.css';
 import profileImageSrc from '../image/profile.png';
-import ActivityLog from '../components/ActivityLog';
 import Guestbook from '../components/Guestbook';
-import api from '../axios';  // axios를 통해 API 요청을 보낼 것입니다.
+import PageSubMenu from '../components/PageSubMenu';
+import Visithistory from '../components/Visithistory';
+import Myhomepost from '../components/Myhomepost';
+import ActivityDashboard from '../components/ActivityDashboard';
+
+import { Chart as ChartJS, LinearScale, CategoryScale, PointElement, LineElement } from 'chart.js';
+import { Line } from 'react-chartjs-2';
+ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement);
 
 const MyMenu = () => {
+    const menuItems = ["게시물", "방명록", "활동통계", "타임라인", "추천 게시물", "북마크 게시물"];
+    const [activeIndex, setActiveIndex] = useState(null);
     const [profileImage, setProfileImage] = useState(profileImageSrc);
-    const [activeTab, setActiveTab] = useState('activity');
-    const [isFollowing, setIsFollowing] = useState(false); // 팔로우 상태
-    const [followingCount, setFollowingCount] = useState(0); // 팔로잉 수
-    const [followerCount, setFollowerCount] = useState(0); // 팔로워 수
+    const [activeTab, setActiveTab] = useState('ActivityDashboard');
+    const [followingCount, setFollowingCount] = useState(120); // 팔로잉 수
+    const [followerCount, setFollowerCount] = useState(250); // 팔로워 수
 
-    // 팔로우 요청 함수
-    const handleFollow = async () => {
-        try {
-            const response = await api.post('/follow/follow', null, {
-                params: { followingId: 1 } // followingId는 팔로우할 사용자 ID로 설정
-            });
-            if (response.status === 200) {
-                setIsFollowing(true);
-                setFollowerCount(followerCount + 1);
-            }
-        } catch (error) {
-            console.error('팔로우 실패:', error);
-        }
-    };
-
-    // 언팔로우 요청 함수
-    const handleUnfollow = async () => {
-        try {
-            const response = await api.delete('/follow/unfollow', {
-                params: { followingId: 1 } // 언팔로우할 사용자 ID
-            });
-            if (response.status === 200) {
-                setIsFollowing(false);
-                setFollowerCount(followerCount - 1);
-            }
-        } catch (error) {
-            console.error('언팔로우 실패:', error);
+    const handleMenuClick = (item) => {
+        if (item === "게시물") {
+            setActiveTab('myhomepost');
+        } else if (item === "활동통계") {
+            setActiveTab('ActivityDashboard');
+        } else if (item === "방명록") {
+            setActiveTab('guestbook');
         }
     };
 
@@ -50,21 +37,30 @@ const MyMenu = () => {
             <div className="profile-info">
                 <img src={profileImage} className="profile-picture" alt="프로필 사진" />
                 <span className="nickname">사용자 닉네임</span>
+                <div className="follow-info">
+
+                    <span>팔로잉: {followingCount}</span> | <span>팔로워: {followerCount}</span>
+                </div>
             </div>
-            <div className="my-menu-follow">
-                <span className="nickname">팔로워: {followerCount}</span>
-                <span className="nickname">팔로잉: {followingCount}</span>
+            <div className="my-menu-submenu1">
+                <div className="my-menu-submenu">
+                    <PageSubMenu
+                        items={menuItems}
+                        activeIndex={activeIndex}
+                        setActiveIndex={setActiveIndex}
+                        onItemClick={handleMenuClick}
+                    />
+                </div>
             </div>
-            <button onClick={isFollowing ? handleUnfollow : handleFollow} className="follow-button">
-                {isFollowing ? '언팔로우' : '팔로우'}
-            </button>
-            <div className="aa">
-                {activeTab === 'activity' && <ActivityLog />}
-                {activeTab === 'guestbook' && <Guestbook />}
-            </div>
-            <div className="button-container">
-                <button className="button1" onClick={() => setActiveTab('activity')}>게시물</button>
-                <button className="button2" onClick={() => setActiveTab('guestbook')}>방명록</button>
+            <div className="my-menu-content">
+                <div className="my-menu-content1">
+                    <Visithistory />
+                </div>
+                <div className="my-menu-content2">
+                    {activeTab === 'myhomepost' && <Myhomepost />}
+                    {activeTab === 'ActivityDashboard' && <ActivityDashboard />}
+                    {activeTab === 'guestbook' && <Guestbook />}
+                </div>
             </div>
         </div>
     );
