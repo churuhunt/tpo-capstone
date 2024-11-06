@@ -1,19 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../axios'; // axios 인스턴스 설정
 import BubblyButton from '../components/BubblyButton';
 import './Noticeboard.css';
 
 import listViewIcon from '../image/listview.png';
 import gridViewIcon from '../image/gridview.png';
 
-
-const Noticeboard = ({ posts, postsPerPage = 15 }) => {
+const Noticeboard = ({ postsPerPage = 15 }) => {
+    const [posts, setPosts] = useState([]);
     const [NoticeboardViewMode, setNoticeboardViewMode] = useState('card');
     const [NoticeboardSearchTerm, setNoticeboardSearchTerm] = useState('');
     const [NoticeboardCurrentPage, setNoticeboardCurrentPage] = useState(1);
     const [NoticeboardSortBy, setNoticeboardSortBy] = useState('date-rise');
     const [NoticeboardSortAscending, setNoticeboardSortAscending] = useState(true);
+    const [totalPages, setTotalPages] = useState(1);
 
+    useEffect(() => {
+        fetchPosts();
+    }, [NoticeboardSearchTerm, NoticeboardSortBy, NoticeboardSortAscending, NoticeboardCurrentPage]);
+
+    // Fetch posts from backend based on current filter and sort criteria
+    const fetchPosts = async () => {
+        try {
+            const response = await api.get('/api/posts', {
+                params: {
+                    searchTerm: NoticeboardSearchTerm,
+                    page: NoticeboardCurrentPage - 1, // 페이지 번호 조정 (0부터 시작)
+                    size: postsPerPage,
+                    sortBy: NoticeboardSortBy,
+                },
+            });
+            setPosts(response.data.posts); // 백엔드 응답의 posts 배열
+            setTotalPages(response.data.totalPages); // 전체 페이지 수
+        } catch (error) {
+            console.error('Failed to fetch posts:', error);
+        }
+    };
+
+    // 핸들 정렬 함수
     const NoticeboardSortPosts = (sortByKey) => {
         if (NoticeboardSortBy === sortByKey) {
             setNoticeboardSortAscending(!NoticeboardSortAscending);
@@ -126,7 +151,7 @@ const Noticeboard = ({ posts, postsPerPage = 15 }) => {
             <div className="Noticeboard-pagination-write-container">
                 <div className="Noticeboard-pagination-container">
                     <ul className="Noticeboard-pagination">
-                        {Array.from({ length: Math.ceil(posts.length / postsPerPage) }).map((_, index) => (
+                        {Array.from({ length: totalPages }).map((_, index) => (
                             <li key={index} className="Noticeboard-page-item">
                                 <button
                                     onClick={() => NoticeboardPaginate(index + 1)}
