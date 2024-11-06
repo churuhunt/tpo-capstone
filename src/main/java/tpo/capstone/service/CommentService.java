@@ -3,6 +3,7 @@ package tpo.capstone.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import tpo.capstone.config.NotificationType;
 import tpo.capstone.entity.Comment;
 import tpo.capstone.entity.Post;
 import tpo.capstone.entity.Report;
@@ -18,49 +19,64 @@ import java.util.Optional;
 @Service
 public class CommentService {
 
-    @Autowired
-    private CommentRepository commentRepository;
+    private final CommentRepository commentRepository;
+    private final PostRepository postRepository;
+    private final UserAccountRepository userAccountRepository;
+    private final ReportRepository reportRepository;
+    private final NotificationService notificationService;
 
     @Autowired
-    private PostRepository postRepository;
+    public CommentService(CommentRepository commentRepository, PostRepository postRepository,
+                          UserAccountRepository userAccountRepository, ReportRepository reportRepository,
+                          NotificationService notificationService) {
+        this.commentRepository = commentRepository;
+        this.postRepository = postRepository;
+        this.userAccountRepository = userAccountRepository;
+        this.reportRepository = reportRepository;
+        this.notificationService = notificationService;
+    }
 
-    @Autowired
-    private UserAccountRepository userAccountRepository;
-
-    @Autowired
-    private ReportRepository reportRepository;
-
-
+    /**
+     * 댓글 작성 및 저장
+     *
+     * @param postId 게시물 ID
+     * @param content 댓글 내용
+     * @param authorUserId 작성자 사용자 ID
+     * @return 저장된 댓글
+     */
     @Transactional
-    public Comment saveComment(Long postId, String content, String author) {
-        // 게시물 조회
+    public Comment saveComment(Long postId, String content, String authorUserId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid postId"));
+                .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + postId));
 
-        // 댓글 생성 및 저장
+        UserAccount author = userAccountRepository.findByUserId(authorUserId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with userId: " + authorUserId));
+
         Comment comment = new Comment();
         comment.setContent(content);
         comment.setAuthor(author);
         comment.setPost(post);
-        comment.setDate(new java.util.Date());  // 현재 날짜 설정
+        comment.setDate(new Date());
         Comment savedComment = commentRepository.save(comment);
 
-        // 댓글 작성자 포인트 5점 증가
-        Optional<UserAccount> optionalUser = userAccountRepository.findByUserId(author);
-        if (optionalUser.isPresent()) {
-            UserAccount user = optionalUser.get();
-            user.setPoints(user.getPoints() + 5); // 댓글 작성 시 5포인트 증가
-            userAccountRepository.save(user);
-        }
+        // 댓글 작성 시 포인트 추가
+        author.setPoints(author.getPoints() + 5);
+        userAccountRepository.save(author);
 
         return savedComment;
     }
 
-    // 댓글 추천 기능 추가
+
+    /**
+     * 댓글 추천 기능
+     *
+     * @param commentId 댓글 ID
+     * @param userId 추천을 하는 사용자 ID
+     */
     @Transactional
     public void likeComment(Long commentId, String userId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid commentId"));
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + commentId));
 
         if (!comment.getLikedUsers().contains(userId)) {
             comment.setLikes(comment.getLikes() + 1);
@@ -69,16 +85,22 @@ public class CommentService {
         }
     }
 
-    // 댓글 비추천 기능 추가
+    /**
+     * 댓글 비추천 기능
+     *
+     * @param commentId 댓글 ID
+     * @param userId 비추천을 하는 사용자 ID
+     */
     @Transactional
     public void dislikeComment(Long commentId, String userId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid commentId"));
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + commentId));
 
         if (!comment.getDislikedUsers().contains(userId)) {
             comment.setDislikes(comment.getDislikes() + 1);
             comment.getDislikedUsers().add(userId);
 
+            // 비추천 수가 10 이상인 경우 댓글을 블라인드 처리
             if (comment.getDislikes() >= 10) {
                 comment.setBlind(true);
             }
@@ -87,21 +109,50 @@ public class CommentService {
         }
     }
 
-    // 댓글 신고 처리
-    public void reportComment(Long commentId, String userId) {
+    /**
+     * 댓글 신고 처리
+     *
+     * @param commentId 댓글 ID
+     * @param userId 신고를 하는 사용자 ID
+     * @param reason 신고 사유
+     */
+    public void reportComment(Long commentId, String userId, String reason) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid commentId"));
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + commentId));
 
         // 신고 기록 저장
         Report report = Report.builder()
                 .reporter(userId)
                 .targetType("COMMENT")
                 .targetId(commentId)
-                .reason("댓글 신고") // 신고 사유를 받을 수 있습니다.
+                .reason(reason)
                 .reportedAt(new Date())
                 .build();
 
         reportRepository.save(report);
     }
 
+
+
+    /**
+     * 게시물에 댓글 추가 시 알림 생성
+     *
+     * @param post 게시물 객체
+     * @param comment 댓글 객체
+     */
+    public void addComment(Post post, Comment comment) {
+        String message = post.getTitle() + "에 댓글이 달렸습니다.";
+        notificationService.createNotification(post.getAuthor(), post, NotificationType.COMMENT, message);
+    }
+
+    /**
+     * 댓글에 대댓글 추가 시 알림 생성
+     *
+     * @param parentComment 부모 댓글 객체
+     * @param reply 대댓글 객체
+     */
+    public void addReply(Comment parentComment, Comment reply) {
+        String message = parentComment.getContent() + "에 대댓글이 달렸습니다.";
+        notificationService.createNotification(parentComment.getAuthor(), parentComment.getPost(), NotificationType.REPLY, message);
+    }
 }
