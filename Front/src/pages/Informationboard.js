@@ -4,6 +4,8 @@ import './Informationboard.css';
 import { Link } from 'react-router-dom';
 import BubblyButton from '../components/BubblyButton';
 
+
+
 const InformationBoard = () => {
   const [posts, setPosts] = useState([]);
   const [sortBy, setSortBy] = useState('date-rise');
