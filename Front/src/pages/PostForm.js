@@ -22,7 +22,7 @@ const PostForm = () => {
     const menuItems = ["🗽자유게시판", "👖데일리룩게시판", "❔질문게시판"]; /*sub */
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [category, setCategory] = useState('');
+    const [category, setCategory] = useState('자유게시판');
     const [author, setAuthor] = useState(''); // 서버에서 가져온 닉네임 저장
     const [imageFile, setImageFile] = useState(null); // 이미지 파일 상태 추가
     const [fontColor, setFontColor] = useState('#000000');
@@ -39,7 +39,7 @@ const PostForm = () => {
         const fetchCurrentUser = async () => {
             try {
                 const response = await api.get('/users/current');  // 현재 사용자 정보를 가져오는 API 호출
-                setAuthor(response.data.userId); // 서버에서 가져온 닉네임 설정
+                setAuthor(response.data.nickname); // 서버에서 가져온 닉네임 설정
             } catch (error) {
                 console.error('사용자 정보를 가져오는 중 오류 발생:', error);
             }
