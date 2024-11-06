@@ -8,10 +8,7 @@ import lombok.Setter;
 import tpo.capstone.entity.Post;
 import tpo.capstone.entity.UserAccount;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Objects;
 
 @Getter
@@ -53,9 +50,10 @@ public class PostDto {
         post.setId(this.id);
         post.setTitle(this.title);
         post.setContent(this.content);
-        post.setAuthor(authorAccount);
+        post.setAuthor(authorAccount); // UserAccount 객체와 관계 설정
+        post.setAuthorNickname(authorAccount.getNickname()); // nickname을 authorNickname에 저장
         post.setCategory(this.category);
-        post.setDate(this.date); // `OffsetDateTime`을 그대로 사용
+        post.setDate(this.date);
         post.setLikes(this.likes);
         post.setDislikes(this.dislikes);
         post.setViews(this.views);

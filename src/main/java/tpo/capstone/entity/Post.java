@@ -5,9 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -38,6 +36,9 @@ public class Post {
     @JoinColumn(name = "author_id", nullable = false)
     private UserAccount author;
 
+    @Transient
+    private String authorNickname;
+
     private int views = 0;   // 조회수, 기본값 0
     private int likes = 0;   // 추천 수, 기본값 0
     private int dislikes = 0; // 비추천 수, 기본값 0
@@ -62,4 +63,6 @@ public class Post {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<UserAccount> dislikedUsers = new HashSet<>();
+
+
 }
