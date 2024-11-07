@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './community.css';
+/*import './community.css';*/
 import { Link } from 'react-router-dom';
 import BubblyButton from '../components/BubblyButton';
 import api from '../axios';

@@ -5,8 +5,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import reportWebVitals from './reportWebVitals';
 import Topbar from './components/Topbar';
 import Mainpage from './pages/Mainpage';
-import Notification from './pages/Notification';
-import Popularity from './pages/Popularity';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Store from './pages/Store';
@@ -15,17 +13,10 @@ import MyMenu from './pages/Mymenu';
 import PostForm from './pages/PostForm';
 import Community from './pages/community';
 import Informationboard from './pages/Informationboard';
-import Recommendedboard from './pages/Recommendedboard';
 import PostView from './pages/PostView';
 import ProfileManagement from './pages/ProfileManagement';
 import ErrorPage from './pages/ErrorPage';
-import FreePage from './pages/FreePage';
-import DailyLookPage from "./pages/DailyLookPage";
-import QuestionPage from "./pages/QuestionPage";
-import ArticlesPage from "./pages/ArticlesPage";
-import OthersPage from "./pages/OthersPage";
 import ScrollToTop from './components/ScrollToTop';
-import SalesPage from "./pages/SalesPage";
 
 const App = () => {
   return (
@@ -37,11 +28,7 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Mainpage />} />
             <Route path="/main" element={<Mainpage />} />
-            <Route path="/notification" element={<Notification />} />
-            <Route path="/popularity" element={<Popularity />} />
-            <Route path="/community" element={<Community />} />
             <Route path="/informationboard" element={<Informationboard />} />
-            <Route path="/recommendedboard" element={<Recommendedboard />} />
             <Route path="/ranking" element={<Ranking />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
@@ -51,12 +38,6 @@ const App = () => {
             <Route path="/postview/:postId" element={<PostView />} />
             <Route path="/profile" element={<ProfileManagement />} />
             <Route path="/error" element={<ErrorPage />} />
-            <Route path="/Free" element={<FreePage />} />
-            <Route path="/DailyLook" element={<DailyLookPage />} />
-            <Route path="/Questions" element={<QuestionPage />} />
-            <Route path="/Articles" element={<ArticlesPage />} />
-            <Route path="/Sales" element={<SalesPage />} />
-            <Route path="/Others" element={<OthersPage />} />
           </Routes>
         </div>
       </Router>
