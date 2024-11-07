@@ -364,8 +364,8 @@
 .Sign-up-page-button1 {
   cursor: pointer;
   position: absolute; /* 절대 위치 설정으로 입력창과 겹치게 */
-  top:70px;
-  right: 5px;
+  top:98px;
+  right: -30px;
   width: 80px;
   height: 50px;
   font-size: 14px;
@@ -377,8 +377,8 @@
 .Sign-up-page-button2 {
   cursor: pointer;
     position: absolute; /* 절대 위치 설정으로 입력창과 겹치게 */
-    top:-10px;
-    right: -45px;
+    top:11px;
+    right: -80px;
     width: 80px;
     height: 50px;
     font-size: 14px;
