@@ -10,63 +10,83 @@ ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement, Tooltip,
 const Visithistory = () => {
     const introduction = "마이홈 소개글란";
 
-    const [visitorData, setVisitorData] = useState({
-        labels: [],
+    const [visitorCount, setVisitorCount] = useState(0);  // 방문자 수 상태값
+    const [visitorUsername, setVisitorUsername] = useState(null);  // 현재 사용자 이름 상태값
+    const [visitorDataPoints, setVisitorDataPoints] = useState([]); // 5일간 방문자 수 데이터 상태값
+
+    useEffect(() => {
+        // 현재 사용자 정보 가져오기
+        const fetchCurrentUser = async () => {
+            try {
+                const response = await api.get('/users/current');
+                const username = response.data.nickname; // 가져온 사용자의 이름 저장
+                console.log( response.data.nickname)
+                setVisitorUsername(username);
+            } catch (error) {
+                console.error("Error fetching current user:", error);
+            }
+        };
+
+        // 가져온 사용자 이름으로 방문 기록 남기기
+        const logVisit = async (username) => {
+            try {
+                await api.post('/myhome/add-visitor', null, {
+                    params: { visitorUsername: username },
+                });
+                console.log("Visitor logged successfully");
+            } catch (error) {
+                console.error("Error logging visitor:", error);
+            }
+        };
+
+        // 방문자 수 가져오기
+        const fetchVisitorCount = async () => {
+            try {
+                const response = await api.get('/myhome/visitor-count');
+                const totalVisitorCount = response.data; // 가져온 전체 방문자 수
+                setVisitorCount(totalVisitorCount);
+
+                // 방문자 수를 5일간의 데이터로 가정해서 배열로 설정
+                const data = Array(6).fill(totalVisitorCount); // 예시로 5일간 방문자 수를 모두 동일하게 설정
+                setVisitorDataPoints(data);
+            } catch (error) {
+                console.error("Error fetching visitor count:", error);
+                setVisitorDataPoints([0, 0, 0, 0, 0, 0]); // 데이터 가져오는 데 실패한 경우 기본값 사용
+            }
+        };
+
+        // 컴포넌트가 처음 로드될 때 실행
+        fetchCurrentUser().then(() => {
+            if (visitorUsername) {
+                logVisit(visitorUsername);
+            }
+        });
+        fetchVisitorCount();
+    }, [visitorUsername]);
+
+    // 최근 5일간 날짜 생성
+    const labels = Array.from({ length: 6 }, (_, i) => {
+        const date = new Date();
+        date.setDate(date.getDate() - (5 - i));
+        return `${date.getMonth() + 1}/${date.getDate()}`;
+    });
+
+    const visitorData = {
+        labels: labels,
         datasets: [
             {
                 label: "방문자 수",
-                data: [], // 초기 데이터는 빈 배열
+                data: visitorDataPoints.length > 0 ? visitorDataPoints : [0, 0, 0, 0, 0, 0], // 방문자 수 데이터
                 borderColor: '#40C4FF',
                 backgroundColor: '#40C4FF',
                 pointBackgroundColor: '#40C4FF',
                 pointRadius: 4,
                 borderWidth: 1.5,
                 fill: false,
-                tension: 0.3, // 곡선 설정
+                tension: 0.3,
             },
         ],
-    });
-
-    // 오늘부터 5일 전까지의 날짜를 계산하여 labels에 저장
-    const generateLabels = () => {
-        return Array.from({ length: 6 }, (_, i) => {
-            const date = new Date();
-            date.setDate(date.getDate() - (5 - i));
-            return `${date.getMonth() + 1}/${date.getDate()}`; // 월/일 형식으로 반환
-        });
     };
-
-    // 컴포넌트가 마운트될 때 방문자 수 데이터를 가져오는 함수
-    useEffect(() => {
-        const fetchVisitorData = async () => {
-            try {
-                // 현재 사용자 정보를 가져오는 API 호출
-                const userResponse = await api.get('/users/current');
-                const visitorUsername = userResponse.data.nickname; // 사용자 이름 설정 (nickname으로 가정)
-
-                // 방문자 수를 추가하는 API 호출
-                await api.post('/myhome/add-visitor', { visitorUsername }); // 현재 사용자의 username을 넣어야 함
-
-                // 방문자 수를 가져오는 API 호출
-                const countResponse = await api.get('/myhome/visitor-count'); // 방문자 수 API 호출
-                const visitorCountData = countResponse.data;
-
-                // 방문자 수 데이터를 업데이트
-                setVisitorData((prevState) => ({
-                    ...prevState,
-                    labels: generateLabels(),
-                    datasets: [{
-                        ...prevState.datasets[0],
-                        data: visitorCountData, // 가져온 데이터로 업데이트
-                    }],
-                }));
-            } catch (error) {
-                console.error("Error fetching visitor count:", error);
-            }
-        };
-
-        fetchVisitorData();
-    }, []);
 
     const options = {
         responsive: true,
@@ -125,6 +145,7 @@ const Visithistory = () => {
             <p className="visit-history-intro">{introduction}</p>
             <hr className="visit-history-divider" />
             <h2 className="visit-history-title">방문자</h2>
+            <p className="visitor-count">총 방문자 수: {visitorCount.toLocaleString()}</p>
             <div className="visit-history-chart">
                 <Line data={visitorData} options={options} />
             </div>
