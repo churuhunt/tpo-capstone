@@ -3,7 +3,9 @@ package tpo.capstone.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tpo.capstone.entity.Post;
@@ -139,24 +141,18 @@ public class PostService {
      * @param pageable 페이징 정보
      * @return 필터링된 게시물 페이지
      */
-    public Page<Post> getFilteredPosts(String category, String smallCategory, String searchTerm, Pageable pageable) {
-        log.info("Filtering posts with category={}, smallCategory={}, searchTerm={}, pageable={}",
-                category, smallCategory, searchTerm, pageable);
+    public Page<Post> getFilteredPosts(List<String> category, String smallCategory, String searchTerm, String searchMode, String sortBy, String direction, Pageable pageable) {
+        log.info("Filtering posts with category={}, smallCategory={}, searchTerm={}, pageable={}, searchMode: {}, sortBy: {}, direction: {}",
+                category, smallCategory, searchTerm, pageable, searchMode, sortBy, direction);
 
-        if (category != null && smallCategory != null && searchTerm != null) {
-            return postRepository.findByCategoryAndSmallCategoryAndTitleContaining(category, smallCategory, searchTerm, pageable);
-        } else if (category != null && smallCategory != null) {
-            return postRepository.findByCategoryAndSmallCategory(category, smallCategory, pageable);
-        } else if (category != null && searchTerm != null) {
-            return postRepository.findByCategoryAndTitleContaining(category, searchTerm, pageable);
-        } else if (category != null) {
-            return postRepository.findByCategory(category, pageable);
-        } else if (searchTerm != null) {
-            return postRepository.findByTitleContaining(searchTerm, pageable);
-        } else {
-            return postRepository.findAll(pageable);
-        }
+        // 정렬 기준 설정
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
+        // 검색 모드에 따른 쿼리 실행
+        return postRepository.findFilteredPosts(category, searchTerm, pageable);
     }
+
 
     /**
      * 게시물 신고 처리 메서드.

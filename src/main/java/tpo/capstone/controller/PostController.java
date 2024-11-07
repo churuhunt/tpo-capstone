@@ -23,6 +23,7 @@ import tpo.capstone.service.S3Service;
 import tpo.capstone.service.UserAccountService;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,23 +50,23 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity<Map<String, Object>> getFilteredPosts(
-            @RequestParam(required = false) String category,
+            @RequestParam(required = false) List<String> category,
             @RequestParam(required = false) String smallCategory,
             @RequestParam(required = false) String searchTerm,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "15") int size,
-            @RequestParam(defaultValue = "date") String sortBy, // 정렬 기준 필드
-            @RequestParam(defaultValue = "desc") String direction // 정렬 방향 추가
-    ) {
-        log.info("Received getFilteredPosts request with category={}, smallCategory={}, searchTerm={}, page={}, size={}, sortBy={}, direction={}",
-                category, smallCategory, searchTerm, page, size, sortBy, direction);
+            @RequestParam(defaultValue = "15") int size, // 페이지당 게시글 수
+            @RequestParam(defaultValue = "date") String sortBy,
+            @RequestParam(defaultValue = "desc") String direction,
+            @RequestParam(defaultValue = "title") String searchMode) {
 
-        // 정렬 기준 필드와 방향을 동적으로 설정
+        log.info("Received getFilteredPosts request with category={}, smallCategory={}, searchTerm={}, page={}, size={}, sortBy={}, direction={}, searchMode={}",
+                category, smallCategory, searchTerm, page, size, sortBy, direction, searchMode);
+
         Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        Pageable pageable = PageRequest.of(page, size, sort);
+        Pageable pageable = PageRequest.of(page, size, sort); // size 사용
 
-        // 필터링된 게시물 가져오기 (소카테고리 포함)
-        Page<Post> filteredPosts = postService.getFilteredPosts(category, smallCategory, searchTerm, pageable);
+        // 게시물 목록 필터링
+        Page<Post> filteredPosts = postService.getFilteredPosts(category, smallCategory, searchTerm, searchMode, sortBy, direction, pageable);
         List<PostDto> postDtoList = filteredPosts.stream()
                 .map(PostDto::fromEntity)
                 .collect(Collectors.toList());
@@ -129,10 +130,18 @@ public class PostController {
     }
 
     @GetMapping("/posts/notices")
-    public ResponseEntity<Page<PostDto>> getNotices(@RequestParam(defaultValue = "0") int page,
-                                                    @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<Page<PostDto>> getNotices(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+
         Pageable pageable = PageRequest.of(page, size);
-        Page<PostDto> notices = postService.getFilteredPosts("공지사항", null, null, PageRequest.of(page, size))
+        List<String> categories = Collections.singletonList("공지사항"); // 단일 카테고리를 List로 변환
+        // 필요한 인자 추가
+        String searchMode = null; // 적절한 기본값을 설정
+        String sortBy = "date"; // 기본 정렬 기준
+        String direction = "desc"; // 기본 정렬 방향
+
+        Page<PostDto> notices = postService.getFilteredPosts(categories, null, null, searchMode, sortBy, direction, pageable)
                 .map(PostDto::fromEntity);
         return ResponseEntity.ok(notices);
     }
@@ -148,7 +157,12 @@ public class PostController {
                 .toList();
         response.put("popularPosts", popularPosts);
 
-        Page<PostDto> notices = postService.getFilteredPosts("공지사항", null, null, PageRequest.of(page, size))
+        // 공지사항 카테고리를 List<String> 형태로 변환하여 전달
+        List<String> categories = Collections.singletonList("공지사항");
+        String searchMode = null; // 적절한 기본값을 설정
+        String sortBy = "date"; // 기본 정렬 기준
+        String direction = "desc"; // 기본 정렬 방향
+        Page<PostDto> notices = postService.getFilteredPosts(categories, null, null, searchMode, sortBy, direction, PageRequest.of(page, size))
                 .map(PostDto::fromEntity);
         response.put("notices", notices.getContent());
         response.put("totalNotices", notices.getTotalElements());

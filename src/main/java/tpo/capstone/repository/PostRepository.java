@@ -50,4 +50,18 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 특정 사용자가 작성한 게시물의 총 비추천 수
     @Query("SELECT SUM(p.dislikes) FROM Post p WHERE p.author.id = :authorId")
     long countTotalDislikesByAuthor_Id(@Param("authorId") Long authorId);
+
+    // 여러 카테고리를 필터링하는 메서드 추가
+    Page<Post> findByCategoryIn(List<String> category, Pageable pageable);
+    Page<Post> findByCategoryInAndTitleContaining(List<String> category, String title, Pageable pageable);
+    Page<Post> findByCategoryInAndSmallCategory(List<String> category, String smallCategory, Pageable pageable);
+    Page<Post> findByCategoryInAndSmallCategoryAndTitleContaining(List<String> category, String smallCategory, String title, Pageable pageable);
+
+    // likedUsers와 dislikedUsers 정보를 함께 가져오는 쿼리 추가
+    @Query("SELECT p FROM Post p " +
+            "LEFT JOIN FETCH p.likedUsers " +
+            "LEFT JOIN FETCH p.dislikedUsers " +
+            "WHERE p.category IN :category " +
+            "AND (p.title LIKE %:searchTerm% OR :searchTerm IS NULL)")
+    Page<Post> findFilteredPosts(@Param("category") List<String> category, @Param("searchTerm") String searchTerm, Pageable pageable);
 }
