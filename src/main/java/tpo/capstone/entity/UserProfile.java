@@ -13,7 +13,7 @@ public class UserProfile {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false) // 지연 로딩 및 필수 값 설정
+    @OneToOne(fetch = FetchType.EAGER, optional = false) // 지연 로딩 및 필수 값 설정
     @JoinColumn(name = "user_id", nullable = false)
     private UserAccount user;
 

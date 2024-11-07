@@ -16,10 +16,13 @@ const MyMenu = () => {
     const menuItems = ["게시물", "방명록", "활동통계", "타임라인", "추천 게시물", "북마크 게시물"];
     const [activeIndex, setActiveIndex] = useState(null);
     const [profileImage, setProfileImage] = useState(profileImageSrc);
+    const [backgroundImage, setBackgroundImage] = useState('');
+    const [nickname, setNickname] = useState('');
+    const [nicknameDecoration, setNicknameDecoration] = useState('');
+    const [introduction, setIntroduction] = useState('');
     const [activeTab, setActiveTab] = useState('ActivityDashboard');
     const [followingCount, setFollowingCount] = useState(120); // 팔로잉 수
     const [followerCount, setFollowerCount] = useState(250); // 팔로워 수
-    const [nickname, setNickname] = useState('')
 
 
     useEffect(() => {
@@ -28,7 +31,11 @@ const MyMenu = () => {
             try {
                 const response = await api.get('/myhome/profile'); // API 엔드포인트에 맞게 수정
                 const userData = response.data;
-                setProfileImage(userData.profileImage || profileImageSrc); // 가져온 이미지 설정 또는 기본 이미지 사용
+                setProfileImage(userData.profileImageUrl || profileImageSrc);
+                setBackgroundImage(userData.backgroundImageUrl || '');
+                setNicknameDecoration(userData.nicknameDecoration || '');
+                setIntroduction(userData.introduction || '');
+
             } catch (error) {
                 console.error("프로필 데이터를 가져오지 못했습니다.", error);
             }
@@ -59,41 +66,11 @@ const MyMenu = () => {
         }
     };
 
- /*   // 팔로우 요청 함수
-    const handleFollow = async () => {
-        try {
-            const response = await api.post('/follow/follow', null, {
-                params: { followingId: 1 } // followingId는 팔로우할 사용자 ID로 설정
-            });
-            if (response.status === 200) {
-                setIsFollowing(true);
-                setFollowerCount(followerCount + 1);
-            }
-        } catch (error) {
-            console.error('팔로우 실패:', error);
-        }
-    };
-
-    // 언팔로우 요청 함수
-    const handleUnfollow = async () => {
-        try {
-            const response = await api.delete('/follow/unfollow', {
-                params: { followingId: 1 } // 언팔로우할 사용자 ID
-            });
-            if (response.status === 200) {
-                setIsFollowing(false);
-                setFollowerCount(followerCount - 1);
-            }
-        } catch (error) {
-            console.error('언팔로우 실패:', error);
-        }
-    };*/
-
 
 
     return (
         <div className="my-menu-container">
-            <div className="background-image">
+            <div className="background-image" style={{backgroundImage: `url(${backgroundImage})`}}>
                 <button className="custom-button">커스텀</button>
             </div>
             <div className="profile-info">
