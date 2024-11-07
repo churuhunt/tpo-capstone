@@ -1,6 +1,7 @@
 package tpo.capstone.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 import tpo.capstone.entity.UserProfile;
 import tpo.capstone.repository.UserProfileRepository;
@@ -17,6 +18,7 @@ public class UserProfileService {
      * @return 사용자 프로필 정보
      * @throws IllegalArgumentException 사용자 프로필을 찾을 수 없을 때 발생
      */
+    @Transactional
     public UserProfile getProfile(Long userId) {
         return userProfileRepository.findByUser_Id(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User profile not found for ID: " + userId));

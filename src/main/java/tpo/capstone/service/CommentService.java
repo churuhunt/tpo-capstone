@@ -14,6 +14,7 @@ import tpo.capstone.repository.ReportRepository;
 import tpo.capstone.repository.UserAccountRepository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -130,6 +131,36 @@ public class CommentService {
                 .build();
 
         reportRepository.save(report);
+    }
+
+    /**
+     * 게시물에 대한 댓글 목록 조회
+     * @param postId 게시물 ID
+     * @return 댓글 목록
+     */
+    public List<Comment> getCommentsByPostId(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + postId));
+
+        return commentRepository.findByPost(post);  // 댓글을 게시물과 연결하여 조회
+    }
+
+    /**
+     * 댓글 삭제
+     * @param commentId 삭제할 댓글 ID
+     * @param userId 삭제하는 사용자 ID
+     */
+    @Transactional
+    public void deleteComment(Long commentId, String userId) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new IllegalArgumentException("Comment not found with ID: " + commentId));
+
+        // 댓글 작성자가 아닌 경우 삭제 불가
+        if (!comment.getAuthor().getUserId().equals(userId)) {
+            throw new IllegalArgumentException("본인만 댓글을 삭제할 수 있습니다.");
+        }
+
+        commentRepository.delete(comment);
     }
 
 

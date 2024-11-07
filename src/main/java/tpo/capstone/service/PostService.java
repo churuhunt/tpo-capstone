@@ -118,6 +118,9 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid postId"));
 
+        UserAccount user = userAccountRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
+
         // 블라인드 처리된 게시물일 경우 추가 확인 필요
         if (post.isBlind()) {
             log.warn("블라인드된 게시물입니다. 추가 확인이 필요합니다.");
@@ -125,6 +128,21 @@ public class PostService {
 
         return post;
     }
+
+    // 게시물 삭제
+    public boolean deletePost(Long postId, String userId) {
+
+        UserAccount user = userAccountRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
+
+        // 게시물 존재 여부 확인
+        if (postRepository.existsById(postId)) {
+            postRepository.deleteById(postId); // 게시물 삭제
+            return true;
+        }
+        return false; // 게시물이 존재하지 않으면 false 반환
+    }
+
 
     /**
      * 추천 수가 10 이상인 인기 게시물 목록 조회.
