@@ -1,6 +1,6 @@
-
 button {
-  margin: 20px;
+  margin-right: 50px;
+  z-index: 5;
 }
 .custom-btn {
   width: 130px;
