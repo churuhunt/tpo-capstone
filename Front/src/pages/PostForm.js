@@ -19,10 +19,16 @@ import Banner from '../components/Banner';
 
 
 const PostForm = () => {
-    const menuItems = ["🗽자유게시판", "👖데일리룩게시판", "❔질문게시판"]; /*sub */
+    const menuItems = ["자유게시판", "데일리룩게시판", "질문게시판", "추천게시판", "정보게시판"];
+    const subCategories = {
+        정보게시판: ["패션정보", "세일정보", "기타정보"], // 소카테고리가 있는 게시판의 소카테고리 목록
+    };
+
+
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [category, setCategory] = useState('자유게시판');
+    const [category, setCategory] = useState(menuItems[0]); // 기본값으로 첫 번째 카테고리
+    const [smallCategory, setSmallCategory] = useState(''); // 소카테고리 상태 추가
     const [author, setAuthor] = useState(''); // 서버에서 가져온 닉네임 저장
     const [imageFile, setImageFile] = useState(null); // 이미지 파일 상태 추가
     const [fontColor, setFontColor] = useState('#000000');
@@ -49,6 +55,7 @@ const PostForm = () => {
     }, []);
 
 
+
     useEffect(() => {
         const menuItem = document.querySelectorAll('.post-form-sub-menu li')[hoverIndex ?? activeIndex];
         if (menuItem && underlineRef.current) {
@@ -64,28 +71,25 @@ const PostForm = () => {
             title,
             content,
             category,
+            smallCategory: category === "정보게시판" ? smallCategory : null,
             author,
             date: new Date(),
             views: 0,
             likes: 0,
         };
 
-        // FormData 객체를 생성하여 데이터 추가
         const formData = new FormData();
-        formData.append('postDto', JSON.stringify(postData)); // JSON 문자열로 추가
+        formData.append('postDto', JSON.stringify(postData));
         if (imageFile) {
-            formData.append('imageFile', imageFile); // 이미지 파일 추가
+            formData.append('imageFile', imageFile);
         }
 
-
         try {
-            // axios 인스턴스(api)로 POST 요청
             await api.post('/posts', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data', // multipart/form-data 헤더 설정
+                    'Content-Type': 'multipart/form-data',
                 },
             });
-
             alert('게시물이 성공적으로 작성되었습니다.');
             navigate('/community');
         } catch (error) {
@@ -121,6 +125,7 @@ const PostForm = () => {
             reader.readAsDataURL(file);
         }
     };
+
 
     return (
         <div className="post-form-container">
@@ -158,7 +163,7 @@ const PostForm = () => {
                         <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="제목을 입력해주세요" />
                     </label>
                 </div>
-                
+
                 <div className="editor-controls">
                     <label>
                         <select onChange={(e) => applyStyle('fontName', e.target.value)}>
@@ -212,7 +217,7 @@ const PostForm = () => {
                             style={{ display: 'none' }}
                         />
                     </label>
-                    
+
                     <button type="button" onMouseDown={() => applyStyle('justifyLeft')} className="PostForm-icon-button">
                         <img src={leftIcon} alt="Left" />
                     </button>
@@ -227,7 +232,7 @@ const PostForm = () => {
                         <input type="file" accept="image/*" onChange={insertImage} style={{ display: 'none' }} />
                     </label>
                 </div>
-                
+
                 <div
                     ref={contentRef}
                     contentEditable
@@ -244,8 +249,8 @@ const PostForm = () => {
                     />
                 </div> */}
 
-                    <button type="submit" className="submit-button">등록</button>
-                    <button type="button" className="list-button" onClick={() => navigate(-1)}>취소</button>
+                <button type="submit" className="submit-button">등록</button>
+                <button type="button" className="list-button" onClick={() => navigate(-1)}>취소</button>
 
             </form>
         </div>

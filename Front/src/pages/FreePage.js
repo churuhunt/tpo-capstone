@@ -15,45 +15,30 @@ import gridViewIcon from '../image/gridview.png';
 
 const FreePage = () => {
     const [posts, setPosts] = useState([]);
-    const [sortBy, setSortBy] = useState('date-rise');
-    const [sortAscending, setSortAscending] = useState(true);
+    const [sortBy, setSortBy] = useState('date');
+    const [direction, setDirection] = useState('desc');
     const [searchTerm, setSearchTerm] = useState('');
+    const [debouncedSearchTerm, setDebouncedSearchTerm] = useState(''); // 디바운싱된 검색어
     const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(15);
-    const [viewMode, setViewMode] = useState('list');
     const [loading, setLoading] = useState(true);
     const [totalPages, setTotalPages] = useState(1);
-    const [filteredCategory, setFilteredCategory] = useState(''); // 카테고리 필터링 상태
-    const [activeIndex, setActiveIndex] = useState(0); /*sub */
-    const menuItems = ["전체", "🗽자유게시판", "👖데일리룩게시판", "❔질문게시판"]; /*sub */
 
-
-    const sortMapping = {
-        'date-rise': 'date',
-        'date-fall': 'date',
-        'likes-rise': 'likes',
-        'likes-fall': 'likes',
-        'views-rise': 'views',
-        'views-fall': 'views'
-    };
-
-    // 게시물 데이터 가져오기
     useEffect(() => {
         const fetchPosts = async () => {
-            setLoading(true); // 로딩 상태 초기화
+            setLoading(true);
             try {
-                const response = await api.get('/posts', { // 수정된 부분
+                const response = await api.get('/posts', {
                     params: {
-                        category: filteredCategory || '자유게시판', // 기본 카테고리 설정
-                        searchTerm: searchTerm,
-                        sortBy: sortMapping[sortBy] || 'date', // 정렬 기준 매핑
-                        ascending: sortAscending ,
+                        category: '자유게시판',
+                        searchTerm: debouncedSearchTerm, // 디바운싱된 검색어 사용
+                        sortBy,
+                        direction,
                         page: currentPage - 1,
                         size: postsPerPage
                     }
                 });
-                console.log(response.data); // API 응답 로그
-                setPosts(response.data.posts || []); // posts가 undefined일 경우 빈 배열로 설정
+                setPosts(response.data.posts || []);
                 setTotalPages(response.data.totalPages);
             } catch (error) {
                 console.error('게시물 데이터를 가져오는 데 실패했습니다:', error);
@@ -63,206 +48,92 @@ const FreePage = () => {
         };
 
         fetchPosts();
-    }, [filteredCategory, searchTerm, currentPage]);
+    }, [debouncedSearchTerm, sortBy, direction, currentPage]);
 
+    // 디바운싱을 위해 searchTerm이 변경되면 일정 시간 후 debouncedSearchTerm을 업데이트
+    useEffect(() => {
+        const timerId = setTimeout(() => {
+            setDebouncedSearchTerm(searchTerm);
+            setCurrentPage(1);
+        }, 500); // 0.5초 후에 업데이트
 
+        return () => clearTimeout(timerId); // 컴포넌트가 언마운트되거나 searchTerm이 변경되면 타이머 클리어
+    }, [searchTerm]);
 
-    const sortPosts = (sortByKey) => {
-        let sortedPosts = [...posts];
-        switch (sortByKey) {
-            case 'date-rise':
-                sortedPosts.sort((a, b) => new Date(a.date) - new Date(b.date));
-                break;
-            case 'date-fall':
-                sortedPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-                break;
-            case 'likes-rise':
-                sortedPosts.sort((a, b) => a.likes - b.likes);
-                break;
-            case 'likes-fall':
-                sortedPosts.sort((a, b) => b.likes - a.likes);
-                break;
-            case 'views-rise':
-                sortedPosts.sort((a, b) => a.views - b.views);
-                break;
-            case 'views-fall':
-                sortedPosts.sort((a, b) => b.views - a.views);
-                break;
-            default:
-                break;
-        }
-        if (sortByKey === sortBy) {
-            sortedPosts.reverse();
-            setSortAscending(!sortAscending);
-        } else {
-            setSortBy(sortByKey);
-            setSortAscending(true);
-        }
-        setPosts(sortedPosts);
-    };
-
-
-
-    const indexOfLastPost = currentPage * postsPerPage;
-    const indexOfFirstPost = indexOfLastPost - postsPerPage;
-    const currentPosts = posts.slice(indexOfFirstPost, indexOfLastPost);
-
-    const handleCategoryClick = (category) => {
-        setFilteredCategory(category === '전체' ? '' : category); // '전체' 클릭 시 카테고리 리셋
+    const handleSortChange = (event) => {
+        const selectedSort = event.target.value;
+        const [field, dir] = selectedSort.split('-');
+        setSortBy(field);
+        setDirection(dir);
         setCurrentPage(1);
     };
 
-
-    const handleSearch = () => {
-        setCurrentPage(1);
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
     };
 
-    const handleResetFilter = () => {
-        setFilteredCategory('');
-        setSearchTerm('');
-        setSortBy('date-rise');
-        setCurrentPage(1);
-    };
-
-    const paginate = (pageNumber) => {
-        setCurrentPage(pageNumber);
-    };
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    }
 
     if (loading) {
         return <div>로딩 중...</div>;
     }
 
+    const removeHtmlTags = (str) => {
+        return str.replace(/<[^>]*>?/gm, '');
+    };
+
     return (
-        <div className="board4-container">
-            <h2 onClick={handleResetFilter}>💬커뮤니티</h2>
-            <div className="banner">
-                <h2 className="post-form-title">💬커뮤니티</h2>
-            </div>
+        <div>
+            <h1>자유게시판</h1>
 
-            <div className="board4-container-top">
-                <div className="date">
-                    <ul>
-                        <li><a onClick={() => handleCategoryClick('자유게시판')}>🗽자유게시판</a></li>
-                        <li><a onClick={() => handleCategoryClick('데일리룩')}>👖데일리룩</a></li>
-                        <li><a onClick={() => handleCategoryClick('질문게시판')}>❔질문게시판</a></li>
-                    </ul>
-                </div>
-                <div className="board4-container search-container">
-                    <div className="input-group">
-                        <input
-                            type="text"
-                            className="form-control"
-                            placeholder="검색어를 입력하세요..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
-                    <div className="board4-select-wrapper">
-                        <select className="board4-select" onChange={(e) => sortPosts(e.target.value)}>
-                            <option value="">정렬 기준 선택</option>
-                            <option value="date-rise">최신순▲</option>
-                            <option value="date-fall">최신순▼</option>
-                            <option value="likes-rise">추천순▲</option>
-                            <option value="likes-fall">추천순▼</option>
-                            <option value="views-rise">조회수▲</option>
-                            <option value="views-fall">조회수▼</option>
-                        </select>
-                    </div>
-                    <div className="view-toggle-container">
-                        <img
-                            src={listViewIcon}
-                            alt="리스트형 보기"
-                            className={`view-toggle-icon ${viewMode === 'list' ? 'active' : ''}`}
-                            onClick={() => setViewMode('list')}
-                        />
-                        <img
-                            src={gridViewIcon}
-                            alt="액자형 보기"
-                            className={`view-toggle-icon ${viewMode === 'card' ? 'active' : ''}`}
-                            onClick={() => setViewMode('card')}
-                        />
-                    </div>
-                </div>
-            </div>
+            <select onChange={handleSortChange} value={`${sortBy}-${direction}`}>
+                <option value="date-desc">최신순▼</option>
+                <option value="date-asc">최신순▲</option>
+                <option value="likes-desc">추천순▼</option>
+                <option value="likes-asc">추천순▲</option>
+                <option value="views-desc">조회수▼</option>
+                <option value="views-asc">조회수▲</option>
+            </select>
 
-            {viewMode === 'list' ? (
-                <table className="board4-container post-table">
-                    <thead>
-                    <tr>
-                        <th>카테고리</th>
-                        <th>글번호</th>
-                        <th>제목</th>
-                        <th>작성자</th>
-                        <th>작성일자</th>
-                        <th>조회수</th>
-                        <th>추천수</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {currentPosts.map((post, index) => (
-                        <tr key={index}>
-                            <td>{post.category}</td>
-                            <td>{post.id}</td>
-                            <td>
-                                <Link to={`/postview/${post.id}`} style={{color: 'black'}}>{post.title}</Link>
-                            </td>
-                            <td>{post.author}</td>
-                            <td>{new Date(post.date).toLocaleDateString()}</td>
-                            {/* 작성일자 포맷 변경 */}
-                            <td>{post.views}</td>
-                            <td>{post.likes}</td>
-                        </tr>
-                    ))}
-                    {currentPosts.length < postsPerPage &&
-                        [...Array(postsPerPage - currentPosts.length)].map((_, index) => (
-                            <tr key={`empty-${index}`} className="board6-container empty-row">
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                                <td></td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            ) : (
-                <div className="card-view">
-                    {currentPosts.map((post, index) => (
-                        <Link to={`/postview/${post.id}`} key={index}> {/* Link 추가 */}
-                            <div className="card">
-                                <img src={post.thumbnailUrl} alt={`${post.title} 썸네일`} className="thumbnail"/>
-                                <div className="card-info">
-                                    <h3>{post.title}</h3>
-                                    <div className="details">
-                                        <div className="author-info">
-                                            <img src={post.profileImageUrl} alt={`${post.author} 프로필`} className="profile-image"/>
-                                            <p>{post.author} 👁️{post.views} 👍{post.likes}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </Link>
-                    ))}
-                </div>
-            )}
+            <input
+                type="text"
+                placeholder="검색어 입력"
+                value={searchTerm}
+                onChange={handleSearchChange}
+            />
 
-            <div className="board4-container pagination-write-container">
-                <div className="board4-container pagination-container">
-                    <ul className="board4-container pagination">
-                        {Array.from({length: Math.ceil(posts.length / postsPerPage)}).map((_, index) => (
-                            <li key={index} className="board4-container page-item">
-                                <button onClick={() => paginate(index + 1)} className="board4-container page-link">
-                                    {index + 1}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-                <div className="board4-container write-button-container">
-                    <BubblyButton><Link to="/write">글작성</Link></BubblyButton>
-                </div>
+            <ul>
+                {posts.map((post) => (
+                    <li key={post.id}>
+                        {post.imageUrl && post.imageUrl.startsWith('http') && (
+                            <img
+                                src={post.imageUrl}
+                                alt="게시물 이미지"
+                                style={{ width: '100px', height: 'auto' }}
+                            />
+                        )}
+                        <h3>{post.title}</h3>
+                        <p>{removeHtmlTags(post.content)}</p>
+                        <small>작성자: {post.author}</small>
+                        <small>조회수: {post.views}</small>
+                        <small>추천수: {post.likes}</small>
+                        <small>작성일: {post.date}</small>
+                    </li>
+                ))}
+            </ul>
+
+            <div>
+                {Array.from({ length: totalPages }, (_, index) => (
+                    <button
+                        key={index + 1}
+                        onClick={() => handlePageChange(index + 1)}
+                        disabled={index + 1 === currentPage}
+                    >
+                        {index + 1}
+                    </button>
+                ))}
             </div>
         </div>
     );

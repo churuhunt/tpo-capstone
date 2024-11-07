@@ -7,10 +7,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PagedModel;
-import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +19,13 @@ import tpo.capstone.dto.UserAccountDto;
 import tpo.capstone.entity.Post;
 import tpo.capstone.entity.UserAccount;
 import tpo.capstone.service.PostService;
-import tpo.capstone.auth.CustomUserDetails;
 import tpo.capstone.service.S3Service;
 import tpo.capstone.service.UserAccountService;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -57,16 +50,22 @@ public class PostController {
     @GetMapping("/posts")
     public ResponseEntity<Map<String, Object>> getFilteredPosts(
             @RequestParam(required = false) String category,
+            @RequestParam(required = false) String smallCategory,
             @RequestParam(required = false) String searchTerm,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size,
-            @RequestParam(defaultValue = "date") String sortBy
+            @RequestParam(defaultValue = "date") String sortBy, // 정렬 기준 필드
+            @RequestParam(defaultValue = "desc") String direction // 정렬 방향 추가
     ) {
-        log.info("Received getFilteredPosts request with category={}, searchTerm={}, page={}, size={}, sortBy={}",
-                category, searchTerm, page, size, sortBy);
+        log.info("Received getFilteredPosts request with category={}, smallCategory={}, searchTerm={}, page={}, size={}, sortBy={}, direction={}",
+                category, smallCategory, searchTerm, page, size, sortBy, direction);
 
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy).descending());
-        Page<Post> filteredPosts = postService.getFilteredPosts(category, searchTerm, pageable);
+        // 정렬 기준 필드와 방향을 동적으로 설정
+        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        // 필터링된 게시물 가져오기 (소카테고리 포함)
+        Page<Post> filteredPosts = postService.getFilteredPosts(category, smallCategory, searchTerm, pageable);
         List<PostDto> postDtoList = filteredPosts.stream()
                 .map(PostDto::fromEntity)
                 .collect(Collectors.toList());
@@ -102,6 +101,7 @@ public class PostController {
             postDto.setImageUrl(imageUrl); // S3 URL을 DTO에 설정
         }
 
+        // 저장 시 소카테고리 정보 포함
         Post savedPost = postService.savePost(postDto.toEntity(authorAccount), userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(PostDto.fromEntity(savedPost));
     }
@@ -132,7 +132,7 @@ public class PostController {
     public ResponseEntity<Page<PostDto>> getNotices(@RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "10") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<PostDto> notices = postService.getFilteredPosts("공지사항", null, pageable)
+        Page<PostDto> notices = postService.getFilteredPosts("공지사항", null, null, PageRequest.of(page, size))
                 .map(PostDto::fromEntity);
         return ResponseEntity.ok(notices);
     }
@@ -148,7 +148,7 @@ public class PostController {
                 .toList();
         response.put("popularPosts", popularPosts);
 
-        Page<PostDto> notices = postService.getFilteredPosts("공지사항", null, PageRequest.of(page, size))
+        Page<PostDto> notices = postService.getFilteredPosts("공지사항", null, null, PageRequest.of(page, size))
                 .map(PostDto::fromEntity);
         response.put("notices", notices.getContent());
         response.put("totalNotices", notices.getTotalElements());

@@ -21,6 +21,7 @@ public class PostDto {
     private String content;
     private String author;
     private String category;
+    private String smallCategory; // 소카테고리 필드 추가
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private OffsetDateTime date;
     private int likes;
@@ -35,8 +36,9 @@ public class PostDto {
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
-                authorNickname, // nickname으로 설정
+                authorNickname,
                 post.getCategory(),
+                post.getSmallCategory(), // 소카테고리 설정
                 post.getDate(),
                 post.getLikes(),
                 post.getDislikes(),
@@ -45,14 +47,16 @@ public class PostDto {
         );
     }
 
+    // DTO에서 엔티티로 변환하는 메서드
     public Post toEntity(UserAccount authorAccount) {
         Post post = new Post();
         post.setId(this.id);
         post.setTitle(this.title);
         post.setContent(this.content);
-        post.setAuthor(authorAccount); // UserAccount 객체와 관계 설정
-        post.setAuthorNickname(authorAccount.getNickname()); // nickname을 authorNickname에 저장
+        post.setAuthor(authorAccount);
+        post.setAuthorNickname(authorAccount.getNickname());
         post.setCategory(this.category);
+        post.setSmallCategory(this.smallCategory); // 소카테고리 설정
         post.setDate(this.date);
         post.setLikes(this.likes);
         post.setDislikes(this.dislikes);
@@ -73,11 +77,13 @@ public class PostDto {
                 Objects.equals(title, postDto.title) &&
                 Objects.equals(content, postDto.content) &&
                 Objects.equals(author, postDto.author) &&
+                Objects.equals(category, postDto.category) && // 카테고리 추가
+                Objects.equals(smallCategory, postDto.smallCategory) && // 소카테고리 추가
                 Objects.equals(date, postDto.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, content, author, date, likes, dislikes, views);
+        return Objects.hash(id, title, content, author, category, smallCategory, date, likes, dislikes, views);
     }
 }

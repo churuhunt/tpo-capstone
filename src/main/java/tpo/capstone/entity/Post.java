@@ -29,7 +29,10 @@ public class Post {
     @Column(columnDefinition = "MEDIUMTEXT")
     private String content;    // 게시글 내용
 
-    private String category;   // 게시글 카테고리
+    private String category;   // 게시글 카테고리 ( 자유게시판, 정보게시판 등)
+
+    private String smallCategory; // 소카테고리 ( 패션정보, 세일정보, 기타정보 )
+
     private String imageUrl; // 이미지 파일 URL
 
     @ManyToOne(fetch = FetchType.EAGER)

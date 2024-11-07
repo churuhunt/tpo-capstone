@@ -3,9 +3,7 @@ package tpo.capstone.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tpo.capstone.entity.Post;
@@ -15,11 +13,10 @@ import tpo.capstone.repository.PostRepository;
 import tpo.capstone.repository.ReportRepository;
 import tpo.capstone.repository.UserAccountRepository;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
-import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 
 @Service
@@ -39,7 +36,8 @@ public class PostService {
 
     @Transactional
     public Post savePost(Post post, String userId) {
-        log.info("Saving post with title={}, content={}, userId={}", post.getTitle(), post.getContent(), userId);
+        log.info("Saving post with title={}, content={}, userId={}, category={}, smallCategory={}",
+                post.getTitle(), post.getContent(), userId, post.getCategory(), post.getSmallCategory());
 
         UserAccount author = userAccountRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
@@ -48,7 +46,7 @@ public class PostService {
         post.setDate(OffsetDateTime.now(ZoneOffset.UTC)); // 현재 날짜를 OffsetDateTime으로 설정
         Post savedPost = postRepository.save(post);
 
-        author.setPoints(author.getPoints() + 10);
+        author.setPoints(author.getPoints() + 10); // 포인트 추가
         userAccountRepository.save(author);
 
         log.info("Post saved with ID={} by userId={}", savedPost.getId(), userId);
@@ -141,10 +139,15 @@ public class PostService {
      * @param pageable 페이징 정보
      * @return 필터링된 게시물 페이지
      */
-    public Page<Post> getFilteredPosts(String category, String searchTerm, Pageable pageable) {
-        log.info("Filtering posts with category={}, searchTerm={}, pageable={}", category, searchTerm, pageable);
+    public Page<Post> getFilteredPosts(String category, String smallCategory, String searchTerm, Pageable pageable) {
+        log.info("Filtering posts with category={}, smallCategory={}, searchTerm={}, pageable={}",
+                category, smallCategory, searchTerm, pageable);
 
-        if (category != null && searchTerm != null) {
+        if (category != null && smallCategory != null && searchTerm != null) {
+            return postRepository.findByCategoryAndSmallCategoryAndTitleContaining(category, smallCategory, searchTerm, pageable);
+        } else if (category != null && smallCategory != null) {
+            return postRepository.findByCategoryAndSmallCategory(category, smallCategory, pageable);
+        } else if (category != null && searchTerm != null) {
             return postRepository.findByCategoryAndTitleContaining(category, searchTerm, pageable);
         } else if (category != null) {
             return postRepository.findByCategory(category, pageable);

@@ -208,3 +208,9 @@
 .post-form-container .buttons-container{
     float: right;
 }
+
+/* contentEditable 영역 내의 이미지 크기 제한 */
+.content-editable img {
+    max-width: 100%; /* 부모 요소의 너비를 벗어나지 않도록 제한 */
+    height: auto;    /* 이미지 비율을 유지 */
+}

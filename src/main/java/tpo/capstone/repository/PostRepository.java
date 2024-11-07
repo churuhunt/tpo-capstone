@@ -19,8 +19,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // 제목에 검색어가 포함된 게시물 찾기 (페이징 포함)
     Page<Post> findByTitleContaining(String searchTerm, Pageable pageable);
 
+    Page<Post> findByCategoryAndSmallCategory(String category, String smallCategory, Pageable pageable);
+
     // 카테고리와 제목 모두 필터링된 게시물 찾기 (페이징 포함)
-    Page<Post> findByCategoryAndTitleContaining(String category, String searchTerm, Pageable pageable);
+    Page<Post> findByCategoryAndTitleContaining(String category, String title, Pageable pageable);
+
+    Page<Post> findByCategoryAndSmallCategoryAndTitleContaining(String category, String smallCategory, String title, Pageable pageable);
 
     // 추천수가 10 이상인 게시물 찾기
     List<Post> findByLikesGreaterThanEqual(int likes);
