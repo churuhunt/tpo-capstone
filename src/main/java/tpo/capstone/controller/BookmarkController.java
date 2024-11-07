@@ -20,16 +20,18 @@ public class BookmarkController {
 
     // 북마크한 게시글 조회
     @GetMapping()
-    public ResponseEntity<List<Post>> getBookmarkedPosts(@AuthenticationPrincipal UserAccountDto userDto) {
-        Long userId = userDto.getId(); // 인증된 사용자 ID 가져오기
+    public ResponseEntity<List<Post>> getBookmarkedPosts(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
+        Long userId = userAccountDto.getId(); // 인증된 사용자 ID 가져오기
         List<Post> bookmarkedPosts = bookmarkService.getBookmarkedPosts(userId);
         return ResponseEntity.ok(bookmarkedPosts);
     }
 
     // 북마크 추가/삭제 (토글)
     @PostMapping("/toggle/{postId}")
-    public ResponseEntity<?> toggleBookmark(@PathVariable Long postId, @AuthenticationPrincipal UserAccountDto userDto) {
-        Long userId = userDto.getId(); // 인증된 사용자 ID 가져오기
+    public ResponseEntity<?> toggleBookmark(@PathVariable Long postId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
+        Long userId = userAccountDto.getId(); // 인증된 사용자 ID 가져오기
         bookmarkService.toggleBookmark(userId, postId);
         return ResponseEntity.ok("북마크가 업데이트되었습니다.");
     }

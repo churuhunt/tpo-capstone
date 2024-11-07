@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import tpo.capstone.auth.CustomUserDetails;
 import tpo.capstone.dto.PostDto;
 import tpo.capstone.dto.ReportRequest;
 import tpo.capstone.dto.UserAccountDto;
@@ -177,4 +178,20 @@ public class PostController {
         log.info("게시글이 신고되었습니다. postId: {}, reporterId: {}", postId, userId);
         return ResponseEntity.ok("신고가 접수되었습니다.");
     }
+
+    // 게시물 삭제
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<String> deletePost(@PathVariable Long postId, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        String userId = userDetails.getUsername(); // JWT에서 사용자 ID 추출
+
+        // 게시물 삭제 서비스 호출
+        boolean isDeleted = postService.deletePost(postId, userId); // 삭제 서비스 메소드 호출
+
+        if (isDeleted) {
+            return ResponseEntity.ok("게시물이 삭제되었습니다.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("게시물을 찾을 수 없습니다.");
+        }
+    }
+
 }

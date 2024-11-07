@@ -43,7 +43,8 @@ public class MyHomeController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<UserProfile> getProfile(@AuthenticationPrincipal UserAccountDto userAccountDto) {
+    public ResponseEntity<UserProfile> getProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         Long userId = userAccountDto.getId();
         log.info("Fetching profile for userId: {}", userId);
         UserProfile userProfile = userProfileService.getProfile(userId);
@@ -51,7 +52,8 @@ public class MyHomeController {
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<UserProfile> updateProfile(@AuthenticationPrincipal UserAccountDto userAccountDto, @RequestBody UserProfile profile) {
+    public ResponseEntity<UserProfile> updateProfile(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody UserProfile profile) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         Long userId = userAccountDto.getId();
         log.info("Updating profile for userId: {}", userId);
         UserProfile updatedProfile = userProfileService.updateProfile(userId, profile);
@@ -68,7 +70,8 @@ public class MyHomeController {
     }
 
     @GetMapping("/bookmarks")
-    public ResponseEntity<List<Post>> getBookmarks(@AuthenticationPrincipal UserAccountDto userAccountDto) {
+    public ResponseEntity<List<Post>> getBookmarks(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         Long userId = userAccountDto.getId();
         log.info("Fetching bookmarks for userId: {}", userId);
         List<Post> bookmarks = bookmarkService.getBookmarkedPosts(userId);
@@ -76,7 +79,8 @@ public class MyHomeController {
     }
 
     @PostMapping("/add-visitor")
-    public ResponseEntity<Void> addVisitor(@AuthenticationPrincipal UserAccountDto userAccountDto, @RequestParam String visitorUsername) {
+    public ResponseEntity<Void> addVisitor(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam String visitorUsername) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         Long userId = userAccountDto.getId();
         log.info("Adding visitor: {} for userId: {}", visitorUsername, userId);
         visitorService.addVisitor(userId, visitorUsername);
@@ -84,7 +88,8 @@ public class MyHomeController {
     }
 
     @GetMapping("/visitor-count")
-    public ResponseEntity<Long> getVisitorCount(@AuthenticationPrincipal UserAccountDto userAccountDto) {
+    public ResponseEntity<Long> getVisitorCount(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         Long userId = userAccountDto.getId();
         log.info("Fetching visitor count for userId: {}", userId);
         Long visitorCount = visitorService.getVisitorCount(userId);
@@ -92,7 +97,8 @@ public class MyHomeController {
     }
 
     @GetMapping("/timeline")
-    public ResponseEntity<List<UserActivity>> getTimeline(@AuthenticationPrincipal UserAccountDto userAccountDto) {
+    public ResponseEntity<List<UserActivity>> getTimeline(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         Long userId = userAccountDto.getId();
         log.info("Fetching timeline for userId: {}", userId);
         List<UserActivity> timeline = timelineService.getUserTimeline(userId);
@@ -109,7 +115,8 @@ public class MyHomeController {
     }
 
     @GetMapping("/posts/{category}")
-    public ResponseEntity<List<Post>> getUserPostsByCategory(@AuthenticationPrincipal UserAccountDto userAccountDto, @PathVariable String category) {
+    public ResponseEntity<List<Post>> getUserPostsByCategory(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable String category) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         Long userId = userAccountDto.getId();
         log.info("Fetching posts for userId: {} in category: {}", userId, category);
         List<Post> userPostsByCategory = postService.getUserPostsByCategory(userId, category);

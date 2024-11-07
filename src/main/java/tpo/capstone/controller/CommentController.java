@@ -37,8 +37,9 @@ public class CommentController {
     public ResponseEntity<Comment> createComment(
             @PathVariable Long postId,
             @RequestBody CommentRequest commentRequest,
-            @AuthenticationPrincipal UserAccountDto userAccountDto
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         String userId = userAccountDto.getUserId(); // JWT에서 추출한 사용자 ID
         try {
             Comment comment = commentService.saveComment(postId, commentRequest.getContent(), userId);
@@ -58,8 +59,9 @@ public class CommentController {
     @PostMapping("/comments/{commentId}/like")
     public ResponseEntity<String> likeComment(
             @PathVariable Long commentId,
-            @AuthenticationPrincipal UserAccountDto userAccountDto
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         String userId = userAccountDto.getUserId();
         try {
             commentService.likeComment(commentId, userId);
@@ -79,8 +81,9 @@ public class CommentController {
     @PostMapping("/comments/{commentId}/dislike")
     public ResponseEntity<String> dislikeComment(
             @PathVariable Long commentId,
-            @AuthenticationPrincipal UserAccountDto userAccountDto
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         String userId = userAccountDto.getUserId();
         try {
             commentService.dislikeComment(commentId, userId);
@@ -102,8 +105,9 @@ public class CommentController {
     public ResponseEntity<String> reportComment(
             @PathVariable Long commentId,
             @RequestBody ReportRequest reportRequest,
-            @AuthenticationPrincipal UserAccountDto userAccountDto
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         String userId = userAccountDto.getUserId();
         try {
             // 신고 사유를 추가로 전달
