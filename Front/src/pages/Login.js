@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Login.css';
 
 const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -83,10 +82,10 @@ const Login = () => {
             <form id="Login-page-sign-in-form">
 
               <div>
-                <label htmlFor="userId">아이디</label>
                 <input
                     type="text"
                     id="userId"
+                    placeholder="아이디"
                     value={userId}
                     onChange={(e) => setUserId(e.target.value)}
                     required
@@ -94,10 +93,10 @@ const Login = () => {
               </div>
 
               <div>
-                <label htmlFor="password">비밀번호</label>
                 <input
                     type="password"
                     id="password"
+                    placeholder="비밀번호"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -113,11 +112,11 @@ const Login = () => {
             <h1>회원가입</h1>
             <form id="Login-page-sign-up-form">
             <input type="text" placeholder="아이디" />
-              <input type="text" placeholder="이름" />
-              <input type="text" placeholder="닉네임" />
-              <input type="password" placeholder="비밀번호" />
-              <input type="password" placeholder="비밀번호 확인" />
-              <button className="Login-page-control-button Login-page-up">가입하기</button>
+            <input type="text" placeholder="이름" />
+            <input type="text" placeholder="닉네임" />
+            <input type="password" placeholder="비밀번호" />
+            <input type="password" placeholder="비밀번호 확인" />
+            <button className="Login-page-control-button Login-page-up">가입하기</button>
             </form>
           </div>
         </div>

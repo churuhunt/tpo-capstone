@@ -134,39 +134,37 @@ const Signup = () => {
                 style={{display: isSignUp ? 'flex' : 'none'}}>
               <h1>회원가입</h1>
               <form id="Login-page-sign-up-form">
-                <label htmlFor="userId">아이디:</label>
                 <input
                     type="email"
                     id="userId"
+                    placeholder="아이디"
                     value={userId}
                     onChange={(e) => setUserId(e.target.value)}
                     required
                 />
-                <button type="button" onClick={handleUserIdCheck}>아이디 중복확인</button>
+                <button className="Sign-up-page-button1" type="button" onClick={handleUserIdCheck}>중복확인</button>
 
-                <label htmlFor="password">비밀번호:</label>
                 <input
                     type="password"
                     id="password"
+                    placeholder="비밀번호"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-
-                <label htmlFor="confirmPassword">비밀번호 확인:</label>
                 <input
                     type="password"
                     id="confirmPassword"
+                    placeholder="비밀번호 확인"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     required
                 />
 
-
-                <label htmlFor="name">이름:</label>
                 <input
                     type="text"
                     id="name"
+                    placeholder="이름"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
@@ -174,18 +172,18 @@ const Signup = () => {
 
 
               <div className='btndiv'>
-                <label htmlFor="nickname">닉네임:</label>
                 <input
                     type="text"
+                    placeholder="닉네임"
                     id="nickname"
                     value={nickname}
                     onChange={(e) => setNickname(e.target.value)}
                     required
                 />
-                <button type="button" onClick={handleNicknameCheck}>닉네임 중복확인</button>
+                <button className="Sign-up-page-button2" type="button" onClick={handleNicknameCheck}>중복확인</button>
               </div>
 
-              <button className="button2" type="submit">가입하기</button>
+              <button className="Login-page-control-button Login-page-up">가입하기</button>
             </form>
           </div>
         </div>
