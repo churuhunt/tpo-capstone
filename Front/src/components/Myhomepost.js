@@ -56,6 +56,7 @@ const Myhomepost = ({ posts }) => { // Receive posts as a prop
                         <div className="myhomepost-stats">
                             <span>👍 {post.likes}</span>
                             <span>👁️ {post.views}</span>
+                            <span>💬 {post.commentsCount}</span>
                         </div>
                     </div>
                 );
