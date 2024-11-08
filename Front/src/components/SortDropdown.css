@@ -1,0 +1,22 @@
+.Sort-select-container {
+    display: inline-block;
+    background-color: #eee;
+    border-radius: 5px;
+    padding: 0; /* 패딩을 제거해 높이 일치 */
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    height: 40px; /* 검색창 높이와 일치 */
+    display: flex;
+    align-items: center;
+}
+
+.Sort-select-container select {
+    background-color: #eee;
+    border: none; /* 컨테이너에 맞춤 */
+    font-size: 0.8em;
+    padding: 5px 10px;
+    box-sizing: border-box;
+    outline: none;
+    height: 100%; /* 부모 요소와 같은 높이로 설정 */
+    border-radius: 5px;
+}

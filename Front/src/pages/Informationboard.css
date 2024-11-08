@@ -1,0 +1,15 @@
+.informationboard-container {
+    background-color: #F0F2F5;
+    height: 100vh;
+}
+
+
+.post-head-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position:relative;
+    top:-50px;
+    left: -190px;
+}
+

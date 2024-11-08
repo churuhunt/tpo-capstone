@@ -3,11 +3,17 @@ import api from '../axios';
 import Noticeboard from '../components/Noticeboard';
 import { Link } from 'react-router-dom';
 import BubblyButton from '../components/BubblyButton';
+import './Informationboard.css';
 
 import banner1 from '../image/infobanner.jpg';
 import Banner from '../components/Banner';
-import PageSubMenu from '../components/PageSubMenu'; /*sub*/
+import PageSubMenu from '../components/PageSubMenu';
 import ViewModeToggle from '../components/ViewModeToggle';
+import SortDropdown from '../components/SortDropdown';
+import SearchBar from '../components/SearchBar';
+import ListMode from '../components/ListMode';
+import CardMode from '../components/CardMode';
+import Pagination from '../components/Pagination';
 
 const Informationboard = () => {
     const [activeIndex, setActiveIndex] = useState(0); /*sub */
@@ -122,93 +128,30 @@ const Informationboard = () => {
 
     // 컴포넌트 반환
     return (
-        <div className="board4-container">
+        <div className="informationboard-container">
            <Banner src={banner1} title="ℹ️정보게시판" />
-           <div className="post-form-container"> {/*sub*/}
-               <PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
-           </div>
 
-           <ViewModeToggle/>
+           {/* 서브 메뉴 */}
+           <div className="post-form-container"><PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} onItemClick={(item, index) => { const value = item === "🅰️전체" ? "all" : item; handleSubCategoryChange({ target: { value } }); }} /></div>
 
+        <div className="post-head-container">
+           {/* 뷰 전환 버튼 컴포넌트 */}
+           <ViewModeToggle viewMode={viewMode} onChange={handleViewModeChange} />
 
+            {/* 검색창 컴포넌트 */}
+            <SearchBar searchTerm={searchTerm} searchMode={searchMode} onSearchChange={handleSearchChange} onSearchModeChange={handleSearchModeChange} onSearchSubmit={handleSearchSubmit} />
 
+            {/* 정렬 컴포넌트 */}
+            <SortDropdown sortBy={sortBy} direction={direction} onSortChange={handleSortChange} />
+        </div>
 
+        {/* 게시글 (리스트/액자형) 컴포넌트 */}
+        <div> {viewMode === 'list' ? ( <ListMode posts={filteredPosts} /> ) : ( <CardMode posts={filteredPosts} /> )} </div>
 
+        {/* 페이징 컴포넌트 */}
+        <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
 
-                          {/* 뷰 모드 전환 버튼 */}
-                          <div>
-                              <button onClick={() => handleViewModeChange('list')} disabled={viewMode === 'list'}>리스트형 보기</button>
-                              <button onClick={() => handleViewModeChange('grid')} disabled={viewMode === 'grid'}>액자형 보기</button>
-                          </div>
-
-                          {/* 소카테고리 필터링 드롭다운 */}
-                          <select onChange={handleSubCategoryChange} value={subCategoryFilter}>
-                              <option value="all">전체</option>
-                              <option value="패션정보">패션정보</option>
-                              <option value="세일정보">세일정보</option>
-                              <option value="기타정보">기타정보</option>
-                          </select>
-
-                          {/* 정렬 드롭다운 */}
-                          <select onChange={handleSortChange} value={`${sortBy}-${direction}`}>
-                              <option value="date-desc">최신순▼</option>
-                              <option value="date-asc">최신순▲</option>
-                              <option value="likes-desc">추천순▼</option>
-                              <option value="likes-asc">추천순▲</option>
-                              <option value="views-desc">조회수▼</option>
-                              <option value="views-asc">조회수▲</option>
-                          </select>
-
-                          {/* 검색 입력 및 모드 선택 */}
-                          <div>
-                              <input
-                                  type="text"
-                                  placeholder="검색어 입력"
-                                  value={searchTerm}
-                                  onChange={handleSearchChange}
-                              />
-                              <select onChange={handleSearchModeChange} value={searchMode}>
-                                  <option value="title">제목</option>
-                                  <option value="content">내용</option>
-                                  <option value="title_content">제목 + 내용</option>
-                              </select>
-                              <button onClick={handleSearchSubmit}>검색</button>
-                          </div>
-
-                          {/* 게시물 목록 */}
-                          <ul className={viewMode === 'grid' ? 'grid-view' : 'list-view'}>
-                              {filteredPosts.map((post) => (
-                                  <li key={post.id} style={{ border: '1px solid #ccc', margin: '10px', padding: '10px', borderRadius: '8px' }}>
-                                      {post.imageUrl && post.imageUrl.startsWith('http') && (
-                                          <img
-                                              src={post.imageUrl}
-                                              alt="게시물 이미지"
-                                              style={viewMode === 'grid' ? { width: '150px', height: 'auto' } : { width: '100px', height: 'auto' }}
-                                          />
-                                      )}
-                                      <h3>{post.title}</h3>
-                                      <p>{removeHtmlTags(post.content)}</p>
-                                      <small>작성자: {post.author}</small>
-                                      <small>조회수: {post.views}</small>
-                                      <small>추천수: {post.likes}</small>
-                                      <small>작성일: {post.date}</small>
-                                  </li>
-                              ))}
-                          </ul>
-
-                          {/* 페이지네이션 */}
-                          <div>
-                              {Array.from({ length: totalPages }, (_, index) => (
-                                  <button
-                                      key={index + 1}
-                                      onClick={() => handlePageChange(index + 1)}
-                                      disabled={index + 1 === currentPage}
-                                  >
-                                      {index + 1}
-                                  </button>
-                              ))}
-                          </div>
-                      </div>
+    </div>
     );
 };
 

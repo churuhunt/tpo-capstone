@@ -1,0 +1,74 @@
+.Post-List-Mode-table {
+    width: 80%;
+    margin: 0 auto;
+    border-collapse: collapse;
+    background-color: #fff;
+    table-layout: fixed;
+    position: relative;
+    top: -35px;
+}
+
+.Post-List-Mode-table .empty-row td {
+    background-color: #f9f9f9;
+}
+
+.Post-List-Mode-table th, .Post-List-Mode-table td {
+    padding: 8px;
+    text-align: center;
+    border: none;
+    height: 33px;
+}
+
+.Post-List-Mode-table th {
+    background-color: #bbbbbb;
+    color: black;
+    font-weight: bold;
+}
+
+.Post-List-Mode-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.Post-List-Mode-table tr:hover {
+    background-color: #cecdcd;
+}
+
+.Post-List-Mode-table th:nth-child(1), .Post-List-Mode-table td:nth-child(1) {
+    width: 7%;
+}
+
+.Post-List-Mode-table th:nth-child(2), .Post-List-Mode-table td:nth-child(2) {
+    width: 8%;
+}
+
+.Post-List-Mode-table th:nth-child(3), .Post-List-Mode-table td:nth-child(3) {
+    width: 50%;
+    text-align: left;
+    padding-left: 1rem;
+    cursor: pointer;
+}
+
+.Post-List-Mode-table th:nth-child(3) {
+    text-align: center;
+    cursor: default;
+}
+
+.Post-List-Mode-table th:nth-child(4), .Post-List-Mode-table td:nth-child(4) {
+    width: 10%;
+}
+
+.Post-List-Mode-table th:nth-child(5), .Post-List-Mode-table td:nth-child(5) {
+    width: 7%;
+}
+
+.Post-List-Mode-table th:nth-child(6), .Post-List-Mode-table td:nth-child(6) {
+    width: 7%;
+}
+
+.Post-List-Mode-table th:nth-child(7), .Post-List-Mode-table td:nth-child(7) {
+    width: 7%;
+}
+
+.Post-List-Mode-table a {
+    text-decoration: none; /* 테이블 내 링크 밑줄 제거 */
+}
