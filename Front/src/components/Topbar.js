@@ -1,10 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from "react";
 import './Topbar.css';
 import logoImage from '../image/Logo.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from "react-router-dom";
 import PositionAwareButton from '../components/PositionAwareButton';
 
+
 const Topbar = () => {
+  // 로그인 상태 관리
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // 로그인 여부를 확인하는 코드
+    const token = localStorage.getItem("token"); //토큰이 있으면 로그인 상태로 설정
+    setIsLoggedIn(!!token);
+  }, []);
+
+  const handleLogout = () => {
+    // 로그아웃 처리
+    localStorage.removeItem("token"); // 로컬 스토리지의 토큰 삭제
+    setIsLoggedIn(false); // 로그인 상태 업데이트
+    alert("로그아웃 되었습니다.");
+    navigate("/"); // 로그아웃 후 홈 페이지로 이동
+  };
+
   return (
     <div className="top-menu">
       <div className="logo">
@@ -70,13 +89,13 @@ const Topbar = () => {
           </nav>
         </div>
       </div>
+      {isLoggedIn ? (
+          <PositionAwareButton text="로그아웃" onClick={handleLogout} />
+      ) : (
       <Link to="/Login">
         <PositionAwareButton text="로그인" onClick={() => alert('로그인 클릭')} />
       </Link>
-      {/*
-      로그인 0일 때 로그인 창 이동,
-      로그인 1일 때 text 로그아웃으로 변경
-       */}
+          )}
     </div>
   );
 };
