@@ -1,29 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import api from '../axios'; // api 모듈 경로를 설정하세요
+import React, { useState } from 'react';
 import './Myhomepost.css';
 
-const Myhomepost = () => {
-    const [posts, setPosts] = useState([]);
+const Myhomepost = ({ posts }) => { // Receive posts as a prop
     const [showMore, setShowMore] = useState(false);
     const [modalImage, setModalImage] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    useEffect(() => {
-        const fetchUserPosts = async () => {
-            try {
-                setLoading(true);
-                const response = await api.get('/myhome/posts');
-                setPosts(response.data || []); // posts가 undefined일 경우 빈 배열로 설정
-                console.log(response.data)
-            } catch (err) {
-                setError("게시물을 불러오는 중 오류가 발생했습니다.");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchUserPosts();
-    }, []);
 
     const openModal = (image) => {
         setModalImage(image);
@@ -33,13 +13,10 @@ const Myhomepost = () => {
         setModalImage(null);
     };
 
-    if (loading) return <p>로딩 중...</p>;
-    if (error) return <p>{error}</p>;
-
     return (
         <div className="myhomepost-container">
             {posts.map((post) => {
-                const images = post.images || []; // 여기서 images를 초기화
+                const images = post.images || [];
                 return (
                     <div key={post.id} className="myhomepost">
                         <a href={`/post/${post.id}`} className="myhomepost-title">{post.title}</a>
@@ -47,12 +24,11 @@ const Myhomepost = () => {
                             <td>{new Date(post.date).toLocaleDateString()}</td>
                         </p>
                         <div className="myhomepost-content">
-                            {/* content 길이에 따라 '더보기' 처리 */}
                             {showMore || post.content.length <= 100
                                 ? (
                                     <div
                                         className="myhomepost-content-html"
-                                        dangerouslySetInnerHTML={{__html: post.content}}
+                                        dangerouslySetInnerHTML={{ __html: post.content }}
                                     />
                                 ) : (
                                     <p>{post.content.slice(0, 100)}...</p>
