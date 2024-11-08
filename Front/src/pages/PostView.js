@@ -272,15 +272,16 @@ const PostView = () => {
         </div>
         <div className="PageView-post-content">
           <p>{post.content}</p>
-          {/*  {post.content.map((item, index) => {
-            if (typeof item === 'string') {
-              return <p key={index}>{item}</p>; // 텍스트일 경우 p 태그로 렌더링
-            } else if (item.type === 'image') {
-              return <img key={index} src={item.src} alt={item.alt} className="PageView-post-image"/>; // 이미지일 경우 img 태그로 렌더링
-            }
-            return null;
-          })}
-        */}</div>
+
+          {/* 이미지 출력 부분 */}
+          {post.imageUrl && (
+              <div>
+                <img src={post.imageUrl} alt="Post Image" style={{ width: '100%', height: 'auto' }} />
+              </div>
+          )}
+
+
+        </div>
 
         <div className="post-reactions">
           <button onClick={handleLike}>
