@@ -15,11 +15,11 @@ const Pagination = ({ totalPages, currentPage, onPageChange }) => {
 
     // 이전 페이지와 다음 페이지 핸들러
     const handlePrevious = () => {
-        if (currentPage > 1) onPageChange(currentPage - 1);
+        if (currentPage > 1) onPageChange(currentPage - 5);
     };
 
     const handleNext = () => {
-        if (currentPage < totalPages) onPageChange(currentPage + 1);
+        if (currentPage < totalPages) onPageChange(currentPage + 5);
     };
 
     return (

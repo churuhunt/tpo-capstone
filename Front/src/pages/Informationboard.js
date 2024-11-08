@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../axios';
 import { Link } from 'react-router-dom';
-import BubblyButton from '../components/BubblyButton';
 import './Informationboard.css';
 import LoadingModal from '../components/LoadingModal';
 
@@ -14,6 +13,7 @@ import SearchBar from '../components/SearchBar';
 import ListMode from '../components/ListMode';
 import CardMode from '../components/CardMode';
 import Pagination from '../components/Pagination';
+import ShadowButton from '../components/ShadowButton';
 
 const Informationboard = () => {
     const [activeIndex, setActiveIndex] = useState(0); /*sub */
@@ -149,7 +149,10 @@ const Informationboard = () => {
         <div> {viewMode === 'list' ? ( <ListMode posts={filteredPosts} /> ) : ( <CardMode posts={filteredPosts} /> )} </div>
 
         {/* 페이징 컴포넌트 */}
-        <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
+            <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
+
+        {/* 글작성 버튼 컴포넌트 */}
+        <div className="post-button-container"><Link to="/write" className="ShadowButton-inline"><ShadowButton>글작성</ShadowButton></Link></div>
 
     </div>
     );
