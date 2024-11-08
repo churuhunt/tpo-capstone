@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import api from '../axios';
-import Noticeboard from '../components/Noticeboard';
 import { Link } from 'react-router-dom';
 import BubblyButton from '../components/BubblyButton';
 import './Informationboard.css';
