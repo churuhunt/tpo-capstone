@@ -71,8 +71,12 @@ const Topbar = () => {
         </div>
       </div>
       <Link to="/Login">
-        <PositionAwareButton />
+        <PositionAwareButton text="로그인" onClick={() => alert('로그인 클릭')} />
       </Link>
+      {/*
+      로그인 0일 때 로그인 창 이동,
+      로그인 1일 때 text 로그아웃으로 변경
+       */}
     </div>
   );
 };

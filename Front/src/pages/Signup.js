@@ -135,7 +135,7 @@ const Signup = () => {
               <h1>회원가입</h1>
               <form id="Login-page-sign-up-form">
                 <input
-                    type="email"
+                    type="text"
                     id="userId"
                     placeholder="아이디"
                     value={userId}
