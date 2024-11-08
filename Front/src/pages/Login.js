@@ -18,11 +18,12 @@ const Login = () => {
       });
 
       if (response.status === 200) {
-        // JWT 토큰을 로컬 스토리지에 저장
-        localStorage.setItem('token', response.data.token);
-        localStorage.setItem('nickname', response.data.nickname); // 서버에서 받은 닉네임 저장
-        alert('로그인 성공!');
-        navigate('/');
+          // JWT 토큰을 로컬 스토리지에 저장
+          localStorage.setItem('token', response.data.token);
+          localStorage.setItem('nickname', response.data.nickname); // 서버에서 받은 닉네임 저장
+          alert('로그인 성공!');
+          navigate('/'); // 메인 페이지로 이동
+          window.location.reload(); // 페이지 새로고침하여 로그인 상태 즉시 반영
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
