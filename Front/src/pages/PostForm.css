@@ -1,30 +1,6 @@
-.post-form-container .post-form-title {
-    color: white;
-    position: absolute;
-    left: 80px;
-    top: 200px;
-    font-size: 30px;
-    text-shadow: 
-    -1px -1px 0 #000,
-     1px -1px 0 #000,
-    -1px  1px 0 #000, 
-     1px  1px 0 #000,
-     0 0 1px #fff,
-     0 0 3px #fff,
-     0 0 3px #fff;
-}
-
-.banner{
-    background-color: rgb(255, 255, 255);
-    background-image: url("https://www.macromedia-fachhochschule.de/wp-content/uploads/2021/04/210412-macromedia-hochschule-bachelor-fashion-management-5440x1700-ll.jpg");
-    background-repeat: no-repeat; /* 이미지 반복 제거 */
-    background-size: cover; /* 요소 전체에 맞추어 이미지 크기 조정 */
-    background-position: center;
-    color: white;
-    height: 310px;
-    position: relative;
-    top:-82px;
-
+.post-form-container{
+    background-color: #F0F2F5;
+    height:100%;
 }
 
 .title-category-container {
@@ -34,51 +10,65 @@
     gap:15px;
 }
 
-
-
 .post-form-container input[type="text"] {
     padding: 20px;
-    font-size: 16px; 
-    color: #333; 
-    background-color: #fff; 
-    border: 1px solid #ccc; 
-    border-radius: 5px; 
-    appearance: none; 
+    font-size: 16px;
+    color: #333;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     position: relative;
-    padding-right: 30px; 
+    padding-right: 30px;
     width: 95%;
+    width: 113vh
 
 }
 
-
 .post-form-container select {
     padding: 20px;
-    font-size: 16px; 
+    font-size: 16px;
+    text-align:center;
     color: #333;
     background-color: #fff;
-    border: 1px solid #ccc; 
+    border: 1px solid #ccc;
     border-radius: 5px;
-    appearance: none; 
+    appearance: none;
     -webkit-appearance: none;
     -moz-appearance: none;
     position: relative;
     z-index: 1;
-    padding-right: 30px; 
+    padding-right: 30px;
     background-image: url('https://cdn-icons-png.flaticon.com/512/32/32195.png');
     background-size: 10px;
     background-repeat: no-repeat;
     background-position: right 10px center;
 }
 
+.Postform-sel-1 {
+    width:200px;
+    height: 60px;
+}
+
+.Postform-sel-2 {
+    width: 300px;
+    height: 80px;
+}
+
+.Postform-sel-3 {
+    width: 80px;
+    height: 80px;
+}
+
 .editor-controls {
     display: flex;
     flex-wrap: nowrap;
-    gap: 10px; /* 버튼 간격 조정 */
+    gap: 10px;
     margin-bottom: 20px;
     align-items: center;
-    justify-content: flex-start; /* 왼쪽 정렬 */
+    justify-content: flex-start;
 }
 
 
@@ -92,7 +82,7 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-right: 10px; /* 버튼 간격을 일정하게 설정 */
+    margin-right: 10px;
 }
 
 
@@ -121,8 +111,8 @@
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
-    justify-content: flex-end; 
-    
+    justify-content: flex-end;
+
 }
 
 .submit-button:hover,
@@ -139,78 +129,33 @@
     margin-bottom:20px;
 }
 
-
-
-.post-form-container1{
+.post-form-container1 {
     width: 70%;
-    margin: 20px auto;
+    position:relative;
+    top:-50px;
+    margin: auto;
     padding: 20px;
-    padding-bottom: 100px;
-    margin-top:-80px;
+    padding-bottom: 70px;
     background-color: hsl(0, 0%, 98%);
     border-radius: 10px;
     box-shadow: 0 2px 4px rgba(150, 71, 71, 0.1);
+    margin-top: 0;
 }
 
-
-.post-form-sub-menu {
-    background-color: #f9f9f9;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-    position: relative;
-    top:-82px;
-    padding-top:20px;
-    padding-bottom:20px;
-}
-
-.post-form-sub-menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    position: relative;
-  }
-
-.post-form-sub-menu li {
-  cursor: pointer;
-  font-size: 16px;
-  color: #333;
-  font-weight: bold;
-  padding: 5px 10px;
-  position: relative;
-}
-
-.post-form-sub-menu li.active {
-  color: #000;
-  background-color: transparent;
-}
-
-.post-form-sub-menu li:hover {
-  color: #555;
-}
-
-.underline {
-    position: absolute;
-    bottom: 0;
-    height: 2px;
-    background-color: black;
-    transition: left 0.3s ease, width 0.3s ease;
-}
-
-.content-editable[placeholder]:empty:before{
-    content: attr(placeholder);
-    color: #aaa;
-    pointer-events: none;
-}
-
-.post-form-container .buttons-container{
-    float: right;
-}
-
-/* contentEditable 영역 내의 이미지 크기 제한 */
 .content-editable img {
-    max-width: 100%; /* 부모 요소의 너비를 벗어나지 않도록 제한 */
-    height: auto;    /* 이미지 비율을 유지 */
+    max-width: 100%;
+    height: auto;
 }
+
+.PostForm-postandcancelbutton-container {
+    position: relative;
+    top: 20px;
+    display: flex;
+    justify-content: flex-end; /* 오른쪽 정렬 */
+}
+
+.PostForm-icon-button.active {
+    background-color: #d0d0d0;
+    border: 1px solid #898989;
+}
+

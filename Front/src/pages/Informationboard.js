@@ -132,7 +132,7 @@ const Informationboard = () => {
            <Banner src={banner1} title="ℹ️정보게시판" />
 
            {/* 서브 메뉴 */}
-           <div className="post-form-container"><PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} onItemClick={(item, index) => { const value = item === "🅰️전체" ? "all" : item; handleSubCategoryChange({ target: { value } }); }} /></div>
+           <div className="information-container"><PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} onItemClick={(item, index) => { const value = item === "🅰️전체" ? "all" : item; handleSubCategoryChange({ target: { value } }); }} /></div>
 
         <div className="post-head-container">
            {/* 뷰 전환 버튼 컴포넌트 */}
