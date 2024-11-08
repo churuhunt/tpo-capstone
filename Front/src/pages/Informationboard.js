@@ -4,6 +4,7 @@ import Noticeboard from '../components/Noticeboard';
 import { Link } from 'react-router-dom';
 import BubblyButton from '../components/BubblyButton';
 import './Informationboard.css';
+import LoadingModal from '../components/LoadingModal';
 
 import banner1 from '../image/infobanner.jpg';
 import Banner from '../components/Banner';
@@ -116,11 +117,6 @@ const Informationboard = () => {
         setViewMode(mode); // 뷰 모드 상태 업데이트
     };
 
-    // 로딩 중일 경우 로딩 메시지 반환
-    if (loading) {
-        return <div>로딩 중...</div>;
-    }
-
     // HTML 태그 제거 함수
     const removeHtmlTags = (str) => {
         return str.replace(/<[^>]*>?/gm, ''); // 정규 표현식을 사용하여 HTML 태그 제거
@@ -129,6 +125,11 @@ const Informationboard = () => {
     // 컴포넌트 반환
     return (
         <div className="informationboard-container">
+
+           {/* 로딩 */}
+           {loading && <LoadingModal />}
+
+           {/* 배너 */}
            <Banner src={banner1} title="ℹ️정보게시판" />
 
            {/* 서브 메뉴 */}
