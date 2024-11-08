@@ -67,5 +67,8 @@ public class Post {
     )
     private Set<UserAccount> dislikedUsers = new HashSet<>();
 
+    public void incrementViews() {
+        this.views += 1;
+    }
 
 }

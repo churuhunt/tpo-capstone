@@ -114,6 +114,7 @@ public class PostService {
      * @param userId 조회하는 사용자 ID
      * @return 조회된 게시물 객체
      */
+    @Transactional
     public Post getPost(Long postId, String userId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid postId"));
@@ -121,10 +122,13 @@ public class PostService {
         UserAccount user = userAccountRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
 
-        // 블라인드 처리된 게시물일 경우 추가 확인 필요
         if (post.isBlind()) {
             log.warn("블라인드된 게시물입니다. 추가 확인이 필요합니다.");
         }
+
+        // 조회수 증가 처리
+        post.incrementViews();
+        postRepository.save(post); // 증가된 조회수를 저장
 
         return post;
     }
