@@ -13,6 +13,8 @@ import tpo.capstone.entity.Comment;
 import tpo.capstone.service.CommentService;
 import tpo.capstone.dto.CommentRequest;
 
+import java.util.List;
+
 
 @Slf4j
 @RestController
@@ -50,6 +52,32 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
+
+
+    /**
+     * 댓글 삭제 API
+     * @param commentId 댓글 ID
+     * @param userAccountDto 인증된 사용자 정보
+     * @return 삭제된 댓글의 ID 또는 실패 메시지
+     */
+    @DeleteMapping("/comments/{commentId}")
+    public ResponseEntity<String> deleteComment(
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
+        String userId = userAccountDto.getUserId();
+        try {
+            // 댓글 삭제 메서드 호출 (본인의 댓글만 삭제할 수 있도록)
+            commentService.deleteComment(commentId, userId);
+            log.info("댓글 삭제 성공: commentId={}, userId={}", commentId, userId);
+            return ResponseEntity.ok("댓글 삭제가 완료되었습니다.");
+        } catch (Exception e) {
+            log.error("댓글 삭제 실패: commentId={}, userId={}, 오류={}", commentId, userId, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 삭제 실패: " + e.getMessage());
+        }
+    }
+
 
     /**
      * 댓글 추천 API
@@ -117,6 +145,23 @@ public class CommentController {
         } catch (Exception e) {
             log.error("댓글 신고 실패: commentId={}, userId={}, 오류={}", commentId, userId, e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("댓글 신고 실패: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 게시물에 대한 댓글 목록 조회 API
+     * @param postId 게시글 ID
+     * @return 댓글 목록
+     */
+    @GetMapping("/posts/{postId}/comments")
+    public ResponseEntity<List<Comment>> fetchComments(@PathVariable Long postId) {
+        try {
+            List<Comment> comments = commentService.getCommentsByPostId(postId);
+            log.info("댓글 조회 성공: postId={}", postId);
+            return ResponseEntity.ok(comments);
+        } catch (Exception e) {
+            log.error("댓글 조회 실패: postId={}, 오류={}", postId, e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 

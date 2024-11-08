@@ -19,7 +19,7 @@ const Myhomepost = ({ posts }) => { // Receive posts as a prop
                 const images = post.images || [];
                 return (
                     <div key={post.id} className="myhomepost">
-                        <a href={`/post/${post.id}`} className="myhomepost-title">{post.title}</a>
+                        <a href={`/postview/${post.id}`} className="myhomepost-title">{post.title}</a>
                         <p className="myhomepost-date">
                             <td>{new Date(post.date).toLocaleDateString()}</td>
                         </p>
@@ -56,7 +56,6 @@ const Myhomepost = ({ posts }) => { // Receive posts as a prop
                         <div className="myhomepost-stats">
                             <span>👍 {post.likes}</span>
                             <span>👁️ {post.views}</span>
-                            <span>💬 {post.commentsCount}</span>
                         </div>
                     </div>
                 );

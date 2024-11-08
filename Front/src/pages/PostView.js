@@ -68,12 +68,13 @@ const PostView = () => {
 
     const checkBookmarkStatus = async () => {
       try {
-        const bookmarkResponse = await api.get(`/bookmarks`);
-        const bookmarkedPosts = bookmarkResponse.data;
-        return bookmarkedPosts.some(bookmarkedPost => bookmarkedPost.id === postId);
+        const response = await api.get(`/bookmarks`);
+        const bookmarkedPosts = response.data;
+        // 이 게시물이 북마크된 게시물 목록에 있는지 확인
+        return bookmarkedPosts.some(post => post.id === postId);
       } catch (error) {
-        console.error("북마크 상태를 확인하는 중 오류가 발생했습니다:", error);
-        return false; // 오류 발생 시 기본값 반환
+        console.error('북마크 상태를 확인하는 중 오류가 발생했습니다:', error);
+        return false;  // 오류가 발생하면 기본값은 false
       }
     };
 
@@ -81,6 +82,7 @@ const PostView = () => {
     fetchPost();
     fetchComments();
   }, [postId]);
+
 
   const handleLike = async () => {
     await api.post(`/posts/${postId}/like`); // axios 인스턴스 사용
@@ -134,8 +136,7 @@ const PostView = () => {
     }
   };
 
-  const handleOpenReportModal = (commentId = null) => {
-    setEditingCommentId(commentId); // 수정할 댓글 ID 설정
+  const handleOpenReportModal = () => {
     setIsReportModalOpen(true);  // 신고 모달 열기
   };
 
@@ -271,15 +272,16 @@ const PostView = () => {
         </div>
         <div className="PageView-post-content">
           <p>{post.content}</p>
-          {/*  {post.content.map((item, index) => {
-            if (typeof item === 'string') {
-              return <p key={index}>{item}</p>; // 텍스트일 경우 p 태그로 렌더링
-            } else if (item.type === 'image') {
-              return <img key={index} src={item.src} alt={item.alt} className="PageView-post-image"/>; // 이미지일 경우 img 태그로 렌더링
-            }
-            return null;
-          })}
-        */}</div>
+
+          {/* 이미지 출력 부분 */}
+          {post.imageUrl && (
+              <div>
+                <img src={post.imageUrl} alt="Post Image" style={{ width: '100%', height: 'auto' }} />
+              </div>
+          )}
+
+
+        </div>
 
         <div className="post-reactions">
           <button onClick={handleLike}>
