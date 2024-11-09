@@ -11,12 +11,15 @@ import Store from './pages/Store';
 import Ranking from './pages/Ranking';
 import MyMenu from './pages/Mymenu';
 import PostForm from './pages/PostForm';
-import Community from './pages/community';
 import Informationboard from './pages/Informationboard';
+import Community from './pages/Community';
 import PostView from './pages/PostView';
 import ProfileManagement from './pages/ProfileManagement';
 import ErrorPage from './pages/ErrorPage';
 import ScrollToTop from './components/ScrollToTop';
+import Popularity from './pages/Popularity';
+import Recommendedboard from './pages/Recommendedboard';
+import Notification from './pages/Notification';
 
 const App = () => {
   return (
@@ -38,6 +41,10 @@ const App = () => {
             <Route path="/postview/:postId" element={<PostView />} />
             <Route path="/profile" element={<ProfileManagement />} />
             <Route path="/error" element={<ErrorPage />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/popularity" element={<Popularity />} />
+            <Route path="/recommendedboard" element={<Recommendedboard />} />
+            <Route path="/notification" element={<Notification />} />
           </Routes>
         </div>
       </Router>

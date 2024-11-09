@@ -9,14 +9,15 @@ import Banner from '../components/Banner';
 import banner1 from '../image/rankingbanner.jpg';
 
 const Rankings = () => {
+  const menuItems = ["🅿️누적포인트", "👍추천수", "👁️조회수"];
   const [currentPage, setCurrentPage] = useState(1);
   const [rankings, setRankings] = useState([]);
   const [rankingType, setRankingType] = useState('total'); // 기본 랭킹 타입은 '전체'
   const [userSummary, setUserSummary] = useState(null); // 사용자 요약 정보 상태 추가
   const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
+  const [activeIndex, setActiveIndex] = useState(null);
 
   const itemsPerPage = 15;
-
 
   useEffect(() => {
     const fetchRankings = async () => {
@@ -54,10 +55,22 @@ const Rankings = () => {
     return '';
   };
 
+    const getRankIcon = (rank) => {
+        if (rank === 1) return <span style={{ fontSize: '2em' }}>🥇</span>;
+        if (rank === 2) return <span style={{ fontSize: '2em' }}>🥈</span>;
+        if (rank === 3) return <span style={{ fontSize: '2em' }}>🥉</span>;
+        return rank;
+    };
+
   return (
     <div className="ranking-container">
       <Confetti />
-      <h2>🏆랭킹</h2>
+      <Banner src={banner1} title="🏆랭킹" />
+
+      <div className="post-form-container"> {/*sub*/}
+        <PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
+      </div>
+
       <table className="ranking-table">
         <tbody>
           {currentRankings.map((rank, index) => {
@@ -68,7 +81,7 @@ const Rankings = () => {
                 className="ranking-item"
                 style={{ backgroundColor: getBackgroundColor(realIndex) }}
               >
-                <td>{realIndex}</td>
+                <td>{getRankIcon(realIndex)}</td>
                 <td className="profile-cell">
                   {rank.profile ? (
                     <img src={rank.profile} alt="프로필 사진" style={{ width: '50px', height: '50px' }} />
@@ -96,6 +109,7 @@ const Rankings = () => {
             ))}
         </tbody>
       </table>
+
       <div className="pagination">
         <button onClick={() => paginate(currentPage - 1)} disabled={currentPage === 1}>
           이전
@@ -107,23 +121,23 @@ const Rankings = () => {
 
       {/* 모달 창 */}
       {isModalOpen && (
-          <div className="modal">
-            <div className="modal-content">
+        <div className="modal">
+          <div className="modal-content">
             <span className="close" onClick={() => setIsModalOpen(false)}>
               &times;
             </span>
-              <h3>사용자 요약 정보</h3>
-              {userSummary ? (
-                  <div>
-                    <p>닉네임: {userSummary.nickname}</p>
-                    <p>포인트: {userSummary.points}</p>
-                    <p>아이디: {userSummary.userId}</p>
-                  </div>
-              ) : (
-                  <p>요약 정보를 불러오는 중입니다...</p>
-              )}
-            </div>
+            <h3>사용자 요약 정보</h3>
+            {userSummary ? (
+              <div>
+                <p>닉네임: {userSummary.nickname}</p>
+                <p>포인트: {userSummary.points}</p>
+                <p>아이디: {userSummary.userId}</p>
+              </div>
+            ) : (
+              <p>요약 정보를 불러오는 중입니다...</p>
+            )}
           </div>
+        </div>
       )}
     </div>
   );

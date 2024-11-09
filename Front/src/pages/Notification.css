@@ -1,0 +1,27 @@
+.Notification-container {
+    background-color: #F0F2F5;
+}
+
+.post-head-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+    top: -50px;
+    left: -190px;
+}
+
+.post-button-container {
+    display: flex;
+    position:relative;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px 20px;
+    top:-60px;
+    left:-120px;
+}
+
+.ShadowButton-inline {
+    margin-left: auto;
+    margin-right: 0;
+}

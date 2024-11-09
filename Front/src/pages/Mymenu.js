@@ -8,6 +8,7 @@ import Myhomepost from '../components/Myhomepost';
 import ActivityDashboard from '../components/ActivityDashboard';
 import LoadingModal from '../components/LoadingModal';
 import CustomizationPage from '../components/CustomizationPage';
+import FriendList from '../components/FriendList';
 import api from '../axios';
 
 import { Chart as ChartJS, LinearScale, CategoryScale, PointElement, LineElement } from 'chart.js';
@@ -143,7 +144,13 @@ const MyMenu = () => {
                         <img src={tempProfileImage} className="profile-picture" alt="프로필 사진" />
                         <span className="nickname">{nickname}</span>
                         <div className="follow-info">
-                            <span>팔로잉: {followingCount}</span> | <span>팔로워: {followerCount}</span>
+                            <span onClick={() => setActiveTab('following')} style={{ cursor: 'pointer', textDecoration: 'none' }}>
+                                팔로잉: {followingCount}
+                            </span>
+                            |
+                            <span onClick={() => setActiveTab('follower')} style={{ cursor: 'pointer', textDecoration: 'none' }}>
+                                팔로워: {followerCount}
+                            </span>
                         </div>
                     </div>
                     <div className="my-menu-submenu1">
@@ -173,6 +180,8 @@ const MyMenu = () => {
                                     points={points}
                                 />
                             )}
+                            {activeTab === 'follower' && <FriendList type="follower" />}
+                            {activeTab === 'following' && <FriendList type="following" />}
                         </div>
                     </div>
                 </>

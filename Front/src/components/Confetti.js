@@ -6,11 +6,11 @@ const Confetti = () => {
     const confettiCount = 100;
     const confettiArray = [];
     for (let i = 0; i < confettiCount; i++) {
-      const style = {
-        left: `${Math.random() * 100}vw`,
-        animationDelay: `${Math.random() * 5}s`,
-        animationDuration: `${Math.random() * 5 + 3}s`
-      };
+        const style = {
+          left: `${Math.random() * 100}vw`,
+          animationDelay: `${Math.random() * 5}s`,
+          animationDuration: `${Math.random() * 8 + 5}s` // 8~13초
+        };
       confettiArray.push(<div key={i} className="confetti" style={style}></div>);
     }
     return confettiArray;

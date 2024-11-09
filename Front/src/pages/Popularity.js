@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import './Informationboard.css';
 import LoadingModal from '../components/LoadingModal';
 
-import banner1 from '../image/infobanner.jpg';
+import banner1 from '../image/Popularitybanner.jpg';
 import Banner from '../components/Banner';
 import PageSubMenu from '../components/PageSubMenu';
 import ViewModeToggle from '../components/ViewModeToggle';
@@ -15,9 +15,9 @@ import CardMode from '../components/CardMode';
 import Pagination from '../components/Pagination';
 import ShadowButton from '../components/ShadowButton';
 
-const Informationboard = () => {
+const Community = () => {
     const [activeIndex, setActiveIndex] = useState(0); /*sub */
-    const menuItems = ["🅰️전체", "🕺패션정보", "💲세일정보", "🎸기타정보"]; /*sub */
+    const menuItems = ["🅰️전체", "😺일간 게시판", "😸주간게시판", "😹월간게시판", "😻연간게시판"]; /*sub */
     const [posts, setPosts] = useState([]); // 전체 정보 게시물 목록
     const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 정보 게시물 목록
     const [sortBy, setSortBy] = useState('date'); // 정렬 기준
@@ -39,7 +39,7 @@ const Informationboard = () => {
             try {
                 const response = await api.get('/posts', {
                     params: {
-                        category: ['정보게시판'], // 정보게시판으로 고정
+                        category: ['인기게시판'],
                         searchTerm: debouncedSearchTerm,
                         searchMode,
                         sortBy,
@@ -129,7 +129,7 @@ const Informationboard = () => {
            {loading && <LoadingModal />}
 
            {/* 배너 */}
-           <Banner src={banner1} title="ℹ️정보 게시판" />
+           <Banner src={banner1} title="🔥인기 게시판" />
 
            {/* 서브 메뉴 */}
            <div className="information-container"><PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} onItemClick={(item, index) => { const value = item === "🅰️전체" ? "all" : item; handleSubCategoryChange({ target: { value } }); }} /></div>
@@ -151,11 +151,9 @@ const Informationboard = () => {
         {/* 페이징 컴포넌트 */}
             <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
 
-        {/* 글작성 버튼 컴포넌트 */}
-        <div className="post-button-container"><Link to="/write" className="ShadowButton-inline" state={{ category: '정보게시판' }}><ShadowButton>글작성</ShadowButton></Link></div>
 
     </div>
     );
 };
 
-export default Informationboard;
+export default Community;

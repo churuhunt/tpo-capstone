@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../axios';
 import './PostForm.css';
 
@@ -19,10 +19,7 @@ import Banner from '../components/Banner';
 
 const PostForm = () => {
     const [fontName, setFontName] = useState('Arial');
-    const menuItems = ["자유게시판", "데일리룩게시판", "질문게시판", "추천게시판", "정보게시판"];
-    const subCategories = {
-        정보게시판: ["패션정보", "세일정보", "기타정보"],
-    };
+    const menuItems = [];
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
@@ -38,6 +35,7 @@ const PostForm = () => {
     const contentRef = useRef(null);
     const [subCategoryFilter, setSubCategoryFilter] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
+    const { state } = useLocation();
 
     const [showFontColorPicker, setShowFontColorPicker] = useState(false);
     const [showBackgroundColorPicker, setShowBackgroundColorPicker] = useState(false);
@@ -59,6 +57,16 @@ const PostForm = () => {
         setSubCategoryFilter(event.target.value);
         setCurrentPage(1);
     };
+
+    const categoryOptions = state?.category === '정보게시판'
+        ? ['패션정보', '세일정보', '기타정보']
+        : state?.category === '커뮤니티'
+        ? ['자유게시판', '데일리룩게시판', '질문게시판']
+        : ['기타1', '기타2', '기타3'];
+
+    useEffect(() => {
+        setCategory(categoryOptions[0]);
+    }, [categoryOptions]);
 
     useEffect(() => {
         const fetchCurrentUser = async () => {
@@ -184,11 +192,9 @@ const PostForm = () => {
                     <div className="title-category-container">
                         <label className="category-label">
                             <select className="Postform-sel-1" value={category} onChange={(e) => setCategory(e.target.value)}>
-                                <option value="자유게시판">자유게시판</option>
-                                <option value="데일리룩">데일리룩</option>
-                                <option value="질문게시판">질문게시판</option>
-                                <option value="추천게시판">추천게시판</option>
-                                <option value="정보게시판">정보게시판</option>
+                                {categoryOptions.map((option, idx) => (
+                                    <option key={idx} value={option}>{option}</option>
+                                ))}
                             </select>
                         </label>
                         <label className="title-label">

@@ -133,6 +133,7 @@ const Mainpage = () => {
         <img
           src={post.author.profile || profileImage}
           alt="작성자 프로필"
+          className="thumbnail-image"
           style={{ width: '20px', height: '20px', marginRight: '5px', borderRadius: '50%' }}
         />
         {post.author.nickname}

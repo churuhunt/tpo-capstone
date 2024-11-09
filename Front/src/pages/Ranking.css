@@ -1,18 +1,12 @@
-.ranking-container {
-  position: relative;
-  overflow-y: auto; /* 스크롤 허용 */
-  padding: 20px; /* 내용과의 여백 추가 */
-}
-
 .ranking-container .ranking-table {
   width: 60%;
   min-height: 200px;
-  margin: 0 auto; 
+  margin: 0 auto;
   border-collapse: collapse;
   margin-bottom: 20px;
   background-color: #fff;
   position: relative;
-  border-radius: 20px; 
+  border-radius: 20px;
 }
 
 .ranking-container .ranking-table tr:first-child td:first-child {
@@ -127,9 +121,14 @@
 .ranking-container h2 {
   color: #fff;
   font-size: 3vh;
-  text-align: center; 
+  text-align: center;
   display: flex;
-  align-items: center; 
-  justify-content: center; 
+  align-items: center;
+  justify-content: center;
   height: 10%;
+}
+
+
+.ranking-container {
+  background-color: #F0F2F5;
 }
