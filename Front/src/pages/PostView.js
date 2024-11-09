@@ -4,6 +4,9 @@ import './PostView.css';
 import api from '../axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';  // 따봉, 신고 아이콘
+import banner1 from '../image/infobanner.jpg';
+import Banner from '../components/Banner';
+import LoadingModal from '../components/LoadingModal';
 
 import reportIcon from '../image/report.png';  // 신고하기 아이콘
 import replyIcon from '../image/reply.png';    // 대댓글 작성 아이콘

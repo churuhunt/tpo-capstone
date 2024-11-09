@@ -7,6 +7,7 @@ import Visithistory from '../components/Visithistory';
 import Myhomepost from '../components/Myhomepost';
 import ActivityDashboard from '../components/ActivityDashboard';
 import LoadingModal from '../components/LoadingModal';
+import CustomizationPage from '../components/CustomizationPage';
 import api from '../axios';
 
 import { Chart as ChartJS, LinearScale, CategoryScale, PointElement, LineElement } from 'chart.js';
@@ -14,11 +15,16 @@ import { Line } from 'react-chartjs-2';
 ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement);
 
 const MyMenu = () => {
-    const menuItems = ["게시물", "방명록", "활동통계", "타임라인", "추천 게시물", "북마크 게시물"];
+    {/*const menuItems = ["게시물", "방명록", "활동통계", "커스텀", "타임라인", "추천 게시물", "북마크 게시물"];*/}
+    const menuItems = ["게시물", "방명록", "활동통계", "커스텀"];
+
     const [activeIndex, setActiveIndex] = useState(0);
+    const [points, setPoints] = useState(0);
     const [profileImage, setProfileImage] = useState(profileImageSrc);
     const [backgroundImage, setBackgroundImage] = useState('');
+    const [tempBackgroundImage, setTempBackgroundImage] = useState('');
     const [nickname, setNickname] = useState('');
+    const [tempProfileImage, setTempProfileImage] = useState(profileImageSrc);
     const [nicknameDecoration, setNicknameDecoration] = useState('');
     const [introduction, setIntroduction] = useState('');
     const [activeTab, setActiveTab] = useState('myhomepost');
@@ -31,79 +37,88 @@ const MyMenu = () => {
     const [visitorDataPoints, setVisitorDataPoints] = useState([]);
 
     useEffect(() => {
-        const fetchProfileData = async () => {
+        const fetchData = async () => {
             setLoading(true); // 로딩 시작
+
             try {
-                const response = await api.get('/myhome/profile');
-                const userData = response.data;
-                setProfileImage(userData.profileImageUrl || profileImageSrc);
-                setBackgroundImage(userData.backgroundImageUrl || '');
-                setNicknameDecoration(userData.nicknameDecoration || '');
-                setIntroduction(userData.introduction || '');
+                // 모든 비동기 함수를 병렬로 실행
+                await Promise.all([
+                    api.get('/myhome/profile').then(response => {
+                        const userData = response.data;
+                        setProfileImage(userData.profileImageUrl || profileImageSrc);
+                        setTempProfileImage(userData.profileImageUrl || profileImageSrc);
+                        setBackgroundImage(userData.backgroundImageUrl || '');
+                        setTempBackgroundImage(userData.backgroundImageUrl || '');
+                        setNicknameDecoration(userData.nicknameDecoration || '');
+                        setIntroduction(userData.introduction || '');
+                    }),
+
+                    api.get('/users/current').then(response => {
+                        const userData = response.data;
+                        setNickname(userData.nickname || '사용자');
+                        setPoints(userData.points);
+                    }),
+
+                    api.get('/myhome/posts').then(response => {
+                        setUserPosts(response.data || []);
+                    }),
+
+                    api.get('/myhome/activity').then(response => {
+                        const fetchedData = response.data;
+                        setActivityStats({
+                            posts: fetchedData.postCount,
+                            comments: fetchedData.commentCount,
+                            likes: fetchedData.likesReceived,
+                            dislikes: fetchedData.dislikesReceived,
+                        });
+                    }),
+
+                    api.get('/myhome/visitor-count').then(response => {
+                        const totalVisitorCount = response.data;
+                        setVisitorCount(totalVisitorCount);
+                        setVisitorDataPoints(Array(6).fill(totalVisitorCount));
+                    })
+                ]);
+
+                // 모든 데이터가 로드된 후 로딩 상태 해제
             } catch (error) {
-                console.error("프로필 데이터를 가져오지 못했습니다.", error);
+                console.error("데이터 로드 중 오류 발생:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
-        const fetchUserNickname = async () => {
-            try {
-                const response = await api.get('/users/current');
-                const userData = response.data;
-                setNickname(userData.nickname || '사용자');
-            } catch (error) {
-                console.error("Failed to fetch user nickname", error);
-            } finally{
-                setLoading(false); // 로딩 종료
-            }
-        };
-
-        const fetchUserPosts = async () => {
-            try {
-                const response = await api.get('/myhome/posts');
-                setUserPosts(response.data || []);
-            } catch (error) {
-                console.error("게시물을 불러오는 중 오류가 발생했습니다.", error);
-            }
-        };
-
-        // 서버에서 활동 통계 가져오기
-        const fetchStats = async () => {
-            try {
-                const response = await api.get('/myhome/activity');
-                const fetchedData = response.data;
-                console.log("Fetched stats:", response.data); // 데이터 확인
-                // 상태와 매핑되는 속성 이름으로 변환
-                setActivityStats({
-                    posts: fetchedData.postCount,
-                    comments: fetchedData.commentCount,
-                    likes: fetchedData.likesReceived,
-                    dislikes: fetchedData.dislikesReceived,
-                });
-            } catch (error) {
-                console.error('활동 통계 데이터를 가져오는 중 오류 발생:', error);
-            }
-        };
-
-        const fetchVisitorData = async () => {
-            try {
-                const response = await api.get('/myhome/visitor-count');
-                const totalVisitorCount = response.data;
-                setVisitorCount(totalVisitorCount);
-                const data = Array(6).fill(totalVisitorCount);
-                setVisitorDataPoints(data);
-            } catch (error) {
-                console.error("Error fetching visitor count:", error);
-                setVisitorDataPoints([0, 0, 0, 0, 0, 0]);
-            }
-        };
-
-
-        fetchStats();
-        fetchProfileData();
-        fetchUserNickname();
-        fetchUserPosts(); // Fetch posts initially here
-        fetchVisitorData();
+        fetchData();
     }, []);
+
+    const handleSave = async () => {
+        try {
+            setLoading(true);
+            const response = await api.put('/myhome/profile', {
+                profileImageUrl: tempProfileImage,
+                backgroundImageUrl: tempBackgroundImage
+            });
+
+            if (response.status === 200) {
+                setProfileImage(tempProfileImage);
+                setBackgroundImage(tempBackgroundImage);
+                alert('저장되었습니다.');
+            } else {
+                console.error("Unexpected response:", response);
+                alert('저장에 실패했습니다. 서버 응답을 확인하세요.');
+            }
+        } catch (error) {
+            console.error("이미지 저장 실패:", error.response || error.message);
+            alert('이미지 저장에 실패했습니다.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleCancel = () => {
+        setTempProfileImage(profileImage);
+        setTempBackgroundImage(backgroundImage);
+    };
 
     const handleMenuClick = (item) => {
         if (item === "게시물") {
@@ -112,43 +127,56 @@ const MyMenu = () => {
             setActiveTab('ActivityDashboard');
         } else if (item === "방명록") {
             setActiveTab('guestbook');
+        } else if (item === "커스텀") {
+            setActiveTab(item === "커스텀" ? "custom" : item.toLowerCase());
         }
     };
 
     return (
         <div className="my-menu-container">
-            {/* 로딩 */}
+            {/* 로딩 모달 - 모든 데이터가 로드될 때까지 표시 */}
             {loading && <LoadingModal />}
-            <div className="background-image" style={{ backgroundImage: `url(${backgroundImage})` }}>
-                <button className="custom-button">커스텀</button>
-            </div>
-            <div className="profile-info">
-                <img src={profileImage} className="profile-picture" alt="프로필 사진" />
-                <span className="nickname">{nickname}</span>
-                <div className="follow-info">
-                    <span>팔로잉: {followingCount}</span> | <span>팔로워: {followerCount}</span>
-                </div>
-            </div>
-            <div className="my-menu-submenu1">
-                <div className="my-menu-submenu">
-                    <PageSubMenu
-                        items={menuItems}
-                        activeIndex={activeIndex}
-                        setActiveIndex={setActiveIndex}
-                        onItemClick={handleMenuClick}
-                    />
-                </div>
-            </div>
-            <div className="my-menu-content">
-                <div className="my-menu-content1">
-                    <Visithistory visitorCount={visitorCount} visitorDataPoints={visitorDataPoints} />
-                </div>
-                <div className="my-menu-content2">
-                    {activeTab === 'myhomepost' && <Myhomepost posts={userPosts} />} {/* Pass posts here */}
-                    {activeTab === 'ActivityDashboard' && <ActivityDashboard stats={activityStats} />}
-                    {activeTab === 'guestbook' && <Guestbook />}
-                </div>
-            </div>
+            {!loading && (
+                <>
+                    <div className="background-image" style={{ backgroundImage: `url(${tempBackgroundImage || backgroundImage})` }}></div>
+                    <div className="profile-info">
+                        <img src={tempProfileImage} className="profile-picture" alt="프로필 사진" />
+                        <span className="nickname">{nickname}</span>
+                        <div className="follow-info">
+                            <span>팔로잉: {followingCount}</span> | <span>팔로워: {followerCount}</span>
+                        </div>
+                    </div>
+                    <div className="my-menu-submenu1">
+                        <div className="my-menu-submenu">
+                            <PageSubMenu
+                                items={menuItems}
+                                activeIndex={activeIndex}
+                                setActiveIndex={setActiveIndex}
+                                onItemClick={handleMenuClick}
+                            />
+                        </div>
+                    </div>
+                    <div className="my-menu-content">
+                        <div className="my-menu-content1">
+                            <Visithistory visitorCount={visitorCount} visitorDataPoints={visitorDataPoints} />
+                        </div>
+                        <div className="my-menu-content2">
+                            {activeTab === 'myhomepost' && <Myhomepost posts={userPosts} />}
+                            {activeTab === 'ActivityDashboard' && <ActivityDashboard stats={activityStats} />}
+                            {activeTab === 'guestbook' && <Guestbook />}
+                            {activeTab === 'custom' && (
+                                <CustomizationPage
+                                    setTempProfileImage={setTempProfileImage}
+                                    setTempBackgroundImage={setTempBackgroundImage}
+                                    onSave={handleSave}
+                                    onCancel={handleCancel}
+                                    points={points}
+                                />
+                            )}
+                        </div>
+                    </div>
+                </>
+            )}
         </div>
     );
 };
