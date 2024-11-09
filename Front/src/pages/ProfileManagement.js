@@ -150,8 +150,8 @@ const ProfileManagement = () => {
 
             <div className="post-form-container"> {/*sub*/}
                 <PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
-            </div>
-            <div className="Profile-Management-container2">
+
+                <div className="Profile-Management-container2">
                 <div className="Profile-Management-section">
                     <label>닉네임 변경</label>
                     <input
@@ -253,6 +253,8 @@ const ProfileManagement = () => {
                     </div>
                 )}
             </div>
+            </div>
+
         </div>
     );
 };
