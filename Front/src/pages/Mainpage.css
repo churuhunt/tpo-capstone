@@ -74,7 +74,6 @@
   text-align: left;
   position: relative;
   margin-bottom: 15px;
-  display: inline-block;
 }
 
 .section h2::after {
@@ -84,7 +83,7 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background-color: black;
+  border-bottom: 2px solid #ddd;
 }
 
 .section-header {
@@ -118,14 +117,19 @@
 }
 
 .section ul {
-  list-style-type: none;
+  list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .section ul li {
-  margin: 10px 0;
-  color: black;
-  cursor: pointer;
+  display: flex;
+  align-items: center; /* 세로 기준 가운데 정렬 */
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+  transition: color 0.3s;
+  height: 40px;
+  color:black;
 }
 
 .section ul li:hover {
@@ -171,6 +175,7 @@
 .ranking-item {
   display: flex;
   align-items: center;
+  justify-content: space-between; /* 아이템 전체를 양쪽 정렬 */
   margin: 10px 0;
 }
 
@@ -178,16 +183,21 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  margin-left: 10px;
-  margin-right: 10px;
+  margin: 0 10px;
 }
-
+.ranking-nickname {
+  flex: 1;
+}
+.ranking-points {
+  text-align: right; /* 포인트를 오른쪽 정렬 */
+  color: #333;
+}
 
 /*.section-with-border {
   border-left: 2px solid blue;
   border-right: 2px solid white;
-  padding-left: 20px; 
-  padding-right: 20px; 
+  padding-left: 20px;
+  padding-right: 20px;
 }*/
 
 .popularity-header {
@@ -218,39 +228,58 @@
     flex: 1 1 calc(100% - 40px);
   }
 }
+
+/* 인기 게시판 섹션 스타일 */
+.popular-posts {
+  list-style: none;
+  padding: 0;
+}
+
 .popular-posts .post-item {
   display: flex;
-  justify-content: space-between; /* 글 제목과 작성자를 양쪽에 배치 */
   align-items: center;
-  padding: 5px 0; /* 글 사이 간격 조정 */
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
 }
+
+.post-thumbnail {
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+.post-content {
+  display: flex;
+  justify-content: space-between; /* 제목과 작성자 정보를 양쪽으로 배치 */
+  align-items: center;
+  width: 100%;
+}
+
+.post-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: black;
+}
+
 .post-author {
   display: flex;
   align-items: center;
+  color: black;
+  justify-content: flex-end;
 }
 
-.popular-posts .post-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 5px 0; /* 글 사이의 간격을 조정 */
+.author-profile {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 5px;
 }
 
-/*.main-page-banner{
-  background-color: blue;
-  background-image: url("https://sociallypowerful.com/wp-content/uploads/2024/07/mens-fashion-banner.jpg");
-  background-repeat: no-repeat;
-  background-size: contain;
-  background-position: center;
-  color: white;
-  height: 500px;
-  position: relative;
-}*/
-
-.main-page-banner{
-  top:-50px;
+.main-page-banner {
+  top: -50px;
 }
-
 
 .main-page .main-page-title {
   color: white;
@@ -258,10 +287,10 @@
   left: 80px;
   top: 200px;
   font-size: 30px;
-  text-shadow: 
+  text-shadow:
   -1px -1px 0 #000,
    1px -1px 0 #000,
-  -1px  1px 0 #000, 
+  -1px  1px 0 #000,
    1px  1px 0 #000,
    0 0 1px #fff,
    0 0 3px #fff,
@@ -270,12 +299,6 @@
 
 .main-page {
   margin-top: -82px; /* topbar에 공간 할당 */
-}
-
-
-
-.main-page {
-  margin-top: -82px;
 }
 
 .banner-slideshow {
@@ -292,3 +315,25 @@
   position: relative;
 }
 
+.announcement-item {
+  display: flex;
+  justify-content: space-between; /* 제목과 작성 일자를 양쪽에 배치 */
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+  color: black;
+}
+
+.announcement-title {
+  font-weight: bold;
+}
+
+.announcement-date {
+  font-size: 0.9em;
+  color: #666; /* 작성 일자 색상 */
+}
+
+.ranking-item span:first-child {
+  font-size: 2.2rem; /* 원하는 폰트 크기로 설정 */
+  font-weight: bold; /* 강조를 원하면 추가 */
+}

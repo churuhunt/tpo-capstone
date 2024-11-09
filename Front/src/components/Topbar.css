@@ -124,15 +124,25 @@ nav ul li {
   left: -115px;
 }
 
-
 @keyframes floatUp {
   from {
-    transform: translateY(-10px);
+    transform: translateY(10px);
     opacity: 0;
   }
   to {
-    transform: translateY(5);
+    transform: translateY(0px);
     opacity: 1;
+  }
+}
+
+@keyframes floatDown {
+  from {
+    transform: translateY(0px);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(10px);
+    opacity: 0;
   }
 }
 
@@ -142,6 +152,15 @@ nav ul li {
   }
   to {
     transform: translateY(-10px);
+  }
+}
+
+@keyframes floatDown2 {
+  from {
+    transform: translateY(-10px);
+  }
+  to {
+    transform: translateY(0px);
   }
 }
 
@@ -166,4 +185,14 @@ nav ul li {
 
 .top-menu > .submenu > .submenu-2 a:hover {
   color: yellow;
+}
+
+
+.top-menu:not(:hover) .submenu {
+  animation: floatDown 0.5s ease-out forwards;
+  opacity: 0;
+  visibility: hidden;
+}
+.top-menu:not(:hover) nav ul li {
+  animation: floatDown2 0.5s ease-out forwards;
 }

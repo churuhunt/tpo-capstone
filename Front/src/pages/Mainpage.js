@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css';
 import './Mainpage.css';
@@ -12,7 +12,7 @@ import mainbanner1 from '../image/mainpage-banner1.jpg';
 import mainbanner2 from '../image/mainpage-banner2.jpg';
 import mainbanner3 from '../image/mainpage-banner3.jpg';
 
-import PageSubMenu from '../components/PageSubMenu'; /*sub*/
+import PageSubMenu from '../components/PageSubMenu';
 
 const slideImages = [mainimg1, mainimg2, mainimg3];
 const slideBanners = [mainbanner1, mainbanner2, mainbanner3];
@@ -27,74 +27,80 @@ const rankings = [
 
 const popularPostsData = {
   daily: [
-    { title: '테스트 일간 인기글 1', author: { nickname: 'User1', profile: 'https://mblogthumb-phinf.pstatic.net/MjAyMTAxMTVfMTQ3/MDAxNjEwNzE1NjI5NDg3.zVoKymGokWDVyo4LR4DGX0hcD0tOhekkrYrQXcFgrvog.j-77qhOAo8HG_hLeeo8PM1UFSZ4UQVpww9sRTX-A-6Qg.JPEG.dltldud33/IMG_8779.JPG?type=w800' } },
-    { title: '테스트 일간 인기글 2', author: { nickname: 'User12', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 일간 인기글 3', author: { nickname: 'User13', profile: 'https://example.com/profile3.jpg' } },
-    { title: '테스트 일간 인기글 4', author: { nickname: 'User14', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 일간 인기글 5', author: { nickname: 'User15', profile: 'https://media.tenor.com/MPCPvINDMKUAAAAM/%E5%AF%B6%E8%B2%9D%E7%86%8A.gif' } },
+    { title: '테스트 일간 인기글 1', thumbnail: mainimg1, author: { nickname: 'User1', profile: 'https://mblogthumb-phinf.pstatic.net/MjAyMTAxMTVfMTQ3/MDAxNjEwNzE1NjI5NDg3.zVoKymGokWDVyo4LR4DGX0hcD0tOhekkrYrQXcFgrvog.j-77qhOAo8HG_hLeeo8PM1UFSZ4UQVpww9sRTX-A-6Qg.JPEG.dltldud33/IMG_8779.JPG?type=w800' } },
+    { title: '테스트 일간 인기글 2', thumbnail: mainimg2, author: { nickname: 'User12', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
+    { title: '테스트 일간 인기글 3', thumbnail: mainimg3, author: { nickname: 'User13', profile: 'https://example.com/profile3.jpg' } },
+    { title: '테스트 일간 인기글 4', thumbnail: mainimg1, author: { nickname: 'User14', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
+    { title: '테스트 일간 인기글 5', thumbnail: mainimg2, author: { nickname: 'User15', profile: 'https://media.tenor.com/MPCPvINDMKUAAAAM/%E5%AF%B6%E8%B2%9D%E7%86%8A.gif' } },
   ],
   weekly: [
-    { title: '테스트 주간 인기글 1', author: { nickname: 'User11', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 주간 인기글 2', author: { nickname: 'User12', profile: null } },
-    { title: '테스트 주간 인기글 3', author: { nickname: 'User13', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 주간 인기글 4', author: { nickname: 'User14', profile: null } },
-    { title: '테스트 주간 인기글 5', author: { nickname: 'User15', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
+    { title: '테스트 주간 인기글 1', thumbnail: mainimg1, author: { nickname: 'User11', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
+    { title: '테스트 주간 인기글 2', thumbnail: mainimg2, author: { nickname: 'User12', profile: null } },
+    { title: '테스트 주간 인기글 3', thumbnail: mainimg3, author: { nickname: 'User13', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
+    { title: '테스트 주간 인기글 4', thumbnail: mainimg1, author: { nickname: 'User14', profile: null } },
+    { title: '테스트 주간 인기글 5', thumbnail: mainimg2, author: { nickname: 'User15', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
   ],
   monthly: [
-    { title: '테스트 월간 인기글 1', author: { nickname: 'User1', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 월간 인기글 2', author: { nickname: 'User1', profile: null } },
-    { title: '테스트 월간 인기글 3', author: { nickname: 'User13', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 월간 인기글 4', author: { nickname: 'User14', profile: null } },
-    { title: '테스트 월간 인기글 5', author: { nickname: 'User15', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
+    { title: '테스트 월간 인기글 1', thumbnail: mainimg1, author: { nickname: 'User1', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
+    { title: '테스트 월간 인기글 2', thumbnail: mainimg2, author: { nickname: 'User1', profile: null } },
+    { title: '테스트 월간 인기글 3', thumbnail: mainimg3, author: { nickname: 'User13', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
+    { title: '테스트 월간 인기글 4', thumbnail: mainimg1, author: { nickname: 'User14', profile: null } },
+    { title: '테스트 월간 인기글 5', thumbnail: mainimg2, author: { nickname: 'User15', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
   ],
   yearly: [
-    { title: '테스트 연간 인기글 1', author: { nickname: 'User1', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 연간 인기글 2', author: { nickname: 'User12', profile: null } },
-    { title: '테스트 연간 인기글 3', author: { nickname: 'User1', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 연간 인기글 4', author: { nickname: 'User14', profile: null } },
-    { title: '테스트 연간 인기글 5', author: { nickname: 'User1', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
+    { title: '테스트 연간 인기글 1', thumbnail: mainimg1, author: { nickname: 'User1', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
+    { title: '테스트 연간 인기글 2', thumbnail: mainimg2, author: { nickname: 'User12', profile: null } },
+    { title: '테스트 연간 인기글 3', thumbnail: mainimg3, author: { nickname: 'User1', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
+    { title: '테스트 연간 인기글 4', thumbnail: mainimg1, author: { nickname: 'User14', profile: null } },
+    { title: '테스트 연간 인기글 5', thumbnail: mainimg2, author: { nickname: 'User1', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
   ],
 };
 
+const announcements = [
+  { title: '첫 번째 테스트 공지사항', date: '2023-11-01' },
+  { title: '두 번째 테스트 공지사항', date: '2023-11-02' },
+  { title: '세 번째 테스트 공지사항', date: '2023-11-03' },
+  { title: '네 번째 테스트 공지사항', date: '2023-11-04' },
+  { title: '다섯 번째 테스트 공지사항', date: '2023-11-05' },
+];
+
 const Mainpage = () => {
-  const [activeIndex, setActiveIndex] = useState(0); /*sub */
-  const menuItems = []; /*sub */
   const [selectedPeriod, setSelectedPeriod] = useState('daily');
 
   const handlePeriodChange = (period) => {
     setSelectedPeriod(period);
   };
 
+  const rankEmojis = ['🥇', '🥈', '🥉', '🏅', '🏅'];
+
   return (
     <div className="main-page">
       <div className="banner-slideshow">
         <Slide easing="ease">
           {slideBanners.map((image, index) => (
-            <div className="main-page-banner" key={index} style={{ backgroundImage: `url(${image})` }}>
-            </div>
+            <div className="main-page-banner" key={index} style={{ backgroundImage: `url(${image})` }} />
           ))}
         </Slide>
       </div>
-      <div className="content">
 
-      <div className="post-form-container"> {/*sub*/}
-          <PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} />
-      </div>
+      <div className="content">
+        <PageSubMenu items={[]} activeIndex={0} setActiveIndex={() => {}} />
 
         <div className="sections-container">
-          {/* 첫 번째 영역 - 공지사항 */}
+          {/* 공지사항 섹션 */}
           <div className="section">
             <h2>📢 공지사항</h2>
             <ul>
-              <li>첫 번째 테스트 공지사항</li>
-              <li>두 번째 테스트 공지사항</li>
-              <li>세 번째 테스트 공지사항</li>
-              <li>네 번째 테스트 공지사항</li>
-              <li>다섯 번째 테스트 공지사항</li>
+              {announcements.map((announcement, index) => (
+                <li key={index} className="announcement-item">
+                  <span className="announcement-title">{announcement.title}</span>
+                  <span className="announcement-date">{announcement.date}</span>
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* 두 번째 영역 - 인기 게시판 */}
+          {/* 인기 게시판 섹션 */}
           <div className="section section-with-border">
             <div className="popularity-header">
               <h2>🔥인기</h2>
@@ -125,38 +131,41 @@ const Mainpage = () => {
                 </a>
               </div>
             </div>
-            <ul className="popular-posts">
-  {popularPostsData[selectedPeriod].map((post, index) => (
-    <li key={index} className="post-item">
-      <span className="post-heading">{post.title}</span>
-      <span className="post-author">
-        <img
-          src={post.author.profile || profileImage}
-          alt="작성자 프로필"
-          className="thumbnail-image"
-          style={{ width: '20px', height: '20px', marginRight: '5px', borderRadius: '50%' }}
-        />
-        {post.author.nickname}
-      </span>
-    </li>
-  ))}
-</ul>
 
+            <ul className="popular-posts">
+              {popularPostsData[selectedPeriod].map((post, index) => (
+                <li key={index} className="post-item">
+                  <img
+                    src={post.thumbnail}
+                    alt="포스트 썸네일"
+                    className="post-thumbnail"
+                  />
+                  <div className="post-content">
+                    <span className="post-title">{post.title}</span>
+                    <div className="post-author">
+                      <img
+                        src={post.author.profile || profileImage}
+                        alt="작성자 프로필"
+                        className="author-profile"
+                      />
+                      {post.author.nickname}
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* 세 번째 영역 - 랭킹 */}
+          {/* 랭킹 섹션 */}
           <div className="section">
             <h2>🏆랭킹</h2>
             <ul className="ranking-list">
               {rankings.map((rank, index) => (
                 <li key={index} className="ranking-item">
-                  <span>{index + 1}위:</span>
-                  <img
-                    src={rank.profile || profileImage}
-                    alt="프로필"
-                    style={{ width: '30px', height: '30px', marginLeft: '10px', marginRight: '10px', borderRadius: '50%' }}
-                  />
-                  {rank.nickname} - {rank.points} 포인트
+                  <span>{rankEmojis[index] || `${index + 1}위`}</span>
+                  <img src={rank.profile || profileImage} alt="프로필" className="profile-image" />
+                  <span className="ranking-nickname">{rank.nickname}</span>
+                  <span className="ranking-points">{rank.points} 포인트</span>
                 </li>
               ))}
             </ul>
