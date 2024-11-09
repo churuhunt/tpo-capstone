@@ -2,6 +2,7 @@ package tpo.capstone.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tpo.capstone.entity.Bookmark;
 import tpo.capstone.entity.Post;
 import tpo.capstone.entity.UserAccount;
@@ -33,6 +34,7 @@ public class BookmarkService {
      * @param userId 사용자 ID
      * @return 사용자가 북마크한 게시물 목록
      */
+    @Transactional
     public List<Post> getBookmarkedPosts(Long userId) {
         return bookmarkRepository.findByUser_Id(userId).stream()
                 .map(Bookmark::getPost)

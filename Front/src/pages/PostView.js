@@ -46,7 +46,7 @@ const PostView = () => {
         setComments(response.data.comments || []);
         // 현재 게시물이 북마크 상태인지 확인합니다.
         // 북마크 상태 확인 로직을 분리
-        const bookmarkStatus = await checkBookmarkStatus();
+        const bookmarkStatus = await checkBookmarkStatus(response.data.id); // 수정된 코드
         setIsBookmarked(bookmarkStatus);
         if (response.data.isBlind) {
           setIsBlind(true);
@@ -70,8 +70,9 @@ const PostView = () => {
       try {
         const response = await api.get(`/bookmarks`);
         const bookmarkedPosts = response.data;
+        console.log(bookmarkedPosts)
         // 이 게시물이 북마크된 게시물 목록에 있는지 확인
-        return bookmarkedPosts.some(post => post.id === postId);
+        return bookmarkedPosts.some((post) => post.id === parseInt(postId));
       } catch (error) {
         console.error('북마크 상태를 확인하는 중 오류가 발생했습니다:', error);
         return false;  // 오류가 발생하면 기본값은 false
@@ -159,6 +160,7 @@ const PostView = () => {
     }
   };
 
+
   const handlecommentReportSubmit = async (commentId) => {
     if (!reportReason.trim()) {
       alert("신고 사유를 입력해 주세요.");
@@ -197,24 +199,6 @@ const PostView = () => {
     }
   };
 
-  // 댓글 수정 시작
-  const handleEditComment = (commentId, content) => {
-    setEditingCommentId(commentId);  // 수정할 댓글 ID 설정
-    setCommentEditText(content);  // 수정할 댓글의 기존 내용 설정
-  };
-
-  // 댓글 수정 완료
-  const handleCommentUpdate = async (commentId) => {
-    try {
-      await api.put(`/comments/${commentId}`, { content: commentEditText }); // axios 인스턴스 사용
-      alert("댓글이 수정되었습니다.");
-      setEditingCommentId(null);  // 수정 완료 후 초기화
-      setCommentEditText('');  // 텍스트 초기화
-      // 댓글 목록 갱신 로직 필요
-    } catch (error) {
-      console.error("댓글 수정 중 오류가 발생했습니다:", error);
-    }
-  };
 
   // 댓글 삭제
   const handleDeleteComment = async (commentId) => {
@@ -239,6 +223,7 @@ const PostView = () => {
       console.error("북마크 토글 중 오류가 발생했습니다:", error);
     }
   };
+
 
   if (!post) {
     return <div>게시물을 불러오는 중입니다...</div>;
@@ -296,7 +281,6 @@ const PostView = () => {
           <button onClick={toggleBookmark}>
             {isBookmarked ? '북마크 해제' : '북마크'}
           </button>
-          <button onClick={() => navigate(`/posts/${postId}/edit`)}>글 수정</button>
           <button onClick={handleDeletePost}>글 삭제</button>
         </div>
 
@@ -322,19 +306,8 @@ const PostView = () => {
                         <button onClick={() => handleOpenReportModal(comment.id)}>
                           <FontAwesomeIcon icon={faExclamationTriangle}/> 신고
                         </button>
-                        <button onClick={() => handleEditComment(comment.id, comment.content)}>댓글 수정
-                        </button>
                         <button onClick={() => handleDeleteComment(comment.id)}>댓글 삭제</button>
 
-                        {editingCommentId === comment.id && (
-                            <>
-                                        <textarea
-                                            value={commentEditText}
-                                            onChange={(e) => setCommentEditText(e.target.value)}
-                                        />
-                              <button onClick={() => handleCommentUpdate(comment.id)}>수정 완료</button>
-                            </>
-                        )}
                       </div>
                     </>
                 )}
