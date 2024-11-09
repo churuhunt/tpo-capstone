@@ -7,14 +7,11 @@ import './Visithistory.css';
 
 ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement, Tooltip, ChartDataLabels);
 
-const Visithistory = () => {
+const Visithistory = ({ visitorCount, visitorDataPoints }) => {
     const introduction = "마이홈 소개글란";
-
-    const [visitorCount, setVisitorCount] = useState(0);  // 방문자 수 상태값
     const [visitorUsername, setVisitorUsername] = useState(null);  // 현재 사용자 이름 상태값
-    const [visitorDataPoints, setVisitorDataPoints] = useState([]); // 5일간 방문자 수 데이터 상태값
 
-    useEffect(() => {
+       useEffect(() => {
         // 현재 사용자 정보 가져오기
         const fetchCurrentUser = async () => {
             try {
@@ -39,21 +36,6 @@ const Visithistory = () => {
             }
         };
 
-        // 방문자 수 가져오기
-        const fetchVisitorCount = async () => {
-            try {
-                const response = await api.get('/myhome/visitor-count');
-                const totalVisitorCount = response.data; // 가져온 전체 방문자 수
-                setVisitorCount(totalVisitorCount);
-
-                // 방문자 수를 5일간의 데이터로 가정해서 배열로 설정
-                const data = Array(6).fill(totalVisitorCount); // 예시로 5일간 방문자 수를 모두 동일하게 설정
-                setVisitorDataPoints(data);
-            } catch (error) {
-                console.error("Error fetching visitor count:", error);
-                setVisitorDataPoints([0, 0, 0, 0, 0, 0]); // 데이터 가져오는 데 실패한 경우 기본값 사용
-            }
-        };
 
         // 컴포넌트가 처음 로드될 때 실행
         fetchCurrentUser().then(() => {
@@ -61,7 +43,6 @@ const Visithistory = () => {
                 logVisit(visitorUsername);
             }
         });
-        fetchVisitorCount();
     }, [visitorUsername]);
 
     // 최근 5일간 날짜 생성

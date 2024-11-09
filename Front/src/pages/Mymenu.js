@@ -26,6 +26,9 @@ const MyMenu = () => {
     const [followerCount, setFollowerCount] = useState(250);
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [userPosts, setUserPosts] = useState([]); // Store posts here
+    const [activityStats, setActivityStats] = useState({ posts: 0, comments: 0, likes: 0, dislikes: 0 });
+    const [visitorCount, setVisitorCount] = useState(0);
+    const [visitorDataPoints, setVisitorDataPoints] = useState([]);
 
     useEffect(() => {
         const fetchProfileData = async () => {
@@ -63,9 +66,43 @@ const MyMenu = () => {
             }
         };
 
+        // 서버에서 활동 통계 가져오기
+        const fetchStats = async () => {
+            try {
+                const response = await api.get('/myhome/activity');
+                const fetchedData = response.data;
+                console.log("Fetched stats:", response.data); // 데이터 확인
+                // 상태와 매핑되는 속성 이름으로 변환
+                setActivityStats({
+                    posts: fetchedData.postCount,
+                    comments: fetchedData.commentCount,
+                    likes: fetchedData.likesReceived,
+                    dislikes: fetchedData.dislikesReceived,
+                });
+            } catch (error) {
+                console.error('활동 통계 데이터를 가져오는 중 오류 발생:', error);
+            }
+        };
+
+        const fetchVisitorData = async () => {
+            try {
+                const response = await api.get('/myhome/visitor-count');
+                const totalVisitorCount = response.data;
+                setVisitorCount(totalVisitorCount);
+                const data = Array(6).fill(totalVisitorCount);
+                setVisitorDataPoints(data);
+            } catch (error) {
+                console.error("Error fetching visitor count:", error);
+                setVisitorDataPoints([0, 0, 0, 0, 0, 0]);
+            }
+        };
+
+
+        fetchStats();
         fetchProfileData();
         fetchUserNickname();
         fetchUserPosts(); // Fetch posts initially here
+        fetchVisitorData();
     }, []);
 
     const handleMenuClick = (item) => {
@@ -104,11 +141,11 @@ const MyMenu = () => {
             </div>
             <div className="my-menu-content">
                 <div className="my-menu-content1">
-                    <Visithistory />
+                    <Visithistory visitorCount={visitorCount} visitorDataPoints={visitorDataPoints} />
                 </div>
                 <div className="my-menu-content2">
                     {activeTab === 'myhomepost' && <Myhomepost posts={userPosts} />} {/* Pass posts here */}
-                    {activeTab === 'ActivityDashboard' && <ActivityDashboard />}
+                    {activeTab === 'ActivityDashboard' && <ActivityDashboard stats={activityStats} />}
                     {activeTab === 'guestbook' && <Guestbook />}
                 </div>
             </div>

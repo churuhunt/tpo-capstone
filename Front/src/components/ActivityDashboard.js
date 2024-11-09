@@ -6,41 +6,13 @@ import api from '../axios'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Tooltip, Legend, Filler);
 
-const ActivityDashboard = () => {
-    const [stats, setStats] = useState({
-        posts: 0,
-        comments: 0,
-        likes: 0,
-        dislikes: 0,
-    });
+const ActivityDashboard = ({stats}) => {
     const [displayStats, setDisplayStats] = useState({
         posts: 0,
         comments: 0,
         likes: 0,
         dislikes: 0,
     });
-
-
-    useEffect(() => {
-        // 서버에서 활동 통계 가져오기
-        const fetchStats = async () => {
-            try {
-                const response = await api.get('/myhome/activity');
-                const fetchedData = response.data;
-                console.log("Fetched stats:", response.data); // 데이터 확인
-                // 상태와 매핑되는 속성 이름으로 변환
-                setStats({
-                    posts: fetchedData.postCount,
-                    comments: fetchedData.commentCount,
-                    likes: fetchedData.likesReceived,
-                    dislikes: fetchedData.dislikesReceived,
-                });
-            } catch (error) {
-                console.error('활동 통계 데이터를 가져오는 중 오류 발생:', error);
-            }
-        };
-        fetchStats();
-    },[]);
 
 
     useEffect(() => {
