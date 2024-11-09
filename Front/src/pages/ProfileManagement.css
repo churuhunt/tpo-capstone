@@ -1,15 +1,19 @@
 .Profile-Management-container1 .Profile-Management-container2 {
-    width: 70%;
+    width: 1000px;
     margin: 0 auto;
     font-family: Arial, sans-serif;
     color: #333;
     background-color: #f7f7f7;
-    padding: 20px;
+    padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position:relative;
+    top:-50px;
 }
 
 .Profile-Management-section {
+    display: flex;
+    align-items: center;
     margin-bottom: 20px;
     padding: 15px;
     background-color: #fff;
@@ -17,19 +21,16 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.Profile-Management-section button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.Profile-Management-section2 {
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.Profile-Management-section button:hover {
-    background-color: #0056b3;
-}
+
 
 .Profile-Management-modal {
     position: fixed;
@@ -81,20 +82,6 @@
     border-radius: 50%;
 }
 
-.Profile-Management-blocked-item button {
-    padding: 5px 10px;
-    font-size: 12px;
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.Profile-Management-blocked-item button:hover {
-    background-color: #c82333;
-}
 
 .Profile-Management-modal-content input {
     width: calc(100% - 20px);
@@ -105,17 +92,47 @@
     font-size: 14px;
 }
 
-.Profile-Management-modal-content button {
-    padding: 8px 12px;
-    margin-top: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
+.Profile-Management-section h3 {
+    white-space: nowrap;
+    margin-right: 30px;
+    min-width: 100px;
+    text-align: left;
 }
 
-.Profile-Management-modal-content button:hover {
-    background-color: #0056b3;
+.Profile-Management-input-area {
+    width: 70%;
+    height: 45px;
+    padding: 8px;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    background-color: white;
+    color: #333;
+    margin-right: 20px;
+    transition: border-color 0.3s ease;
+}
+
+.Profile-Management-input-area:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.notification-toggle {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.notification-toggle span {
+    min-width: 100px; /* 라벨의 최소 너비를 설정하여 일정한 위치에 정렬 */
+}
+
+.butest{
+    display:flex;
+    position:relative;
+}
+
+.Block-modal-button-container{
+    display:flex;
+    margin-top:30px;
 }

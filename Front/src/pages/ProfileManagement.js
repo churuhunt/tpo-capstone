@@ -6,6 +6,9 @@ import PageSubMenu from '../components/PageSubMenu'; /*sub*/
 import Banner from '../components/Banner';
 import banner1 from '../image/ProfileManagementbanner.jpg';
 
+import ShadowButton from '../components/ShadowButton';
+import CheckboxToggle from '../components/CheckboxToggle';
+
 const ProfileManagement = () => {
     const menuItems = ["내 정보 관리"]; /*sub */
     const [activeIndex, setActiveIndex] = useState(null);
@@ -153,78 +156,85 @@ const ProfileManagement = () => {
 
                 <div className="Profile-Management-container2">
                 <div className="Profile-Management-section">
-                    <label>닉네임 변경</label>
+                    <h3>닉네임 변경</h3>
                     <input
                         type="text"
+                        className="Profile-Management-input-area"
                         value={nickname}
                         onChange={(e) => setNickname(e.target.value)}
                         placeholder="새 닉네임 입력"
                     />
-                    <button onClick={updateNickname} disabled={!nickname}>변경</button>
+                    <div className="butest"><ShadowButton onClick={updateNickname} disabled={!nickname}>변경</ShadowButton></div>
                 </div>
 
+
                 <div className="Profile-Management-section">
-                <label>이메일 변경</label>
+                <h3>이메일 변경</h3>
                     <input
                         type="email"
+                        className="Profile-Management-input-area"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="새 이메일 입력"
                     />
-                    <button onClick={updateEmail}>변경</button>
+                    <ShadowButton onClick={updateEmail}>변경</ShadowButton>
                 </div>
 
                 <div className="Profile-Management-section">
-                    <label>아이디 변경</label>
+                    <h3>아이디 변경</h3>
                     <input
                         type="text"
+                        className="Profile-Management-input-area"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
                         placeholder="새 아이디 입력"
                     />
-                    <button onClick={updateUsername}>변경</button>
+                    <ShadowButton onClick={updateUsername}>변경</ShadowButton>
                 </div>
 
                 <div className="Profile-Management-section">
-                <label>비밀번호 변경</label>
+                <h3>비밀번호 변경</h3>
                     <input
                         type="password"
+                        className="Profile-Management-input-area"
                         value={password.old}
                         onChange={(e) => setPassword({...password, old: e.target.value})}
                         placeholder="현재 비밀번호 입력"
                     />
                     <input
                         type="password"
+                        className="Profile-Management-input-area"
                         value={password.new}
                         onChange={(e) => setPassword({...password, new: e.target.value})}
                         placeholder="새 비밀번호 입력"
                     />
-                    <button onClick={updatePassword}>변경</button>
+                    <ShadowButton onClick={updatePassword}>변경</ShadowButton>
                 </div>
 
                 <div className="Profile-Management-section">
                     <h3>차단 내역 관리</h3>
-                    <button onClick={() => setIsModalOpen(true)}>열기</button>
+                    <ShadowButton onClick={() => setIsModalOpen(true)}>열기</ShadowButton>
                 </div>
 
-                <div className="Profile-Management-section">
+                <div className="Profile-Management-section2">
                     <h3>알림 설정</h3>
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={notifications.comments}
+                    <div className="notification-toggle">
+                        <span>댓글 알림</span>
+                        <CheckboxToggle
+                            id="comments-toggle"
+                            isChecked={notifications.comments}
                             onChange={() => toggleNotification('comments')}
                         />
-                        댓글 알림
-                    </label>
-                    <label>
-                        <input
-                            type="checkbox"
-                            checked={notifications.replies}
+                    </div>
+
+                    <div className="notification-toggle">
+                        <span>대댓글 알림</span>
+                        <CheckboxToggle
+                            id="replies-toggle"
+                            isChecked={notifications.replies}
                             onChange={() => toggleNotification('replies')}
                         />
-                        대댓글 알림
-                    </label>
+                    </div>
                 </div>
 
                 {isModalOpen && (
@@ -247,8 +257,11 @@ const ProfileManagement = () => {
                                 value={newBlockedAccount}
                                 onChange={(e) => setNewBlockedAccount(e.target.value)}
                             />
-                            <button onClick={blockUser}>추가</button>
-                            <button onClick={() => setIsModalOpen(false)}>닫기</button>
+                            <div className="Block-modal-button-container">
+                                <ShadowButton onClick={blockUser}>추가</ShadowButton>
+                                <ShadowButton onClick={() => setIsModalOpen(false)}>닫기</ShadowButton>
+                            </div>
+
                         </div>
                     </div>
                 )}

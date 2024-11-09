@@ -192,7 +192,7 @@ const PostForm = () => {
                             </select>
                         </label>
                         <label className="title-label">
-                            <input type="text" className="custom-title-input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="제목을 입력해주세요" />
+                            <input type="text1" className="custom-title-input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="제목을 입력해주세요" />
                         </label>
                     </div>
 
