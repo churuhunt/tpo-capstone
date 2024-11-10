@@ -50,4 +50,5 @@ public class Item {
     public enum Category {
         PROFILE, BORDER, BACKGROUND, FONT, EMOJI, EFFECT, OTHER
     }
+
 }

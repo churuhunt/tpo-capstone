@@ -1,5 +1,7 @@
 package tpo.capstone.dto;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,20 +13,28 @@ import tpo.capstone.entity.Item;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ItemDto {
-    private Long id;
-    private String name;
-    private String description;
-    private int price;
-    private Item.Category category; // 카테고리 필드 추가
 
-    // Entity에서 DTO로 변환하는 메서드
+    private Long id;
+
+    @NotEmpty(message = "Item name cannot be empty")
+    private String name;
+
+    private String description;
+
+    @NotNull(message = "Item price cannot be null")
+    private int price;
+
+    private Item.Category category;
+    private String imageUrl;
+
     public static ItemDto fromEntity(Item item) {
         return new ItemDto(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.getPrice(),
-                item.getCategory() // 카테고리 포함
+                item.getCategory(),
+                item.getImageUrl()
         );
     }
 }

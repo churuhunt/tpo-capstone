@@ -116,35 +116,35 @@ const Store = () => {
               </button>
             ))}
           </div>
-          <div className="itemlist-container">
-            {filteredItems.length > 0 ? (
+        <div className="itemlist-container">
+          {filteredItems.length > 0 ? (
               filteredItems.map((item) => (
-                <div key={item.id} className="store-item">
-                  <img
-                    src={item.image || "기본 이미지 URL"}
-                    alt={item.name || "이미지"}
-                    className="store-item-image"
-                    onError={(e) => {
-                      console.error(`이미지 로드 오류: ${item.image}`);
-                      e.target.src = "기본 이미지 URL";
-                    }}
-                  />
-                  <div className="store-item-info">
-                    <p>{item.name}</p>
-                    <p>💰 {item.price} 포인트</p>
+                  <div key={item.id} className="store-item">
+                    <img
+                        src={item.imageUrl || "path/to/default-image.jpg"} // 기본 이미지 경로 수정
+                        alt={item.name || "이미지"}
+                        className="store-item-image"
+                        onError={(e) => {
+                          console.error(`이미지 로드 오류: ${item.image}`);
+                          e.target.src = "path/to/default-image.jpg"; // 실제 기본 이미지 경로로 변경
+                        }}
+                    />
+                    <div className="store-item-info">
+                      <p>{item.name}</p>
+                      <p>💰 {item.price} 포인트</p>
+                    </div>
                   </div>
-                </div>
               ))
-            ) : (
-                <div className="store-item-empty">
-                  <img src="기본 이미지 URL" alt="준비 중" />
-                  <p>해당 카테고리에 상품이 없습니다.</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </>
-      )}
+          ) : (
+              <div className="store-item-empty">
+                <img src="path/to/default-image.jpg" alt="준비 중"/>
+                <p>해당 카테고리에 상품이 없습니다.</p>
+              </div>
+          )}
+        </div>
+      </div>
+           </>
+       )}
     </div>
   );
 };

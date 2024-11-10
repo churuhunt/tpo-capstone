@@ -20,7 +20,7 @@ import ScrollToTop from './components/ScrollToTop';
 import Popularity from './pages/Popularity';
 import Recommendedboard from './pages/Recommendedboard';
 import Notification from './pages/Notification';
-
+import ItemRegistrationForm from "./pages/ItemRegistrasionForm";
 const App = () => {
   return (
     <div className="app-container">
@@ -45,6 +45,7 @@ const App = () => {
             <Route path="/popularity" element={<Popularity />} />
             <Route path="/recommendedboard" element={<Recommendedboard />} />
             <Route path="/notification" element={<Notification />} />
+            <Route path="/itemregistrationForm" element={<ItemRegistrationForm />} />
           </Routes>
         </div>
       </Router>

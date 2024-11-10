@@ -3,10 +3,12 @@ package tpo.capstone.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import tpo.capstone.dto.ItemDto;
 import tpo.capstone.entity.Item;
 import tpo.capstone.repository.ItemRepository;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,11 +17,12 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     private final ItemRepository itemRepository;
-
+    private final S3Service s3Service;
 
     @Autowired
-    public ItemService(ItemRepository itemRepository) {
+    public ItemService(ItemRepository itemRepository, S3Service s3Service) {
         this.itemRepository = itemRepository;
+        this.s3Service = s3Service;
     }
 
     /**
@@ -48,6 +51,28 @@ public class ItemService {
         return items.stream()
                 .map(ItemDto::fromEntity)
                 .collect(Collectors.toList());
+    }
+
+    public ItemDto createItem(String name, String description, int price, Item.Category category, MultipartFile imageFile) throws IOException {
+        // name 필드 유효성 검사
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Item name cannot be empty");
+        }
+
+        // price 필드 유효성 검사
+        if (price <= 0) {
+            throw new IllegalArgumentException("Item price must be greater than 0");
+        }
+
+        String imageUrl = null;
+        if (imageFile != null && !imageFile.isEmpty()) {
+            imageUrl = s3Service.uploadImage(imageFile);
+        }
+
+        Item item = new Item(name, price, description, imageUrl, category);
+        itemRepository.save(item);
+
+        return ItemDto.fromEntity(item);
     }
 
 }
