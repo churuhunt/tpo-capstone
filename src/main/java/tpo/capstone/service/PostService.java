@@ -184,7 +184,12 @@ public class PostService {
         Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
-        return postRepository.findFilteredPostsByUser(userId, category, searchTerm, pageable);
+        // 카테고리가 null이거나 비어있다면 모든 카테고리를 대상으로 검색
+        if (category == null || category.isEmpty()) {
+            return postRepository.findFilteredPostsByUserWithoutCategory(userId, searchTerm, pageable);
+        } else {
+            return postRepository.findFilteredPostsByUser(userId, category, searchTerm, pageable);
+        }
     }
 
 

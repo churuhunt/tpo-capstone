@@ -69,4 +69,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             @Param("category") List<String> category,
             @Param("searchTerm") String searchTerm,
             Pageable pageable);
+
+    // 카테고리가 없는 경우 모든 게시물을 필터링하는 메서드 추가
+    @Query("SELECT p FROM Post p " +
+            "LEFT JOIN FETCH p.likedUsers " +
+            "LEFT JOIN FETCH p.dislikedUsers " +
+            "WHERE p.author.id = :authorId " +
+            "AND (:searchTerm IS NULL OR p.title LIKE %:searchTerm%)")
+    Page<Post> findFilteredPostsByUserWithoutCategory(
+            @Param("authorId") Long authorId,
+            @Param("searchTerm") String searchTerm,
+            Pageable pageable);
 }
