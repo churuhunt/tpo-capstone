@@ -227,6 +227,16 @@ const PostView = () => {
     }
   };
 
+  // <img> 태그와 base64 문자열을 제거하는 함수
+  const removeImagesAndBase64 = (content) => {
+    // <img> 태그 제거
+    let filteredContent = content.replace(/<img[^>]*>/g, '');
+    // base64 문자열 제거 (이미지가 있을 수 있는 부분만 처리)
+    filteredContent = filteredContent.replace(/data:image\/(png|jpg|jpeg|gif);base64,[^\s]+/g, '');
+    return filteredContent;
+  };
+
+
 
   if (!post) {
     return <div>게시물을 불러오는 중입니다...</div>;
@@ -259,12 +269,12 @@ const PostView = () => {
           <p className="PageView-likes">추천수: {post.likes}</p>
         </div>
         <div className="PageView-post-content">
-          <p>{post.content}</p>
+          <div>{removeImagesAndBase64(post.content)}</div>
 
           {/* 이미지 출력 부분 */}
           {post.imageUrl && (
               <div>
-                <img src={post.imageUrl} alt="Post Image" style={{ width: '100%', height: 'auto' }} />
+                <img src={post.imageUrl} alt="Post Image" style={{width: '100%', height: 'auto'}}/>
               </div>
           )}
 
