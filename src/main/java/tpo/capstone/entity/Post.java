@@ -1,12 +1,15 @@
 package tpo.capstone.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -15,7 +18,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = "comments")
 @DynamicUpdate
 public class Post {
 
@@ -70,8 +73,11 @@ public class Post {
     )
     private Set<UserAccount> dislikedUsers = new HashSet<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Comment> comments = new ArrayList<>(); // 댓글 리스트 추가 및 JsonManagedReference 적용
+
     public void incrementViews() {
         this.views += 1;
     }
-
 }

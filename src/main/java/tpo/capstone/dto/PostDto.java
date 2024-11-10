@@ -42,7 +42,7 @@ public class PostDto {
                 post.getTitle(),
                 post.getContent(),
                 authorNickname,
-                profileImageUrl,  // 프로필 이미지 URL 설정 (없을 경우 null)
+                profileImageUrl,
                 post.getCategory(),
                 post.getSmallCategory(),
                 post.getDate(),

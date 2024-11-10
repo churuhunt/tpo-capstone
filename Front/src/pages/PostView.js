@@ -15,7 +15,7 @@ const PostView = () => {
   const { postId } = useParams(); // URL에서 postId를 가져옴
   const navigate = useNavigate(); // 목록으로 돌아가기 위한 네비게이션
   const [post, setPost] = useState(null);
-  const [comments, setComments] = useState([]); // 댓글 목록
+  const [comments, setComments] = useState([]);
   const [commentText, setCommentText] = useState('');
   const [isBlind, setIsBlind] = useState(false);  // 블라인드 여부 상태
   const [newComment, setNewComment] = useState(''); // 새로운 댓글
@@ -62,10 +62,10 @@ const PostView = () => {
     const fetchComments = async () => {
       try {
         const response = await api.get(`/posts/${postId}/comments`);
-        setComments(response.data); // response.data는 댓글 객체 배열입니다.
-        setcommentId(response.data.id)
+        setComments(Array.isArray(response.data) ? response.data : []); // 배열이 아니면 빈 배열 설정
       } catch (error) {
         console.error("댓글을 불러오는 중 오류 발생:", error);
+        setComments([]); // 오류 발생 시 빈 배열로 설정
       }
     };
 
@@ -299,7 +299,7 @@ const PostView = () => {
 
         <div className="PageView-comments-section">
           <h2>댓글</h2>
-          {comments.map((comment, index) => (
+          {Array.isArray(comments) && comments.map((comment, index) => (
               <div key={index} className="comment-item">
                 {comment.isBlind ? (
                     <div>

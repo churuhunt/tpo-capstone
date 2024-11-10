@@ -35,6 +35,8 @@ const Store = () => {
                 console.log("User Info:", userResponse.data); // 데이터를 출력하여 확인
                 setUserId(userResponse.data.id);
                 setPoints(userResponse.data.points);
+
+                await fetchPurchaseHistory(userResponse.data.id);
             } catch (error) {
                 console.error("Error fetching user info:", error); // 오류 발생 시 콘솔에 출력
                 setError("사용자 정보를 불러올 수 없습니다.");
@@ -65,7 +67,6 @@ const Store = () => {
 
         fetchUserInfo();
         fetchItems();
-        fetchPurchaseHistory();
     }, [userId]);
 
 

@@ -15,7 +15,7 @@ import CardMode from '../components/CardMode';
 import Pagination from '../components/Pagination';
 import ShadowButton from '../components/ShadowButton';
 
-const Community = () => {
+const Nofication = () => {
     const [activeIndex, setActiveIndex] = useState(0); /*sub */
     const menuItems = ["🅰️전체", "📢공지사항", "🎁이벤트", "🆙업데이트"]; /*sub */
     const [posts, setPosts] = useState([]); // 전체 정보 게시물 목록
@@ -156,4 +156,4 @@ const Community = () => {
     );
 };
 
-export default Community;
+export default Nofication;

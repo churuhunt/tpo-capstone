@@ -1,5 +1,6 @@
 package tpo.capstone.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,6 +28,7 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "post_id", nullable = false)
+    @JsonBackReference
     private Post post;  // 게시물과의 관계 설정
 
     @Temporal(TemporalType.TIMESTAMP)
