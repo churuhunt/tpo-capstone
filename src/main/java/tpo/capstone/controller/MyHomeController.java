@@ -149,4 +149,53 @@ public class MyHomeController {
         List<Post> userPostsByCategory = postService.getUserPostsByCategory(userId, category);
         return ResponseEntity.ok(userPostsByCategory);
     }
+
+    // 다른 사용자의 프로필 조회
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity<UserProfile> getProfile(@PathVariable Long userId) {
+        log.info("Fetching profile for userId: {}", userId);
+        UserProfile userProfile = userProfileService.getProfile(userId);
+        return ResponseEntity.ok(userProfile);
+    }
+
+    // 다른 사용자의 활동 통계 조회
+    @GetMapping("/activity/{userId}")
+    public ResponseEntity<Map<String, Long>> getActivityStatistics(@PathVariable Long userId) {
+        log.info("Fetching activity statistics for userId: {}", userId);
+        Map<String, Long> activityStatistics = userActivityService.getActivityStatistics(userId);
+        return ResponseEntity.ok(activityStatistics);
+    }
+
+    // 다른 사용자의 게시물 조회
+    @GetMapping("/posts/{userId}")
+    public ResponseEntity<List<Post>> getUserPosts(@PathVariable Long userId) {
+        log.info("Fetching posts for userId: {}", userId);
+        List<Post> userPosts = postService.getUserPosts(userId);
+        return ResponseEntity.ok(userPosts);
+    }
+
+    // 다른 사용자의 특정 카테고리 게시물 조회
+    @GetMapping("/posts/{userId}/{category}")
+    public ResponseEntity<List<Post>> getUserPostsByCategory(@PathVariable Long userId, @PathVariable String category) {
+        log.info("Fetching posts for userId: {} in category: {}", userId, category);
+        List<Post> userPostsByCategory = postService.getUserPostsByCategory(userId, category);
+        return ResponseEntity.ok(userPostsByCategory);
+    }
+
+    // 다른 사용자의 타임라인 조회
+    @GetMapping("/timeline/{userId}")
+    public ResponseEntity<List<UserActivity>> getTimeline(@PathVariable Long userId) {
+        log.info("Fetching timeline for userId: {}", userId);
+        List<UserActivity> timeline = timelineService.getUserTimeline(userId);
+        return ResponseEntity.ok(timeline);
+    }
+
+    // 다른 사용자의 방문자 수 조회
+    @GetMapping("/visitor-count/{userId}")
+    public ResponseEntity<Long> getVisitorCount(@PathVariable Long userId) {
+        log.info("Fetching visitor count for userId: {}", userId);
+        Long visitorCount = visitorService.getVisitorCount(userId);
+        return ResponseEntity.ok(visitorCount);
+    }
+
 }
