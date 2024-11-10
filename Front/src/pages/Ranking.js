@@ -9,38 +9,40 @@ import Banner from '../components/Banner';
 import banner1 from '../image/rankingbanner.jpg';
 
 const Rankings = () => {
-  const menuItems = ["🅿️누적포인트", "👍추천수", "👁️조회수"];
+  const menuItems = ["일간 랭킹", "주간 랭킹", "월간 랭킹"];
   const [currentPage, setCurrentPage] = useState(1);
   const [rankings, setRankings] = useState([]);
-  const [rankingType, setRankingType] = useState('total'); // 기본 랭킹 타입은 '전체'
-  const [userSummary, setUserSummary] = useState(null); // 사용자 요약 정보 상태 추가
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
-  const [activeIndex, setActiveIndex] = useState(null);
+  const [rankingType, setRankingType] = useState('daily'); // 기본 랭킹 타입은 '일간'
+  const [userSummary, setUserSummary] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   const itemsPerPage = 15;
 
+  // 랭킹 데이터 가져오기
   useEffect(() => {
     const fetchRankings = async () => {
       try {
-        const response = await api.get(`/rankings/${rankingType}`); // api 인스턴스를 사용하여 요청
+        const response = await api.get(`/api/rankings/${rankingType}`); // API 요청
         setRankings(response.data);
       } catch (error) {
         console.error('랭킹 데이터를 불러오는 중 오류가 발생했습니다:', error);
       }
     };
-
     fetchRankings();
   }, [rankingType]);
 
+  // 닉네임 클릭 시 요약 정보 표시
   const handleNicknameClick = async (id) => {
     try {
-      const response = await api.get(`/users/${id}/summary`);
+      const response = await api.get(`/api/users/${id}/summary`);
       setUserSummary(response.data);
-      setIsModalOpen(true); // 모달을 열기
+      setIsModalOpen(true);
     } catch (error) {
       console.error('사용자 요약 정보를 불러오는 중 오류가 발생했습니다:', error);
     }
   };
+
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -48,6 +50,20 @@ const Rankings = () => {
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
+  // 메뉴 클릭 시 랭킹 타입 변경
+  const handleMenuClick = (index) => {
+    setActiveIndex(index);
+    setRankingType(index === 0 ? 'daily' : index === 1 ? 'weekly' : 'monthly');
+    setCurrentPage(1); // 페이지 초기화
+  };
+
+  // 순위 아이콘 및 배경색 설정
+  const getRankIcon = (rank) => {
+    if (rank === 1) return <span style={{ fontSize: '2em' }}>🥇</span>;
+    if (rank === 2) return <span style={{ fontSize: '2em' }}>🥈</span>;
+    if (rank === 3) return <span style={{ fontSize: '2em' }}>🥉</span>;
+    return rank;
+  };
   const getBackgroundColor = (rank) => {
     if (rank === 1) return 'gold';
     if (rank === 2) return 'silver';
@@ -55,12 +71,6 @@ const Rankings = () => {
     return '';
   };
 
-    const getRankIcon = (rank) => {
-        if (rank === 1) return <span style={{ fontSize: '2em' }}>🥇</span>;
-        if (rank === 2) return <span style={{ fontSize: '2em' }}>🥈</span>;
-        if (rank === 3) return <span style={{ fontSize: '2em' }}>🥉</span>;
-        return rank;
-    };
 
   return (
     <div className="ranking-container">
