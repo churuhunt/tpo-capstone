@@ -86,7 +86,7 @@ const MyMenu = () => {
         };
 
         fetchData();
-    }, []);
+    }, [userId]);
 
     // 게시물 가져오기 함수
     const fetchPosts = async (userId) => {
@@ -95,7 +95,6 @@ const MyMenu = () => {
             const response = await api.get('/posts', {
                 params: {
                     userId, // 현재 사용자의 ID로 필터링
-                    category: [],
                 },
                 paramsSerializer: params => {
                     return Object.keys(params)
