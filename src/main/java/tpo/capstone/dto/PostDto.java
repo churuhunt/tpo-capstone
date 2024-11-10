@@ -33,14 +33,16 @@ public class PostDto {
     // 엔티티에서 DTO로 변환하는 메서드
     public static PostDto fromEntity(Post post) {
         String authorNickname = post.getAuthor() != null ? post.getAuthor().getNickname() : "Unknown";
-        String profileImageUrl = post.getUserProfile() != null ? post.getUserProfile().getProfileImageUrl() : null;
+        String profileImageUrl = (post.getAuthor() != null && post.getAuthor().getUserProfile() != null)
+                ? post.getAuthor().getUserProfile().getProfileImageUrl()
+                : null; // 프로필 이미지 URL이 없을 경우 null로 설정
 
         return new PostDto(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 authorNickname,
-                profileImageUrl, // 프로필 이미지 URL 설정
+                profileImageUrl,  // 프로필 이미지 URL 설정 (없을 경우 null)
                 post.getCategory(),
                 post.getSmallCategory(),
                 post.getDate(),

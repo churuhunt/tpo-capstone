@@ -6,12 +6,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 /** 회원 엔티티
  *
@@ -50,6 +47,10 @@ public class UserAccount implements UserDetails {
     @Temporal(TemporalType.TIMESTAMP)
     private Date lastActiveDate;
 
+    // UserProfile과의 1:1 관계 추가
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private UserProfile userProfile;
+
     @Override
     public String toString() {
         return "UserAccount{" +
@@ -65,8 +66,6 @@ public class UserAccount implements UserDetails {
                 '}';
     }
 
-
-
     @Builder
     public UserAccount(String userId, String password, String name, int age, String gender, String email, String nickname) {
         this.userId = userId;
@@ -80,7 +79,6 @@ public class UserAccount implements UserDetails {
     }
 
     // UserDetails 인터페이스 메서드 구현
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
