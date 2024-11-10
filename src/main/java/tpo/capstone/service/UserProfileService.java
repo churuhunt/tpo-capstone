@@ -1,8 +1,9 @@
 package tpo.capstone.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import tpo.capstone.dto.UserProfileRequestDto;
 import tpo.capstone.entity.UserProfile;
 import tpo.capstone.repository.UserProfileRepository;
 
@@ -27,19 +28,32 @@ public class UserProfileService {
     /**
      * 특정 사용자의 프로필 업데이트
      * @param userId 사용자 ID
-     * @param updatedProfile 업데이트된 사용자 프로필 정보
-     * @return 업데이트된 사용자 프로필
+     * @param profileDto 업데이트할 프로필 정보
      */
-    public UserProfile updateProfile(Long userId, UserProfile updatedProfile) {
+    public UserProfile updateProfileData(Long userId, UserProfileRequestDto profileDto) {
         UserProfile userProfile = getProfile(userId);
 
         // 프로필 정보 업데이트
-        userProfile.setProfileImageUrl(updatedProfile.getProfileImageUrl());
-        userProfile.setBackgroundImageUrl(updatedProfile.getBackgroundImageUrl());
-        userProfile.setNicknameDecoration(updatedProfile.getNicknameDecoration());
-        userProfile.setIntroduction(updatedProfile.getIntroduction());
-        userProfile.setInterests(updatedProfile.getInterests());
+        userProfile.setProfileImageUrl(profileDto.getProfileImageUrl());
+        userProfile.setBackgroundImageUrl(profileDto.getBackgroundImageUrl());
+        userProfile.setNicknameDecoration(profileDto.getNicknameDecoration());
+        userProfile.setIntroduction(profileDto.getIntroduction());
+        userProfile.setInterests(profileDto.getInterests());
 
         return userProfileRepository.save(userProfile);
+    }
+
+    // 프로필 이미지 URL 업데이트
+    public void updateProfileImage(Long userId, String profileImageUrl) {
+        UserProfile userProfile = getProfile(userId);
+        userProfile.setProfileImageUrl(profileImageUrl);
+        userProfileRepository.save(userProfile);
+    }
+
+    // 배경 이미지 URL 업데이트
+    public void updateBackgroundImage(Long userId, String backgroundImageUrl) {
+        UserProfile userProfile = getProfile(userId);
+        userProfile.setBackgroundImageUrl(backgroundImageUrl);
+        userProfileRepository.save(userProfile);
     }
 }

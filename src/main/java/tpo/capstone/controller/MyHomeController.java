@@ -7,6 +7,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tpo.capstone.auth.CustomUserDetails;
 import tpo.capstone.dto.UserAccountDto;
+import tpo.capstone.dto.UserProfileRequestDto;
 import tpo.capstone.entity.Post;
 import tpo.capstone.entity.UserActivity;
 import tpo.capstone.entity.UserProfile;
@@ -52,11 +53,11 @@ public class MyHomeController {
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<UserProfile> updateProfile(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody UserProfile profile) {
+    public ResponseEntity<UserProfile> updateProfile(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody UserProfileRequestDto profileDto) {
         UserAccountDto userAccountDto = userDetails.getUserAccountDto();
         Long userId = userAccountDto.getId();
         log.info("Updating profile for userId: {}", userId);
-        UserProfile updatedProfile = userProfileService.updateProfile(userId, profile);
+        UserProfile updatedProfile = userProfileService.updateProfileData(userId, profileDto);
         return ResponseEntity.ok(updatedProfile);
     }
 
