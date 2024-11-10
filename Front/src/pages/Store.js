@@ -74,8 +74,7 @@ const Store = () => {
   }, []);
 
   // 선택된 탭에 맞는 아이템만 필터링
-  const filteredItems = items.filter(item => item.category === tabItems[activeTab]);
-
+  const filteredItems = items.filter(item => item.category.toLowerCase() === tabItems[activeTab]);
 
   return (
     <div className="store-container">
