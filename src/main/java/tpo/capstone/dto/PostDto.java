@@ -20,8 +20,9 @@ public class PostDto {
     private String title;
     private String content;
     private String author;
+    private String profileImageUrl; // 프로필 이미지 URL 추가
     private String category;
-    private String smallCategory; // 소카테고리 필드 추가
+    private String smallCategory;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSX")
     private OffsetDateTime date;
     private int likes;
@@ -32,13 +33,16 @@ public class PostDto {
     // 엔티티에서 DTO로 변환하는 메서드
     public static PostDto fromEntity(Post post) {
         String authorNickname = post.getAuthor() != null ? post.getAuthor().getNickname() : "Unknown";
+        String profileImageUrl = post.getUserProfile() != null ? post.getUserProfile().getProfileImageUrl() : null;
+
         return new PostDto(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
                 authorNickname,
+                profileImageUrl, // 프로필 이미지 URL 설정
                 post.getCategory(),
-                post.getSmallCategory(), // 소카테고리 설정
+                post.getSmallCategory(),
                 post.getDate(),
                 post.getLikes(),
                 post.getDislikes(),
@@ -56,7 +60,7 @@ public class PostDto {
         post.setAuthor(authorAccount);
         post.setAuthorNickname(authorAccount.getNickname());
         post.setCategory(this.category);
-        post.setSmallCategory(this.smallCategory); // 소카테고리 설정
+        post.setSmallCategory(this.smallCategory);
         post.setDate(this.date);
         post.setLikes(this.likes);
         post.setDislikes(this.dislikes);

@@ -11,9 +11,11 @@ import org.springframework.transaction.annotation.Transactional;
 import tpo.capstone.entity.Post;
 import tpo.capstone.entity.Report;
 import tpo.capstone.entity.UserAccount;
+import tpo.capstone.entity.UserProfile;
 import tpo.capstone.repository.PostRepository;
 import tpo.capstone.repository.ReportRepository;
 import tpo.capstone.repository.UserAccountRepository;
+import tpo.capstone.repository.UserProfileRepository;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -28,12 +30,17 @@ public class PostService {
     private final PostRepository postRepository;
     private final UserAccountRepository userAccountRepository;
     private final ReportRepository reportRepository;
+    private final UserProfileRepository userProfileRepository;
 
     @Autowired
-    public PostService(PostRepository postRepository, UserAccountRepository userAccountRepository, ReportRepository reportRepository) {
+    public PostService(PostRepository postRepository,
+                       UserAccountRepository userAccountRepository,
+                       ReportRepository reportRepository,
+                       UserProfileRepository userProfileRepository) {
         this.postRepository = postRepository;
         this.userAccountRepository = userAccountRepository;
         this.reportRepository = reportRepository;
+        this.userProfileRepository = userProfileRepository;
     }
 
     @Transactional
@@ -44,7 +51,11 @@ public class PostService {
         UserAccount author = userAccountRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
 
-        post.setAuthor(author); // Author 설정
+        // UserAccount에서 UserProfile 가져오기
+        UserProfile userProfile = userProfileRepository.findByUser_Id(author.getId())
+                .orElseThrow(() -> new IllegalArgumentException("UserProfile not found for userId: " + userId));
+
+        post.setUserProfile(userProfile); // UserProfile 설정
         post.setDate(OffsetDateTime.now(ZoneOffset.UTC)); // 현재 날짜를 OffsetDateTime으로 설정
         Post savedPost = postRepository.save(post);
 

@@ -35,6 +35,9 @@ public class Post {
 
     private String imageUrl; // 이미지 파일 URL
 
+    @ManyToOne
+    private UserProfile userProfile;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "author_id", nullable = false)
     private UserAccount author;

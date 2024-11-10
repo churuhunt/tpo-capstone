@@ -19,6 +19,8 @@ import tpo.capstone.dto.ReportRequest;
 import tpo.capstone.dto.UserAccountDto;
 import tpo.capstone.entity.Post;
 import tpo.capstone.entity.UserAccount;
+import tpo.capstone.entity.UserProfile;
+import tpo.capstone.repository.UserProfileRepository;
 import tpo.capstone.service.PostService;
 import tpo.capstone.service.S3Service;
 import tpo.capstone.service.UserAccountService;
@@ -40,13 +42,19 @@ public class PostController {
     private final UserAccountService userAccountService;
     private final S3Service s3Service;
     private final ObjectMapper objectMapper;
+    private final UserProfileRepository userProfileRepository;
 
     @Autowired
-    public PostController(PostService postService, UserAccountService userAccountService, S3Service s3Service, ObjectMapper objectMapper) {
+    public PostController(PostService postService,
+                          UserAccountService userAccountService,
+                          S3Service s3Service,
+                          ObjectMapper objectMapper,
+                          UserProfileRepository userProfileRepository) {
         this.postService = postService;
         this.userAccountService = userAccountService;
         this.s3Service = s3Service;
         this.objectMapper = objectMapper;
+        this.userProfileRepository = userProfileRepository;
     }
 
     @GetMapping("/posts")
@@ -87,23 +95,27 @@ public class PostController {
             @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
             @AuthenticationPrincipal(expression = "userAccountDto") UserAccountDto userDto) throws IOException {
 
-        log.info("Received createPost request with postDtoString={}, imageFile provided={}",
-                postDtoString, imageFile != null);
+        log.info("Received createPost request with postDtoString={}, imageFile provided={}", postDtoString, imageFile != null);
 
-        // 주입받은 ObjectMapper 사용
+        // ObjectMapper로 JSON 문자열을 PostDto로 변환
         PostDto postDto = objectMapper.readValue(postDtoString, PostDto.class);
         String userId = userDto.getUserId();
         log.info("User ID extracted from token: {}", userId);
 
         UserAccount authorAccount = userAccountService.findByUserId(userId);
 
-        // 이미지 파일이 있을 경우 S3에 업로드
+        // UserProfile 가져와서 프로필 이미지 URL 설정
+        UserProfile userProfile = userProfileRepository.findByUser_Id(authorAccount.getId())
+                .orElseThrow(() -> new IllegalArgumentException("User profile not found for userId: " + userId));
+        postDto.setProfileImageUrl(userProfile.getProfileImageUrl());
+
+        // 이미지 파일이 있을 경우 S3에 업로드하고, URL을 PostDto에 설정
         if (imageFile != null && !imageFile.isEmpty()) {
             String imageUrl = s3Service.uploadImage(imageFile);
-            postDto.setImageUrl(imageUrl); // S3 URL을 DTO에 설정
+            postDto.setImageUrl(imageUrl);
         }
 
-        // 저장 시 소카테고리 정보 포함
+        // Post 엔티티로 변환하여 저장
         Post savedPost = postService.savePost(postDto.toEntity(authorAccount), userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(PostDto.fromEntity(savedPost));
     }
