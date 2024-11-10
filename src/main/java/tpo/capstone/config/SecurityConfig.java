@@ -9,8 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -21,8 +19,6 @@ import tpo.capstone.security.JwtAuthenticationFilter;
 import tpo.capstone.security.JwtTokenProvider;
 import tpo.capstone.security.OAuth2LoginSuccessHandler;
 import tpo.capstone.service.UserAccountService;
-
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -49,12 +45,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // CSRF 보호 비활성화 (또는 정책을 명시적으로 설정)
+                .csrf(csrf -> csrf.disable()) // CSRF 보호 비활성화
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // CORS 설정 적용
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/signup", "/api/login", "/api/check-userId", "/api/check-nickname", "/oauth2/**",
-                                "/api/user/points", "/api/notification").permitAll() // 인증이 필요 없는 엔드포인트 설정
-                        .anyRequest().permitAll() // 나머지 요청에 대해서는 인증 필요
+                        .anyRequest().permitAll() // 모든 요청 허용 (보안 완화)
                 )
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
@@ -73,8 +67,7 @@ public class SecurityConfig {
                         .failureUrl("/login?error=true") // 인증 실패 시 리디렉션할 URL
                         .successHandler(oAuth2LoginSuccessHandler())
                 )
-                // JWT 필터를 UsernamePasswordAuthenticationFilter 앞에 추가
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // JWT 필터 추가
 
         return http.build();
     }
@@ -82,10 +75,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("*")); // 모든 출처 허용 (최신 스프링 부트 권장 방식)
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 모든 HTTP 메서드 허용
-        configuration.setAllowedHeaders(List.of("*")); // 모든 헤더 허용
-        configuration.setAllowCredentials(true); // 자격 증명 포함 허용
+        configuration.addAllowedOriginPattern("*"); // 모든 오리진 허용
+        configuration.addAllowedMethod("*");        // 모든 HTTP 메서드 허용
+        configuration.addAllowedHeader("*");        // 모든 헤더 허용
+        configuration.setAllowCredentials(true);    // 자격 증명 허용
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

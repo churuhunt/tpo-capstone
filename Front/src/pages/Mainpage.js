@@ -33,40 +33,73 @@ const Mainpage = () => {
       setLoading(true);
       try {
         // 자유게시판 데이터 가져오기
+        const communityParams = {
+          category: ['자유게시판'],
+          page: 0,
+          size: 5
+        };
         const communityResponse = await api.get('/posts', {
-          params: {
-            category: ['자유게시판'],
-            page: 0,
-            size: 5
+          params: communityParams,
+          paramsSerializer: params => {
+            return Object.keys(params)
+                .filter(key => params[key] !== null && params[key] !== undefined) // null 또는 undefined 제거
+                .map(key =>
+                    Array.isArray(params[key])
+                        ? params[key].map(val => `${key}=${encodeURIComponent(val)}`).join('&')
+                        : `${key}=${encodeURIComponent(params[key])}`
+                )
+                .join('&');
           }
         });
         setCommunityPosts(communityResponse.data.posts || []);
 
         // 공지사항 데이터 가져오기
+        const announcementParams = {
+          category: ['공지사항'],
+          page: 0,
+          size: 5
+        };
         const announcementResponse = await api.get('/posts', {
-          params: {
-            category: ['공지사항'],
-            page: 0,
-            size: 5
+          params: announcementParams,
+          paramsSerializer: params => {
+            return Object.keys(params)
+                .filter(key => params[key] !== null && params[key] !== undefined) // null 또는 undefined 제거
+                .map(key =>
+                    Array.isArray(params[key])
+                        ? params[key].map(val => `${key}=${encodeURIComponent(val)}`).join('&')
+                        : `${key}=${encodeURIComponent(params[key])}`
+                )
+                .join('&');
           }
         });
         setAnnouncements(announcementResponse.data.posts || []);
 
         // 인기 게시물 데이터 가져오기
+        const popularParams = {
+          likes: 10,
+          sortBy: 'likes',
+          direction: 'desc',
+          page: 0,
+          size: 5,
+          timeFilter: selectedPeriod
+        };
         const popularResponse = await api.get('/posts', {
-          params: {
-            likes: 10,
-            sortBy: 'likes',
-            direction: 'desc',
-            page: 0,
-            size: 5,
-            timeFilter: selectedPeriod
+          params: popularParams,
+          paramsSerializer: params => {
+            return Object.keys(params)
+                .filter(key => params[key] !== null && params[key] !== undefined) // null 또는 undefined 제거
+                .map(key =>
+                    Array.isArray(params[key])
+                        ? params[key].map(val => `${key}=${encodeURIComponent(val)}`).join('&')
+                        : `${key}=${encodeURIComponent(params[key])}`
+                )
+                .join('&');
           }
         });
         setPopularPosts(popularResponse.data.posts || []);
 
         // 랭킹 데이터 가져오기
-        const rankingResponse = await api.get('/api/rankings/total');
+        const rankingResponse = await api.get('/rankings/total');
         setRankings(rankingResponse.data);
 
       } catch (error) {

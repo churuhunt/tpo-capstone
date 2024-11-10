@@ -16,9 +16,7 @@ import { Line } from 'react-chartjs-2';
 ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement);
 
 const MyMenu = () => {
-    {/*const menuItems = ["게시물", "방명록", "활동통계", "커스텀", "타임라인", "추천 게시물", "북마크 게시물"];*/}
     const menuItems = ["게시물", "방명록", "활동통계", "커스텀"];
-
     const [activeIndex, setActiveIndex] = useState(0);
     const [points, setPoints] = useState(0);
     const [profileImage, setProfileImage] = useState(null);
@@ -36,12 +34,20 @@ const MyMenu = () => {
     const [activityStats, setActivityStats] = useState({ posts: 0, comments: 0, likes: 0, dislikes: 0 });
     const [visitorCount, setVisitorCount] = useState(0);
     const [visitorDataPoints, setVisitorDataPoints] = useState([]);
+    const [userId, setUserId] = useState(null);
+    const [totalPages, setTotalPages] = useState(0); // totalPages 상태 추가
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-
             try {
+                // 사용자 정보 및 ID 가져오기
+                const userResponse = await api.get('/users/current');
+                const userData = userResponse.data;
+                setUserId(userData.id); // 현재 사용자 ID 설정
+                setNickname(userData.nickname || '사용자');
+                setPoints(userData.points);
+
                 await Promise.all([
                     api.get('/myhome/profile').then(response => {
                         const userData = response.data;
@@ -51,14 +57,6 @@ const MyMenu = () => {
                         setTempBackgroundImage(userData.backgroundImageUrl || '');
                         setNicknameDecoration(userData.nicknameDecoration || '');
                         setIntroduction(userData.introduction || '');
-                    }),
-                    api.get('/users/current').then(response => {
-                        const userData = response.data;
-                        setNickname(userData.nickname || '사용자');
-                        setPoints(userData.points);
-                    }),
-                    api.get('/myhome/posts').then(response => {
-                        setUserPosts(response.data || []);
                     }),
                     api.get('/myhome/activity').then(response => {
                         const fetchedData = response.data;
@@ -75,6 +73,11 @@ const MyMenu = () => {
                         setVisitorDataPoints(Array(6).fill(totalVisitorCount));
                     })
                 ]);
+
+                // 게시물 가져오기 함수 호출
+                if (userId) {
+                    fetchPosts(userId);
+                }
             } catch (error) {
                 console.error("데이터 로드 중 오류 발생:", error);
             } finally {
@@ -84,6 +87,30 @@ const MyMenu = () => {
 
         fetchData();
     }, []);
+
+    // 게시물 가져오기 함수
+    const fetchPosts = async (userId) => {
+        try {
+            setLoading(true);
+            const response = await api.get('/posts', {
+                params: {
+                    userId, // 현재 사용자의 ID로 필터링
+                    category: [],
+                },
+                paramsSerializer: params => {
+                    return Object.keys(params)
+                        .map(key => Array.isArray(params[key]) ? params[key].map(val => `${key}=${val}`).join('&') : `${key}=${params[key]}`)
+                        .join('&');
+                }
+            });
+            setUserPosts(response.data.posts || []);
+            setTotalPages(response.data.totalPages);
+        } catch (error) {
+            console.error('게시물 데이터를 가져오는 데 실패했습니다:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleSave = async () => {
         setLoading(true);

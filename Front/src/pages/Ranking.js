@@ -22,7 +22,7 @@ const Rankings = () => {
   useEffect(() => {
     const fetchRankings = async () => {
       try {
-        const response = await api.get(`/api/rankings/${rankingType}`);
+        const response = await api.get(`/rankings/${rankingType}`);
         setRankings(response.data);
       } catch (error) {
         console.error('랭킹 데이터를 불러오는 중 오류가 발생했습니다:', error);
@@ -40,7 +40,7 @@ const Rankings = () => {
 
   const handleNicknameClick = async (id) => {
     try {
-      const response = await api.get(`/api/users/${id}/summary`);
+      const response = await api.get(`/users/${id}/summary`);
       setUserSummary(response.data);
       setIsModalOpen(true);
     } catch (error) {
@@ -90,8 +90,8 @@ const Rankings = () => {
               >
                 <td>{getRankIcon(realIndex)}</td>
                 <td className="profile-cell">
-                  {rank.profile ? (
-                    <img src={rank.profile} alt="프로필 사진" style={{ width: '50px', height: '50px' }} />
+                  {rank.profileImageUrl ? (
+                    <img src={rank.profileImageUrl} alt="프로필 사진" style={{ width: '50px', height: '50px' }} />
                   ) : (
                     <img src={profileImage} alt="기본 프로필 사진" style={{ width: '50px', height: '50px' }} />
                   )}

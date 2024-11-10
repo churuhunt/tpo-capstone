@@ -51,15 +51,17 @@ public class PostService {
         UserAccount author = userAccountRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
 
-        // UserAccount에서 UserProfile 가져오기
+        // UserProfile 가져오기
         UserProfile userProfile = userProfileRepository.findByUser_Id(author.getId())
                 .orElseThrow(() -> new IllegalArgumentException("UserProfile not found for userId: " + userId));
 
-        post.setUserProfile(userProfile); // UserProfile 설정
-        post.setDate(OffsetDateTime.now(ZoneOffset.UTC)); // 현재 날짜를 OffsetDateTime으로 설정
+        post.setUserProfile(userProfile);
+        post.setDate(OffsetDateTime.now(ZoneOffset.UTC));
         Post savedPost = postRepository.save(post);
 
-        author.setPoints(author.getPoints() + 10); // 포인트 추가
+        // 포인트 추가 및 lastActiveDate 업데이트
+        author.setPoints(author.getPoints() + 10);
+        author.setLastActiveDate(new Date());
         userAccountRepository.save(author);
 
         log.info("Post saved with ID={} by userId={}", savedPost.getId(), userId);
@@ -80,24 +82,22 @@ public class PostService {
         UserAccount user = userAccountRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
 
-        // 추천이 중복되지 않도록 처리
         if (!post.getLikedUsers().contains(user)) {
             post.setLikes(post.getLikes() + 1);
             post.getLikedUsers().add(user);
 
-            // 추천 수가 10 이상인 경우 카테고리를 인기게시판으로 변경
+            // 인기 게시판으로 변경
             if (post.getLikes() >= 10 && !"인기게시판".equals(post.getCategory())) {
                 post.setCategory("인기게시판");
             }
             postRepository.save(post);
+
+            // lastActiveDate 업데이트
+            user.setLastActiveDate(new Date());
+            userAccountRepository.save(user);
         }
     }
 
-    /**
-     * 게시물 비추천 기능.
-     * @param postId 비추천할 게시물 ID
-     * @param userId 비추천하는 사용자 ID
-     */
     @Transactional
     public void dislikePost(Long postId, String userId) {
         Post post = postRepository.findById(postId)
@@ -106,16 +106,19 @@ public class PostService {
         UserAccount user = userAccountRepository.findByUserId(userId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid userId"));
 
-        // 비추천이 중복되지 않도록 처리
         if (!post.getDislikedUsers().contains(user)) {
             post.setDislikes(post.getDislikes() + 1);
             post.getDislikedUsers().add(user);
 
-            // 비추천 수가 10 이상이면 게시글을 블라인드 처리
+            // 블라인드 처리
             if (post.getDislikes() >= 10) {
                 post.setBlind(true);
             }
             postRepository.save(post);
+
+            // lastActiveDate 업데이트
+            user.setLastActiveDate(new Date());
+            userAccountRepository.save(user);
         }
     }
 
@@ -174,16 +177,14 @@ public class PostService {
      * @param pageable 페이징 정보
      * @return 필터링된 게시물 페이지
      */
-    public Page<Post> getFilteredPosts(List<String> category, String smallCategory, String searchTerm, String searchMode, String sortBy, String direction, Pageable pageable) {
-        log.info("Filtering posts with category={}, smallCategory={}, searchTerm={}, pageable={}, searchMode: {}, sortBy: {}, direction: {}",
-                category, smallCategory, searchTerm, pageable, searchMode, sortBy, direction);
+    public Page<Post> getFilteredPosts(Long userId, List<String> category, String searchTerm, String searchMode, String sortBy, String direction, Pageable pageable) {
+        log.info("Filtering posts for userId={} with category={}, searchTerm={}, pageable={}, searchMode={}, sortBy={}, direction={}",
+                userId, category, searchTerm, pageable, searchMode, sortBy, direction);
 
-        // 정렬 기준 설정
         Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
 
-        // 검색 모드에 따른 쿼리 실행
-        return postRepository.findFilteredPosts(category, searchTerm, pageable);
+        return postRepository.findFilteredPostsByUser(userId, category, searchTerm, pageable);
     }
 
 

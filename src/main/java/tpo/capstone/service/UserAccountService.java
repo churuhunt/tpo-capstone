@@ -6,21 +6,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tpo.capstone.auth.CustomUserDetails;
 import tpo.capstone.dto.JwtResponse;
 import tpo.capstone.dto.LoginRequest;
 import tpo.capstone.dto.UserAccountRequest;
 import tpo.capstone.dto.UserSummaryDTO;
 import tpo.capstone.entity.UserAccount;
+import tpo.capstone.repository.ItemRepository;
 import tpo.capstone.repository.UserAccountRepository;
 import tpo.capstone.security.JwtTokenProvider;
-import org.springframework.transaction.annotation.Transactional;
-import tpo.capstone.entity.Item;
-import tpo.capstone.repository.ItemRepository;
-
 
 import java.security.Principal;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -84,6 +81,11 @@ public class UserAccountService {
         if (bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
             log.info("비밀번호가 일치합니다. 로그인 성공: {}", request.getUserId());
             String token = jwtTokenProvider.createToken(new CustomUserDetails(user));
+
+            // 로그인 시 lastActiveDate 업데이트
+            user.setLastActiveDate(new Date());
+            userAccountRepository.save(user);
+
             return new JwtResponse(token);
         } else {
             log.warn("비밀번호가 일치하지 않습니다. 로그인 실패: {}", request.getUserId());
