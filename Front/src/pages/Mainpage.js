@@ -14,6 +14,7 @@ import mainbanner2 from '../image/mainpage-banner2.jpg';
 import mainbanner3 from '../image/mainpage-banner3.jpg';
 import LoadingModal from '../components/LoadingModal';
 import PageSubMenu from '../components/PageSubMenu';
+import { Link } from 'react-router-dom';
 
 const slideImages = [mainimg1, mainimg2, mainimg3];
 const slideBanners = [mainbanner1, mainbanner2, mainbanner3];
@@ -25,93 +26,67 @@ const Mainpage = () => {
   const [popularPosts, setPopularPosts] = useState([]);
   const [announcements, setAnnouncements] = useState([]);
   const [communityPosts, setCommunityPosts] = useState([]);
-  const [loading, setLoading] = useState(false); // 로딩 상태 정의
+  const [loading, setLoading] = useState(false);
+  const [cachedPosts, setCachedPosts] = useState({});
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true); // 데이터 가져오기 시작할 때 로딩 상태 true
       try {
-        // 자유게시판 데이터 가져오기
-        const communityParams = {
-          category: ['자유게시판'],
-          page: 0,
-          size: 5
-        };
-        const communityResponse = await api.get('/posts', {
-          params: communityParams,
-          paramsSerializer: params => {
-            return Object.keys(params)
-                .filter(key => params[key] !== null && params[key] !== undefined)
-                .map(key =>
-                    Array.isArray(params[key])
-                        ? params[key].map(val => `${key}=${encodeURIComponent(val)}`).join('&')
-                        : `${key}=${encodeURIComponent(params[key])}`
-                )
-                .join('&');
-          }
-        });
+        // 로딩 시작
+        setLoading(true);
+
+        // 비동기 요청 병렬 처리
+        const [communityResponse, announcementResponse, rankingResponse, ...popularResponses] = await Promise.all([
+          api.get('/posts', {
+            params: { category: ['자유게시판'], page: 0, size: 5 },
+            paramsSerializer: params => Object.keys(params)
+              .map(key => Array.isArray(params[key]) ? params[key].map(val => `${key}=${encodeURIComponent(val)}`).join('&') : `${key}=${encodeURIComponent(params[key])}`)
+              .join('&')
+          }),
+          api.get('/posts', {
+            params: { category: ['공지사항'], page: 0, size: 5 },
+            paramsSerializer: params => Object.keys(params)
+              .map(key => Array.isArray(params[key]) ? params[key].map(val => `${key}=${encodeURIComponent(val)}`).join('&') : `${key}=${encodeURIComponent(params[key])}`)
+              .join('&')
+          }),
+          api.get('/rankings/total'),
+          ...['daily', 'weekly', 'monthly', 'yearly'].map(period =>
+            api.get('/posts', {
+              params: { likes: 10, sortBy: 'likes', direction: 'desc', page: 0, size: 5, timeFilter: period }
+            })
+          )
+        ]);
+
+        // 응답 데이터 설정
         setCommunityPosts(communityResponse.data.posts || []);
-
-        // 공지사항 데이터 가져오기
-        const announcementParams = {
-          category: ['공지사항'],
-          page: 0,
-          size: 5
-        };
-        const announcementResponse = await api.get('/posts', {
-          params: announcementParams,
-          paramsSerializer: params => {
-            return Object.keys(params)
-                .filter(key => params[key] !== null && params[key] !== undefined)
-                .map(key =>
-                    Array.isArray(params[key])
-                        ? params[key].map(val => `${key}=${encodeURIComponent(val)}`).join('&')
-                        : `${key}=${encodeURIComponent(params[key])}`
-                )
-                .join('&');
-          }
-        });
         setAnnouncements(announcementResponse.data.posts || []);
-
-        // 인기 게시물 데이터 가져오기
-        const popularParams = {
-          likes: 10,
-          sortBy: 'likes',
-          direction: 'desc',
-          page: 0,
-          size: 5,
-          timeFilter: selectedPeriod
-        };
-        const popularResponse = await api.get('/posts', {
-          params: popularParams,
-          paramsSerializer: params => {
-            return Object.keys(params)
-                .filter(key => params[key] !== null && params[key] !== undefined)
-                .map(key =>
-                    Array.isArray(params[key])
-                        ? params[key].map(val => `${key}=${encodeURIComponent(val)}`).join('&')
-                        : `${key}=${encodeURIComponent(params[key])}`
-                )
-                .join('&');
-          }
-        });
-        setPopularPosts(popularResponse.data.posts || []);
-
-        // 랭킹 데이터 가져오기
-        const rankingResponse = await api.get('/rankings/total');
         setRankings(rankingResponse.data);
+
+        // 캐시 데이터 설정 및 초기 인기 게시물 설정
+        const newCachedPosts = {
+          daily: popularResponses[0].data.posts || [],
+          weekly: popularResponses[1].data.posts || [],
+          monthly: popularResponses[2].data.posts || [],
+          yearly: popularResponses[3].data.posts || []
+        };
+        setCachedPosts(newCachedPosts);
+        setPopularPosts(newCachedPosts[selectedPeriod]);
 
       } catch (error) {
         console.error('데이터를 불러오는 중 오류가 발생했습니다:', error);
       } finally {
-        setLoading(false); // 데이터 가져오기 완료 시 로딩 상태 false
+        // 로딩 종료
+        setLoading(false);
       }
     };
 
     fetchData();
-  }, [selectedPeriod]);
+  }, []);
 
-  const handlePeriodChange = (period) => setSelectedPeriod(period);
+    const handlePeriodChange = (period) => {
+      setSelectedPeriod(period);
+      setPopularPosts(cachedPosts[period]); // 캐시된 데이터 사용
+    };
 
   return (
     <div className="main-page">
@@ -181,24 +156,29 @@ const Mainpage = () => {
                   {popularPosts.slice(0, 5).map((post, index) => (
                     <li key={index} className="post-item">
                       <img
-                        src={post.thumbnail}
+                        src={post.thumbnail || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwpSuPwVevZxk9WHC04FSWZqscJudpoQhFzw&s"}
                         alt="포스트 썸네일"
                         className="post-thumbnail"
                       />
                       <div className="post-content">
-                        <span className="post-title">{post.title}</span>
-                        <div className="post-author">
-                          <img
-                            src={post.author.profile || profileImage}
-                            alt="작성자 프로필"
-                            className="author-profile"
-                          />
-                          {post.author.nickname}
-                        </div>
+                        <Link to={`/postview/${post.id}`} className="post-title-link">
+                          <span className="post-title">{post.title}</span>
+                        </Link>
+                      </div>
+                      <div className="post-author">
+                        <img
+                          src={post.profileImageUrl || profileImage}
+                          alt="작성자 프로필"
+                          className="author-profile"
+                        />
+                        <span>{post.author.nickname}</span>
                       </div>
                     </li>
                   ))}
                 </ul>
+
+
+
               </div>
 
               {/* 랭킹 섹션 */}
@@ -208,7 +188,7 @@ const Mainpage = () => {
                   {rankings.slice(0, 5).map((rank, index) => (
                     <li key={index} className="ranking-item">
                       <span>{rankEmojis[index] || `${index + 1}위`}</span>
-                      <img src={rank.profile || profileImage} alt="프로필" className="profile-image" />
+                      <img src={rank.profileImageUrl || profileImage} alt="프로필" className="profile-image" />
                       <span className="ranking-nickname">{rank.nickname}</span>
                       <span className="ranking-points">{rank.points} 포인트</span>
                     </li>

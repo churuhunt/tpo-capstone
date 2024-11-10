@@ -245,36 +245,35 @@
 .post-thumbnail {
   width: 50px;
   height: 50px;
-  margin-right: 10px;
   border-radius: 5px;
   object-fit: cover;
+  margin-right: 10px; /* 썸네일과 제목 사이 간격 */
 }
+
 
 .post-content {
   display: flex;
-  justify-content: space-between; /* 제목과 작성자 정보를 양쪽으로 배치 */
+  flex-grow: 1;
+  justify-content: space-between;
   align-items: center;
-  width: 100%;
 }
 
 .post-title {
   font-weight: bold;
-  margin-bottom: 5px;
   color: black;
+  margin-right: auto; /* 제목이 왼쪽으로 정렬되도록 설정 */
 }
 
 .post-author {
   display: flex;
   align-items: center;
-  color: black;
-  justify-content: flex-end;
 }
 
 .author-profile {
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  margin-right: 5px;
+  margin-right: 5px; /* 프로필 사진과 작성자 이름 사이 간격 */
 }
 
 .main-page-banner {
@@ -336,4 +335,16 @@
 .ranking-item span:first-child {
   font-size: 2.2rem; /* 원하는 폰트 크기로 설정 */
   font-weight: bold; /* 강조를 원하면 추가 */
+}
+
+.popular-posts .post-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.post-title-link {
+  text-decoration: none; /* 밑줄 제거 */
+  color: black;
 }
