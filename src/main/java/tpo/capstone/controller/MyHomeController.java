@@ -2,9 +2,11 @@ package tpo.capstone.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import tpo.capstone.auth.CustomUserDetails;
 import tpo.capstone.dto.UserAccountDto;
 import tpo.capstone.dto.UserProfileRequestDto;
@@ -13,6 +15,7 @@ import tpo.capstone.entity.UserActivity;
 import tpo.capstone.entity.UserProfile;
 import tpo.capstone.service.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +30,7 @@ public class MyHomeController {
     private final VisitorService visitorService;
     private final TimelineService timelineService;
     private final PostService postService;
+    private final S3Service s3Service;
 
     @Autowired
     public MyHomeController(UserProfileService userProfileService,
@@ -34,31 +38,53 @@ public class MyHomeController {
                             BookmarkService bookmarkService,
                             VisitorService visitorService,
                             TimelineService timelineService,
-                            PostService postService) {
+                            PostService postService,
+                            S3Service s3Service) {
         this.userProfileService = userProfileService;
         this.userActivityService = userActivityService;
         this.bookmarkService = bookmarkService;
         this.visitorService = visitorService;
         this.timelineService = timelineService;
         this.postService = postService;
+        this.s3Service = s3Service;
     }
 
     @GetMapping("/profile")
     public ResponseEntity<UserProfile> getProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
-        Long userId = userAccountDto.getId();
+        Long userId = userDetails.getUserAccountDto().getId();
         log.info("Fetching profile for userId: {}", userId);
         UserProfile userProfile = userProfileService.getProfile(userId);
         return ResponseEntity.ok(userProfile);
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<UserProfile> updateProfile(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody UserProfileRequestDto profileDto) {
-        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
-        Long userId = userAccountDto.getId();
+    public ResponseEntity<String> updateProfile(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody UserProfileRequestDto profileDto) {
+        Long userId = userDetails.getUserAccountDto().getId();
         log.info("Updating profile for userId: {}", userId);
-        UserProfile updatedProfile = userProfileService.updateProfileData(userId, profileDto);
-        return ResponseEntity.ok(updatedProfile);
+        userProfileService.updateProfileData(userId, profileDto);
+        return ResponseEntity.ok("프로필 정보가 업데이트되었습니다.");
+    }
+
+    @PostMapping("/profile/upload-profile-image")
+    public ResponseEntity<String> uploadProfileImage(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam("file") MultipartFile file) {
+        try {
+            String imageUrl = s3Service.uploadImage(file);
+            userProfileService.updateProfileImage(userDetails.getUserAccountDto().getId(), imageUrl);
+            return ResponseEntity.ok(imageUrl);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("프로필 이미지 업로드 실패");
+        }
+    }
+
+    @PostMapping("/profile/upload-background-image")
+    public ResponseEntity<String> uploadBackgroundImage(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam("file") MultipartFile file) {
+        try {
+            String imageUrl = s3Service.uploadImage(file);
+            userProfileService.updateBackgroundImage(userDetails.getUserAccountDto().getId(), imageUrl);
+            return ResponseEntity.ok(imageUrl);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("배경 이미지 업로드 실패");
+        }
     }
 
     @GetMapping("/activity")

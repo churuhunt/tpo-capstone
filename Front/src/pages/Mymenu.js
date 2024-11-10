@@ -21,49 +21,45 @@ const MyMenu = () => {
 
     const [activeIndex, setActiveIndex] = useState(0);
     const [points, setPoints] = useState(0);
-    const [profileImage, setProfileImage] = useState(profileImageSrc);
-    const [backgroundImage, setBackgroundImage] = useState('');
-    const [tempBackgroundImage, setTempBackgroundImage] = useState('');
+    const [profileImage, setProfileImage] = useState(null);
+    const [backgroundImage, setBackgroundImage] = useState(null);
+    const [tempProfileImage, setTempProfileImage] = useState(null);
+    const [tempBackgroundImage, setTempBackgroundImage] = useState(null);
     const [nickname, setNickname] = useState('');
-    const [tempProfileImage, setTempProfileImage] = useState(profileImageSrc);
     const [nicknameDecoration, setNicknameDecoration] = useState('');
     const [introduction, setIntroduction] = useState('');
     const [activeTab, setActiveTab] = useState('myhomepost');
     const [followingCount, setFollowingCount] = useState(120);
     const [followerCount, setFollowerCount] = useState(250);
-    const [loading, setLoading] = useState(true); // 로딩 상태
-    const [userPosts, setUserPosts] = useState([]); // Store posts here
+    const [loading, setLoading] = useState(true);
+    const [userPosts, setUserPosts] = useState([]);
     const [activityStats, setActivityStats] = useState({ posts: 0, comments: 0, likes: 0, dislikes: 0 });
     const [visitorCount, setVisitorCount] = useState(0);
     const [visitorDataPoints, setVisitorDataPoints] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
-            setLoading(true); // 로딩 시작
+            setLoading(true);
 
             try {
-                // 모든 비동기 함수를 병렬로 실행
                 await Promise.all([
                     api.get('/myhome/profile').then(response => {
                         const userData = response.data;
-                        setProfileImage(userData.profileImageUrl || profileImageSrc);
-                        setTempProfileImage(userData.profileImageUrl || profileImageSrc);
+                        setProfileImage(userData.profileImageUrl || '');
+                        setTempProfileImage(userData.profileImageUrl || '');
                         setBackgroundImage(userData.backgroundImageUrl || '');
                         setTempBackgroundImage(userData.backgroundImageUrl || '');
                         setNicknameDecoration(userData.nicknameDecoration || '');
                         setIntroduction(userData.introduction || '');
                     }),
-
                     api.get('/users/current').then(response => {
                         const userData = response.data;
                         setNickname(userData.nickname || '사용자');
                         setPoints(userData.points);
                     }),
-
                     api.get('/myhome/posts').then(response => {
                         setUserPosts(response.data || []);
                     }),
-
                     api.get('/myhome/activity').then(response => {
                         const fetchedData = response.data;
                         setActivityStats({
@@ -73,15 +69,12 @@ const MyMenu = () => {
                             dislikes: fetchedData.dislikesReceived,
                         });
                     }),
-
                     api.get('/myhome/visitor-count').then(response => {
                         const totalVisitorCount = response.data;
                         setVisitorCount(totalVisitorCount);
                         setVisitorDataPoints(Array(6).fill(totalVisitorCount));
                     })
                 ]);
-
-                // 모든 데이터가 로드된 후 로딩 상태 해제
             } catch (error) {
                 console.error("데이터 로드 중 오류 발생:", error);
             } finally {
@@ -93,23 +86,27 @@ const MyMenu = () => {
     }, []);
 
     const handleSave = async () => {
+        setLoading(true);
         try {
-            setLoading(true);
-            const response = await api.put('/myhome/profile', {
-                profileImageUrl: tempProfileImage,
-                backgroundImageUrl: tempBackgroundImage
-            });
-
-            if (response.status === 200) {
-                setProfileImage(tempProfileImage);
-                setBackgroundImage(tempBackgroundImage);
-                alert('저장되었습니다.');
-            } else {
-                console.error("Unexpected response:", response);
-                alert('저장에 실패했습니다. 서버 응답을 확인하세요.');
+            if (tempProfileImage instanceof File) {
+                const formData = new FormData();
+                formData.append('file', tempProfileImage);
+                const response = await api.post('/myhome/profile/upload-profile-image', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                setProfileImage(response.data);
             }
+            if (tempBackgroundImage instanceof File) {
+                const formData = new FormData();
+                formData.append('file', tempBackgroundImage);
+                const response = await api.post('/myhome/profile/upload-background-image', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' }
+                });
+                setBackgroundImage(response.data);
+            }
+            alert('저장되었습니다.');
         } catch (error) {
-            console.error("이미지 저장 실패:", error.response || error.message);
+            console.error("이미지 저장 실패:", error);
             alert('이미지 저장에 실패했습니다.');
         } finally {
             setLoading(false);
@@ -129,7 +126,7 @@ const MyMenu = () => {
         } else if (item === "방명록") {
             setActiveTab('guestbook');
         } else if (item === "커스텀") {
-            setActiveTab(item === "커스텀" ? "custom" : item.toLowerCase());
+            setActiveTab("custom");
         }
     };
 
@@ -141,14 +138,16 @@ const MyMenu = () => {
                 <>
                     <div className="background-image" style={{ backgroundImage: `url(${tempBackgroundImage || backgroundImage})` }}></div>
                     <div className="profile-info">
-                        <img src={tempProfileImage} className="profile-picture" alt="프로필 사진" />
+                        <img src={tempProfileImage || profileImage} className="profile-picture" alt="프로필 사진"/>
                         <span className="nickname">{nickname}</span>
                         <div className="follow-info">
-                            <span onClick={() => setActiveTab('following')} style={{ cursor: 'pointer', textDecoration: 'none' }}>
+                            <span onClick={() => setActiveTab('following')}
+                                  style={{cursor: 'pointer', textDecoration: 'none'}}>
                                 팔로잉: {followingCount}
                             </span>
                             |
-                            <span onClick={() => setActiveTab('follower')} style={{ cursor: 'pointer', textDecoration: 'none' }}>
+                            <span onClick={() => setActiveTab('follower')}
+                                  style={{cursor: 'pointer', textDecoration: 'none'}}>
                                 팔로워: {followerCount}
                             </span>
                         </div>
