@@ -3,6 +3,9 @@ package tpo.capstone.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import tpo.capstone.entity.Item;
 
-public interface ItemRepository extends JpaRepository<Item, Long> {
+import java.util.List;
 
+public interface ItemRepository extends JpaRepository<Item, Long> {
+    List<Item> findByCategoryOrderByPriceAsc(Item.Category category);
+    List<Item> findByCategoryOrderByPriceDesc(Item.Category category);
 }

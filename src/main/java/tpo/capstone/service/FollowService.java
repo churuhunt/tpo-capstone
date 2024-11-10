@@ -1,5 +1,6 @@
 package tpo.capstone.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tpo.capstone.entity.Follow;
@@ -7,10 +8,6 @@ import tpo.capstone.entity.UserAccount;
 import tpo.capstone.repository.FollowRepository;
 import tpo.capstone.repository.UserAccountRepository;
 import tpo.capstone.security.JwtTokenProvider;
-
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -33,7 +30,7 @@ public class FollowService {
      * @param followingId 팔로우할 대상 사용자 ID
      */
     public void follow(String jwtToken, Long followingId) {
-        String userId = jwtTokenProvider.getUsernameFromToken(jwtToken);  // JWT에서 사용자 ID 추출
+        String userId = jwtTokenProvider.getUsernameFromToken(jwtToken); // JWT에서 사용자 ID 추출
         UserAccount follower = userAccountRepository.findByUserId(userId)
                 .orElseThrow(() -> {
                     log.error("사용자를 찾을 수 없습니다. ID: {}", userId);
@@ -45,11 +42,22 @@ public class FollowService {
                     return new RuntimeException("팔로우할 사용자를 찾을 수 없습니다.");
                 });
 
-        if (!followRepository.existsByFollowerAndFollowing(follower, following)) {
-            followRepository.save(new Follow(follower, following));
-            log.info("사용자 {}가 {}를 팔로우했습니다.", userId, followingId);
+        // 본인 팔로우 방지
+        if (follower.equals(following)) {
+            log.warn("자기 자신을 팔로우할 수 없습니다. ID: {}", userId);
+            throw new IllegalArgumentException("자기 자신을 팔로우할 수 없습니다.");
         }
+
+        // 중복 팔로우 방지
+        if (followRepository.existsByFollowerAndFollowing(follower, following)) {
+            log.warn("이미 팔로우 중입니다. Follower ID: {}, Following ID: {}", userId, followingId);
+            throw new IllegalArgumentException("이미 팔로우 중입니다.");
+        }
+
+        followRepository.save(new Follow(follower, following));
+        log.info("사용자 {}가 {}를 팔로우했습니다.", userId, followingId);
     }
+
 
     /**
      * 사용자 언팔로우

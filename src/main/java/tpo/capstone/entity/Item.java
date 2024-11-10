@@ -26,16 +26,25 @@ public class Item {
 
     private int stock;
 
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
     // 기본 생성자
     public Item() {
     }
 
     // 모든 필드를 초기화하는 생성자
-    public Item(String name, int price, String description, String imageUrl) {
+    public Item(String name, int price, String description, String imageUrl, int stock, Category category) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.imageUrl = imageUrl;
         this.stock = stock;
+        this.category = category;
     }
+
+    public enum Category {
+        PROFILE, BORDER, BACKGROUND, FONT, EMOJI, EFFECT, OTHER
+    }
+
 }

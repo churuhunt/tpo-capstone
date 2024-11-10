@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tpo.capstone.dto.ItemDto;
@@ -33,5 +34,17 @@ public class ItemController {
         log.info("Fetching all items from the inventory.");
         List<ItemDto> items = itemService.getAllItems();
         return ResponseEntity.ok(items);
+    }
+
+    // 카테고리별 아이템 조회 (오름차순)
+    @GetMapping("/category/{category}/price-asc")
+    public ResponseEntity<List<ItemDto>> getItemsByCategoryAscending(@PathVariable Item.Category category) {
+        return ResponseEntity.ok(itemService.getItemsByCategoryAscending(category));
+    }
+
+    // 카테고리별 아이템 조회 (내림차순)
+    @GetMapping("/category/{category}/price-desc")
+    public ResponseEntity<List<ItemDto>> getItemsByCategoryDescending(@PathVariable Item.Category category) {
+        return ResponseEntity.ok(itemService.getItemsByCategoryDescending(category));
     }
 }

@@ -32,4 +32,21 @@ public class ItemService {
                 .map(item -> new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getPrice(), item.getStock()))
                 .collect(Collectors.toList());
     }
+
+    // 카테고리별 아이템 목록 조회 (오름차순)
+    public List<ItemDto> getItemsByCategoryAscending(Item.Category category) {
+        List<Item> items = itemRepository.findByCategoryOrderByPriceAsc(category);
+        return items.stream()
+                .map(ItemDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    // 카테고리별 아이템 목록 조회 (내림차순)
+    public List<ItemDto> getItemsByCategoryDescending(Item.Category category) {
+        List<Item> items = itemRepository.findByCategoryOrderByPriceDesc(category);
+        return items.stream()
+                .map(ItemDto::fromEntity)
+                .collect(Collectors.toList());
+    }
+
 }

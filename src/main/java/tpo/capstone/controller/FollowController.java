@@ -11,7 +11,7 @@ import tpo.capstone.service.FollowService;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/follow")
+@RequestMapping("/api")
 public class FollowController {
 
     private final FollowService followService;
