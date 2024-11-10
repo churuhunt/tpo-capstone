@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css';
 import './Mainpage.css';
 import profileImage from '../image/profile.png'; // 기본 프로필 이미지
+import api from '../axios';
 
 import mainimg1 from '../image/mainimg1.jpg';
 import mainimg2 from '../image/mainimg2.jpg';
@@ -140,7 +141,7 @@ const Mainpage = () => {
             </div>
 
             <ul className="popular-posts">
-              {popularPostsData[selectedPeriod].map((post, index) => (
+              {popularPosts.map((post, index) => (
                 <li key={index} className="post-item">
                   <img
                     src={post.thumbnail}

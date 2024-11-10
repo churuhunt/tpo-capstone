@@ -35,6 +35,7 @@ const PostForm = () => {
     const contentRef = useRef(null);
     const [subCategoryFilter, setSubCategoryFilter] = useState('all');
     const [currentPage, setCurrentPage] = useState(1);
+    const [profileImageUrl, setProfileImageUrl] = useState('');
     const { state } = useLocation();
 
     const [showFontColorPicker, setShowFontColorPicker] = useState(false);
@@ -109,7 +110,7 @@ const PostForm = () => {
             category,
             smallCategory: category === "정보게시판" ? smallCategory : null,
             author,
-            profileImageUrl,
+            profileImageUrl, // 프로필 이미지 URL 추가
             date: new Date(),
             views: 0,
             likes: 0,
