@@ -21,14 +21,14 @@ public class PurchaseHistory {
 
     @ManyToOne
     @JoinColumn(name = "item_id", nullable = false)
-    private ShopItem item; // Item 대신 ShopItem 사용
+    private Item item;
 
     @Column(nullable = false)
     private LocalDateTime purchaseDate;
 
     public PurchaseHistory() {}
 
-    public PurchaseHistory(UserAccount user, ShopItem item, LocalDateTime purchaseDate) {
+    public PurchaseHistory(UserAccount user, Item item, LocalDateTime purchaseDate) {
         this.user = user;
         this.item = item;
         this.purchaseDate = purchaseDate;

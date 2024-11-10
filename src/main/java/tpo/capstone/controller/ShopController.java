@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tpo.capstone.auth.CustomUserDetails;
+import tpo.capstone.entity.Item;
 import tpo.capstone.entity.PurchaseHistory;
-import tpo.capstone.entity.ShopItem;
 import tpo.capstone.service.ShopService;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class ShopController {
      * 모든 아이템 목록 조회
      */
     @GetMapping("/items")
-    public ResponseEntity<List<ShopItem>> getAllItems() {
+    public ResponseEntity<List<Item>> getAllItems() {
         return ResponseEntity.ok(shopService.getAllItems());
     }
 
@@ -42,9 +42,9 @@ public class ShopController {
     @PostMapping("/purchase")
     public ResponseEntity<String> purchaseItem(@RequestParam Long itemId, @AuthenticationPrincipal CustomUserDetails userDetails) {
         try {
-            Long userId = userDetails.getId(); // 인증된 사용자 ID 가져오기
+            Long userId = userDetails.getId();
             PurchaseHistory purchase = shopService.purchaseItem(userId, itemId);
-            return ResponseEntity.ok("Purchase successful: " + purchase.getItem().getName()); // getItemName() -> getName()
+            return ResponseEntity.ok("Purchase successful: " + purchase.getItem().getName());
         } catch (IllegalArgumentException e) {
             log.error("Error during purchase: {}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -58,7 +58,7 @@ public class ShopController {
      * 가격순 오름차순으로 정렬된 아이템 목록 조회
      */
     @GetMapping("/items/price-asc")
-    public ResponseEntity<List<ShopItem>> getItemsByAscendingPrice() {
+    public ResponseEntity<List<Item>> getItemsByAscendingPrice() {
         return ResponseEntity.ok(shopService.getItemsByAscendingPrice());
     }
 
@@ -66,7 +66,7 @@ public class ShopController {
      * 가격순 내림차순으로 정렬된 아이템 목록 조회
      */
     @GetMapping("/items/price-desc")
-    public ResponseEntity<List<ShopItem>> getItemsByDescendingPrice() {
+    public ResponseEntity<List<Item>> getItemsByDescendingPrice() {
         return ResponseEntity.ok(shopService.getItemsByDescendingPrice());
     }
 

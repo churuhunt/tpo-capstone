@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import tpo.capstone.entity.Item;
-import tpo.capstone.entity.ShopItem;
 
 @Getter
 @Setter
