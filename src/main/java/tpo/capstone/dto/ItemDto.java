@@ -15,15 +15,16 @@ public class ItemDto {
     private String name;
     private String description;
     private int price;
-    private int stock;
+    private Item.Category category; // 카테고리 필드 추가
 
+    // Entity에서 DTO로 변환하는 메서드
     public static ItemDto fromEntity(Item item) {
         return new ItemDto(
                 item.getId(),
                 item.getName(),
                 item.getDescription(),
                 item.getPrice(),
-                item.getStock() // stock 필드를 추가
+                item.getCategory() // 카테고리 포함
         );
     }
 }

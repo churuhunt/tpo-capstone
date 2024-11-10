@@ -16,6 +16,7 @@ public class ItemService {
 
     private final ItemRepository itemRepository;
 
+
     @Autowired
     public ItemService(ItemRepository itemRepository) {
         this.itemRepository = itemRepository;
@@ -29,7 +30,7 @@ public class ItemService {
     public List<ItemDto> getAllItems() {
         List<Item> items = itemRepository.findAll();
         return items.stream()
-                .map(item -> new ItemDto(item.getId(), item.getName(), item.getDescription(), item.getPrice(), item.getStock()))
+                .map(ItemDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
