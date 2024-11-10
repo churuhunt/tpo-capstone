@@ -5,6 +5,8 @@ import api from '../axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faThumbsUp, faThumbsDown, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';  // 따봉, 신고 아이콘
 import banner1 from '../image/infobanner.jpg';
+import book1 from '../image/book1.png';
+import book2 from '../image/book2.png';
 import Banner from '../components/Banner';
 import LoadingModal from '../components/LoadingModal';
 
@@ -29,7 +31,12 @@ const PostView = () => {
   const [userId, setuserId] = useState(null); // 현재 사용자 ID
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [commentId, setcommentId] = useState(null)
+  const [commentId, setcommentId] = useState(null);
+const [loadingLike, setLoadingLike] = useState(false);
+const [loadingBookmark, setLoadingBookmark] = useState(false);
+const [loadingDislike, setLoadingDislike] = useState(false);
+const [loadingComment, setLoadingComment] = useState(false);
+const [loadingDelete, setLoadingDelete] = useState(false);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -43,6 +50,7 @@ const PostView = () => {
 
 
     const fetchPost = async () => {
+    setLoading(true)
       try {
         const response = await api.get(`/posts/${postId}`); // axios 인스턴스 사용
         setPost(response.data);
@@ -56,8 +64,19 @@ const PostView = () => {
         }
       } catch (error) {
         console.error('게시물을 불러오는 중 오류가 발생했습니다:', error);
+      } finally {
+        setLoading(false); // 로딩 완료
       }
     };
+
+  const toggleBookmark = async () => {
+    try {
+      await api.post(`/bookmarks/toggle/${postId}`);
+      setIsBookmarked(prev => !prev);  // 북마크 상태를 토글
+    } catch (error) {
+      console.error("북마크 토글 중 오류가 발생했습니다:", error);
+    }
+  };
 
     const fetchComments = async () => {
       try {
@@ -88,31 +107,42 @@ const PostView = () => {
   }, [postId]);
 
 
+// 추천
   const handleLike = async () => {
-    await api.post(`/posts/${postId}/like`); // axios 인스턴스 사용
-    setPost({ ...post, likes: post.likes + 1 });
-  };
-
-
-  const handleDislike = async () => {
-    await api.post(`/posts/${postId}/dislike`); // axios 인스턴스 사용
-    setPost({ ...post, dislikes: post.dislikes + 1 });
-    if (post.dislikes + 1 >= 10) {
-      setIsBlind(true);
+    setLoading(true); // 추천 처리 중 로딩 표시
+    try {
+      await api.post(`/posts/${postId}/like`);
+      setPost({ ...post, likes: post.likes + 1 });
+    } finally {
+      setLoading(false);
     }
   };
 
+
+// 비추천
+  const handleDislike = async () => {
+    setLoading(true);
+    try {
+      await api.post(`/posts/${postId}/dislike`);
+      setPost({ ...post, dislikes: post.dislikes + 1 });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
+// 댓글 등록
   const handleCommentSubmit = async () => {
     if (!commentText.trim()) return;
+    setLoading(true);
     try {
-      const response = await api.post(`/posts/${postId}/comments`, { content: commentText }); // axios 인스턴스 사용
-      setComments([...comments, { ...response.data }]); // 서버에서 반환한 댓글 데이터 추가
+      const response = await api.post(`/posts/${postId}/comments`, { content: commentText });
+      setComments([...comments, { ...response.data }]);
       setCommentText('');
-    } catch (error) {
-      alert("댓글 제출 중 오류가 발생했습니다. 다시 시도해 주세요.");
+    } finally {
+      setLoading(false);
     }
   };
-
 
   const handleLikeComment = async (commentId) => {
     try {
@@ -189,19 +219,22 @@ const PostView = () => {
     );
   };
 
-  // 글 삭제 로직
+// 글 삭제
   const handleDeletePost = async () => {
     if (window.confirm("정말로 이 글을 삭제하시겠습니까?")) {
+      setLoading(true);
       try {
-        await api.delete(`/posts/${postId}`); // axios 인스턴스 사용
-        alert("게시물이 삭제되었습니다.");
-        navigate("/");  // 목록으로 이동
-      } catch (error) {
-        console.error("게시물 삭제 중 오류가 발생했습니다:", error);
+        await api.delete(`/posts/${postId}`);
+        navigate("/");
+      } finally {
+        setLoading(false);
       }
     }
   };
 
+    if (loading) {
+      return <LoadingModal />; // 로딩 중일 때 모달 표시
+    }
 
   // 댓글 삭제
   const handleDeleteComment = async (commentId) => {
@@ -217,13 +250,14 @@ const PostView = () => {
     }
   };
 
-  //북마크
+// 북마크
   const toggleBookmark = async () => {
+    setLoading(true);
     try {
       await api.post(`/bookmarks/toggle/${postId}`);
       setIsBookmarked((prev) => !prev);
-    } catch (error) {
-      console.error("북마크 토글 중 오류가 발생했습니다:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -261,12 +295,22 @@ const PostView = () => {
   return (
       <div className="PageView-container">
         <h1 className="PageView-post-title">{post.title}</h1>
+
+                <button className="bookmark-button-con" onClick={toggleBookmark} style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer' }}>
+                  <img
+                    src={isBookmarked ? book2 : book1}
+                    alt="Bookmark button"
+                    style={{ width: '50px', height: '50px' }}
+                  />
+                </button>
+
         <div className="PageView-post-info">
           <img src={post.profileImageUrl} alt={`${post.author} 프로필`} className="PageView-profile-image"/>
           <p className="PageView-author">{post.author}</p>
+          <div className="PageView-post-info2">
           <p className="PageView-date">작성일자: {new Date(post.date).toLocaleDateString()}</p>
           <p className="PageView-views">조회수: {post.views}</p>
-          <p className="PageView-likes">추천수: {post.likes}</p>
+          <p className="PageView-likes">추천수: {post.likes}</p></div>
         </div>
         <div className="PageView-post-content">
           <div>{removeImagesAndBase64(post.content)}</div>
@@ -290,9 +334,6 @@ const PostView = () => {
           </button>
           <button onClick={handleOpenReportModal}>
             <FontAwesomeIcon icon={faExclamationTriangle}/> 신고
-          </button>
-          <button onClick={toggleBookmark}>
-            {isBookmarked ? '북마크 해제' : '북마크'}
           </button>
           <button onClick={handleDeletePost}>글 삭제</button>
         </div>

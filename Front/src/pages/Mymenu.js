@@ -162,9 +162,9 @@ const MyMenu = () => {
             {loading && <LoadingModal />}
             {!loading && (
                 <>
-                    <div className="background-image" style={{ backgroundImage: `url(${tempBackgroundImage || backgroundImage})` }}></div>
+                    <div className="background-image" style={{ backgroundImage: `url(${tempBackgroundImage || backgroundImage || "https://mblogthumb-phinf.pstatic.net/MjAxODAzMTFfMjU1/MDAxNTIwNzMyNzIzNzU0.r1JTCWNwtluFmL3NWdESziciZuyHzRi2T59CmVKPh7Mg.3pVF4jNFRCLJLUr89Z2ma3dL7prKPuNU8YjIHrduMGgg.PNG.osy2201/1.png?type=w800"})` }}></div>
                     <div className="profile-info">
-                        <img src={tempProfileImage || profileImage} className="profile-picture" alt="프로필 사진"/>
+                        <img src={tempProfileImage || profileImage || profileImageSrc} className="profile-picture" alt="프로필 사진" onError={(e) => e.target.src = profileImageSrc} />
                         <span className="nickname">{nickname}</span>
                         <div className="follow-info">
                             <span onClick={() => setActiveTab('following')}
