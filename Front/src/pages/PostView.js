@@ -296,13 +296,7 @@ const [loadingDelete, setLoadingDelete] = useState(false);
       <div className="PageView-container">
         <h1 className="PageView-post-title">{post.title}</h1>
 
-                <button className="bookmark-button-con" onClick={toggleBookmark} style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer' }}>
-                  <img
-                    src={isBookmarked ? book2 : book1}
-                    alt="Bookmark button"
-                    style={{ width: '50px', height: '50px' }}
-                  />
-                </button>
+
 
         <div className="PageView-post-info">
           <img src={post.profileImageUrl} alt={`${post.author} 프로필`} className="PageView-profile-image"/>
@@ -326,16 +320,16 @@ const [loadingDelete, setLoadingDelete] = useState(false);
         </div>
 
         <div className="post-reactions">
-          <button onClick={handleLike}>
+          <button className="postview-but-a" onClick={handleLike}>
             <FontAwesomeIcon icon={faThumbsUp}/> 추천 {post.likes}
           </button>
-          <button onClick={handleDislike}>
+          <button className="postview-but-a" onClick={handleDislike}>
             <FontAwesomeIcon icon={faThumbsDown}/> 비추천 {post.dislikes}
           </button>
-          <button onClick={handleOpenReportModal}>
+          <button className="postview-but-a" onClick={handleOpenReportModal}>
             <FontAwesomeIcon icon={faExclamationTriangle}/> 신고
           </button>
-          <button onClick={handleDeletePost}>글 삭제</button>
+          <button className="postview-but-a" onClick={handleDeletePost}>글 삭제</button>
         </div>
 
         <div className="PageView-comments-section">
@@ -382,7 +376,7 @@ const [loadingDelete, setLoadingDelete] = useState(false);
           </div>
         </div>
 
-        <button onClick={() => navigate(-1)}>목록으로 돌아가기</button>
+        <button onClick={() => navigate(-1)} className="PageView-comment-button2">목록</button>
 
         {isReportModalOpen && (
             <div className="report-modal">
@@ -393,14 +387,25 @@ const [loadingDelete, setLoadingDelete] = useState(false);
                     onChange={(e) => setReportReason(e.target.value)}
                     placeholder="신고 사유를 입력하세요..."
                 />
-                <button onClick={handleReportSubmit}>신고 제출</button>
-                <button onClick={handleCloseReportModal}>취소</button>
+                 <button onClick={handleReportSubmit} className="report-modal-button">
+                    신고 제출
+                  </button>
+                  <button onClick={handleCloseReportModal} className="report-modal-button cancel">
+                    취소
+                  </button>
               </div>
             </div>
         )
 
 
           }
+          <button className="bookmark-button-con" onClick={toggleBookmark} style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer' }}>
+                            <img
+                              src={isBookmarked ? book2 : book1}
+                              alt="Bookmark button"
+                              style={{ width: '50px', height: '50px' }}
+                            />
+                          </button>
         </div>
           );
           };
