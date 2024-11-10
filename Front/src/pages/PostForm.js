@@ -69,15 +69,21 @@ const PostForm = () => {
     }, [categoryOptions]);
 
     useEffect(() => {
-        const fetchCurrentUser = async () => {
+        const fetchCurrentUserProfile = async () => {
             try {
-                const response = await api.get('/users/current');
-                setAuthor(response.data.nickname);
+                // 현재 사용자 정보 가져오기
+                const userResponse = await api.get('/users/current');
+                const userId = userResponse.data.id;
+                setAuthor(userResponse.data.nickname);
+
+                // 사용자 ID로 프로필 정보 가져오기
+                const profileResponse = await api.get(`/user-profiles/${userId}`);
+                setProfileImageUrl(profileResponse.data.profileImageUrl); // 프로필 이미지 URL 설정
             } catch (error) {
                 console.error('사용자 정보를 가져오는 중 오류 발생:', error);
             }
         };
-        fetchCurrentUser();
+        fetchCurrentUserProfile();
     }, []);
 
     useEffect(() => {
@@ -103,6 +109,7 @@ const PostForm = () => {
             category,
             smallCategory: category === "정보게시판" ? smallCategory : null,
             author,
+            profileImageUrl,
             date: new Date(),
             views: 0,
             likes: 0,
