@@ -15,11 +15,11 @@ import CardMode from '../components/CardMode';
 import Pagination from '../components/Pagination';
 import ShadowButton from '../components/ShadowButton';
 
-const Community = () => {
+const Popularity = () => {
     const [activeIndex, setActiveIndex] = useState(0); /*sub */
     const menuItems = ["🅰️전체", "😺일간 게시판", "😸주간게시판", "😹월간게시판", "😻연간게시판"]; /*sub */
-    const [posts, setPosts] = useState([]); // 전체 정보 게시물 목록
-    const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 정보 게시물 목록
+    const [posts, setPosts] = useState([]); // 전체 인기 게시물 목록
+    const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 인기 게시물 목록
     const [sortBy, setSortBy] = useState('date'); // 정렬 기준
     const [direction, setDirection] = useState('desc'); // 정렬 방향
     const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태
@@ -31,49 +31,42 @@ const Community = () => {
     const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
     const [subCategoryFilter, setSubCategoryFilter] = useState('all'); // 소카테고리 필터 상태
     const [viewMode, setViewMode] = useState('list'); // 뷰 모드 상태
+    const [timeFilter, setTimeFilter] = useState('daily'); // 시간 필터링 기준 (일간, 주간, 월간)
 
     // 게시물 데이터를 가져오는 useEffect 훅
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true); // 로딩 시작
             try {
+                // API 요청하여 인기 게시물 데이터 가져오기
                 const response = await api.get('/posts', {
                     params: {
-                        category: ['인기게시판'],
-                        searchTerm: debouncedSearchTerm,
-                        searchMode,
+                        likes: 10, // 추천 수가 10 이상인 게시물 요청
                         sortBy,
                         direction,
                         page: currentPage - 1,
                         size: postsPerPage,
+                        timeFilter // 시간 필터링 기준 전달
                     },
-                    paramsSerializer: params => {
-                        // 배열 파라미터를 서버에서 받을 수 있도록 문자열로 변환
-                        return Object.keys(params)
-                            .map(key => Array.isArray(params[key]) ? params[key].map(val => `${key}=${val}`).join('&') : `${key}=${params[key]}`)
-                            .join('&');
-                    }
                 });
-                setPosts(response.data.posts || []); // 응답 데이터에서 게시물 목록 설정
+                // 응답 데이터에서 게시물 목록 설정
+                setPosts(response.data.posts || []);
                 setTotalPages(response.data.totalPages); // 총 페이지 수 설정
             } catch (error) {
-                console.error('게시물 데이터를 가져오는 데 실패했습니다:', error); // 에러 처리
+                console.error('인기 게시물 데이터를 가져오는 데 실패했습니다:', error); // 에러 처리
             } finally {
                 setLoading(false); // 로딩 종료
             }
         };
 
         fetchPosts(); // 게시물 데이터 가져오기 함수 호출
-    }, [debouncedSearchTerm, searchMode, sortBy, direction, currentPage]);
+    }, [sortBy, direction, currentPage, timeFilter]); // 의존성 배열
 
     // posts 상태가 변경될 때 filteredPosts 상태 업데이트
     useEffect(() => {
-        if (subCategoryFilter === 'all') {
-            setFilteredPosts(posts); // 전체 게시물을 필터링된 게시물로 설정
-        } else {
-            setFilteredPosts(posts.filter((post) => post.smallCategory === subCategoryFilter)); // 소카테고리 필터링
-        }
-    }, [subCategoryFilter, posts]);
+        setFilteredPosts(posts); // 전체 게시물을 필터링된 게시물로 설정
+    }, [posts]);
+
 
     // 정렬 기준 변경 핸들러
     const handleSortChange = (event) => {
@@ -83,6 +76,13 @@ const Community = () => {
         setDirection(dir); // 정렬 방향 업데이트
         setCurrentPage(1); // 첫 페이지로 리셋
     };
+
+    // 시간 필터 변경 핸들러
+    const handleTimeFilterChange = (event) => {
+        setTimeFilter(event.target.value); // 시간 필터 상태 업데이트
+        setCurrentPage(1); // 첫 페이지로 리셋
+    };
+
 
     // 검색 입력 변경 핸들러
     const handleSearchChange = (event) => {
@@ -156,4 +156,4 @@ const Community = () => {
     );
 };
 
-export default Community;
+export default Popularity;

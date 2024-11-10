@@ -39,7 +39,7 @@ const Community = () => {
             try {
                 const response = await api.get('/posts', {
                     params: {
-                        category: ['자유게시판'],
+                        category: ['자유게시판', '데일리룩', '질문게시판'],
                         searchTerm: debouncedSearchTerm,
                         searchMode,
                         sortBy,

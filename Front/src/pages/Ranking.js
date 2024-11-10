@@ -9,30 +9,35 @@ import Banner from '../components/Banner';
 import banner1 from '../image/rankingbanner.jpg';
 
 const Rankings = () => {
-  const menuItems = ["일간 랭킹", "주간 랭킹", "월간 랭킹"];
+  const menuItems = ["누적 포인트", "주간 누적 포인트", "월간 누적 포인트"];
   const [currentPage, setCurrentPage] = useState(1);
   const [rankings, setRankings] = useState([]);
-  const [rankingType, setRankingType] = useState('daily'); // 기본 랭킹 타입은 '일간'
+  const [rankingType, setRankingType] = useState('total');
   const [userSummary, setUserSummary] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const itemsPerPage = 15;
 
-  // 랭킹 데이터 가져오기
   useEffect(() => {
     const fetchRankings = async () => {
       try {
-        const response = await api.get(`/api/rankings/${rankingType}`); // API 요청
+        const response = await api.get(`/api/rankings/${rankingType}`);
         setRankings(response.data);
       } catch (error) {
         console.error('랭킹 데이터를 불러오는 중 오류가 발생했습니다:', error);
       }
     };
+
     fetchRankings();
   }, [rankingType]);
 
-  // 닉네임 클릭 시 요약 정보 표시
+  const handleMenuClick = (index) => {
+    setActiveIndex(index);
+    setCurrentPage(1);
+    setRankingType(['total', 'weekly', 'monthly'][index]);
+  };
+
   const handleNicknameClick = async (id) => {
     try {
       const response = await api.get(`/api/users/${id}/summary`);
@@ -43,32 +48,24 @@ const Rankings = () => {
     }
   };
 
-
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentRankings = rankings.slice(indexOfFirstItem, indexOfLastItem);
 
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  // 메뉴 클릭 시 랭킹 타입 변경
-  const handleMenuClick = (index) => {
-    setActiveIndex(index);
-    setRankingType(index === 0 ? 'daily' : index === 1 ? 'weekly' : 'monthly');
-    setCurrentPage(1); // 페이지 초기화
-  };
-
-  // 순위 아이콘 및 배경색 설정
-  const getRankIcon = (rank) => {
-    if (rank === 1) return <span style={{ fontSize: '2em' }}>🥇</span>;
-    if (rank === 2) return <span style={{ fontSize: '2em' }}>🥈</span>;
-    if (rank === 3) return <span style={{ fontSize: '2em' }}>🥉</span>;
-    return rank;
-  };
   const getBackgroundColor = (rank) => {
     if (rank === 1) return 'gold';
     if (rank === 2) return 'silver';
     if (rank === 3) return 'rgb(205, 127, 50)';
     return '';
+  };
+
+  const getRankIcon = (rank) => {
+    if (rank === 1) return <span style={{ fontSize: '2em' }}>🥇</span>;
+    if (rank === 2) return <span style={{ fontSize: '2em' }}>🥈</span>;
+    if (rank === 3) return <span style={{ fontSize: '2em' }}>🥉</span>;
+    return rank;
   };
 
 

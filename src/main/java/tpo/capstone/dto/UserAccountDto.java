@@ -11,7 +11,7 @@ import tpo.capstone.entity.UserAccount;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserAccountDto {
-    private Long id;  // ID 필드 추가
+    private Long id;
     private String userId;
     private String password;
     private String name;
@@ -20,11 +20,12 @@ public class UserAccountDto {
     private String email;
     private String nickname;
     private int points;
+    private String profileImageUrl; // 프로필 이미지 URL 필드 추가
 
     // 엔티티에서 DTO로 변환
     public static UserAccountDto fromEntity(UserAccount userAccount) {
         return new UserAccountDto(
-                userAccount.getId(),  // ID 설정
+                userAccount.getId(),
                 userAccount.getUserId(),
                 userAccount.getPassword(),
                 userAccount.getName(),
@@ -32,14 +33,15 @@ public class UserAccountDto {
                 userAccount.getGender(),
                 userAccount.getEmail(),
                 userAccount.getNickname(),
-                userAccount.getPoints()
+                userAccount.getPoints(),
+                userAccount.getUserProfile() != null ? userAccount.getUserProfile().getProfileImageUrl() : null // 프로필 이미지 URL 추가
         );
     }
 
     // DTO에서 엔티티로 변환
     public UserAccount toEntity() {
         return UserAccount.builder()
-                .id(this.id)  // ID 설정
+                .id(this.id)
                 .userId(this.userId)
                 .password(this.password)
                 .name(this.name)

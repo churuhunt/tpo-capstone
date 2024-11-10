@@ -16,62 +16,69 @@ import PageSubMenu from '../components/PageSubMenu';
 
 const slideImages = [mainimg1, mainimg2, mainimg3];
 const slideBanners = [mainbanner1, mainbanner2, mainbanner3];
+const rankEmojis = ['🥇', '🥈', '🥉', '🏅', '🏅'];
 
-const rankings = [
-  { nickname: 'User6', points: 13213, profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' },
-  { nickname: 'User6', points: 9540, profile: 'https://i.namu.wiki/i/AqqP_0SvJeN-Ho3VwvnVlUP9uFxZUHOIAqjQpnc6L5JYjdv4p5am1Q7UEy67RUY9VNSIgdWPfbgQF6vGmZcBJw.gif' },
-  { nickname: 'User6', points: 12213, profile: null },
-  { nickname: 'User6', points: 9530, profile: 'https://image.blip.kr/v1/file/843689388f56fabb7cb64da9cfbc772f' },
-  { nickname: 'User5', points: 1430, profile: 'https://mblogthumb-phinf.pstatic.net/MjAyMDEyMDNfMjM4/MDAxNjA2OTYwMTMwNTIx.WPbCwJi9dPPV9bvYFqNQWOCXBW0cuvxUUV-HlHIrD2kg.Q3IbhhN_ivuL-lxiv-BhOxne1wxBF6mHvTM2Y2wfChYg.GIF.bidsh/17.gif?type=w800' },
-];
-
-const popularPostsData = {
-  daily: [
-    { title: '테스트 일간 인기글 1', thumbnail: mainimg1, author: { nickname: 'User1', profile: 'https://mblogthumb-phinf.pstatic.net/MjAyMTAxMTVfMTQ3/MDAxNjEwNzE1NjI5NDg3.zVoKymGokWDVyo4LR4DGX0hcD0tOhekkrYrQXcFgrvog.j-77qhOAo8HG_hLeeo8PM1UFSZ4UQVpww9sRTX-A-6Qg.JPEG.dltldud33/IMG_8779.JPG?type=w800' } },
-    { title: '테스트 일간 인기글 2', thumbnail: mainimg2, author: { nickname: 'User12', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 일간 인기글 3', thumbnail: mainimg3, author: { nickname: 'User13', profile: 'https://example.com/profile3.jpg' } },
-    { title: '테스트 일간 인기글 4', thumbnail: mainimg1, author: { nickname: 'User14', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 일간 인기글 5', thumbnail: mainimg2, author: { nickname: 'User15', profile: 'https://media.tenor.com/MPCPvINDMKUAAAAM/%E5%AF%B6%E8%B2%9D%E7%86%8A.gif' } },
-  ],
-  weekly: [
-    { title: '테스트 주간 인기글 1', thumbnail: mainimg1, author: { nickname: 'User11', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 주간 인기글 2', thumbnail: mainimg2, author: { nickname: 'User12', profile: null } },
-    { title: '테스트 주간 인기글 3', thumbnail: mainimg3, author: { nickname: 'User13', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 주간 인기글 4', thumbnail: mainimg1, author: { nickname: 'User14', profile: null } },
-    { title: '테스트 주간 인기글 5', thumbnail: mainimg2, author: { nickname: 'User15', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-  ],
-  monthly: [
-    { title: '테스트 월간 인기글 1', thumbnail: mainimg1, author: { nickname: 'User1', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 월간 인기글 2', thumbnail: mainimg2, author: { nickname: 'User1', profile: null } },
-    { title: '테스트 월간 인기글 3', thumbnail: mainimg3, author: { nickname: 'User13', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 월간 인기글 4', thumbnail: mainimg1, author: { nickname: 'User14', profile: null } },
-    { title: '테스트 월간 인기글 5', thumbnail: mainimg2, author: { nickname: 'User15', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-  ],
-  yearly: [
-    { title: '테스트 연간 인기글 1', thumbnail: mainimg1, author: { nickname: 'User1', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 연간 인기글 2', thumbnail: mainimg2, author: { nickname: 'User12', profile: null } },
-    { title: '테스트 연간 인기글 3', thumbnail: mainimg3, author: { nickname: 'User1', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-    { title: '테스트 연간 인기글 4', thumbnail: mainimg1, author: { nickname: 'User14', profile: null } },
-    { title: '테스트 연간 인기글 5', thumbnail: mainimg2, author: { nickname: 'User1', profile: 'https://i.makeagif.com/media/7-30-2021/Ud8Kii.gif' } },
-  ],
-};
-
-const announcements = [
-  { title: '첫 번째 테스트 공지사항', date: '2023-11-01' },
-  { title: '두 번째 테스트 공지사항', date: '2023-11-02' },
-  { title: '세 번째 테스트 공지사항', date: '2023-11-03' },
-  { title: '네 번째 테스트 공지사항', date: '2023-11-04' },
-  { title: '다섯 번째 테스트 공지사항', date: '2023-11-05' },
-];
 
 const Mainpage = () => {
   const [selectedPeriod, setSelectedPeriod] = useState('daily');
+  const [rankings, setRankings] = useState([]);
+  const [popularPosts, setPopularPosts] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
+  const [communityPosts, setCommunityPosts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const handlePeriodChange = (period) => {
-    setSelectedPeriod(period);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        // 자유게시판 데이터 가져오기
+        const communityResponse = await api.get('/posts', {
+          params: {
+            category: ['자유게시판'],
+            page: 0,
+            size: 5
+          }
+        });
+        setCommunityPosts(communityResponse.data.posts || []);
 
-  const rankEmojis = ['🥇', '🥈', '🥉', '🏅', '🏅'];
+        // 공지사항 데이터 가져오기
+        const announcementResponse = await api.get('/posts', {
+          params: {
+            category: ['공지사항'],
+            page: 0,
+            size: 5
+          }
+        });
+        setAnnouncements(announcementResponse.data.posts || []);
+
+        // 인기 게시물 데이터 가져오기
+        const popularResponse = await api.get('/posts', {
+          params: {
+            likes: 10,
+            sortBy: 'likes',
+            direction: 'desc',
+            page: 0,
+            size: 5,
+            timeFilter: selectedPeriod
+          }
+        });
+        setPopularPosts(popularResponse.data.posts || []);
+
+        // 랭킹 데이터 가져오기
+        const rankingResponse = await api.get('/api/rankings/total');
+        setRankings(rankingResponse.data);
+
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류가 발생했습니다:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [selectedPeriod]);
+
+  const handlePeriodChange = (period) => setSelectedPeriod(period);
 
   return (
     <div className="main-page">
