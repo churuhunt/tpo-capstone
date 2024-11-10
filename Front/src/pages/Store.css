@@ -301,3 +301,33 @@
 .store-container .store-header .store-search .store-search-button:active {
   background-color: #9e9e9e;
 }*/
+
+/* Store.css */
+
+.store-item {
+  width: 180px;  /* 아이템 카드의 너비 */
+  margin: 10px;  /* 카드 사이의 간격 */
+  text-align: center;  /* 텍스트와 이미지 중앙 정렬 */
+  background-color: #f9f9f9;  /* 배경색 */
+  border-radius: 8px;  /* 둥근 모서리 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);  /* 그림자 효과 */
+  overflow: hidden;  /* 이미지 넘침 방지 */
+}
+
+.store-item-image {
+  width: 100%;  /* 카드의 너비에 맞춤 */
+  height: 150px;  /* 고정된 높이 */
+  object-fit: cover;  /* 비율을 유지하며 이미지가 꽉 차도록 */
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.store-item-info {
+  padding: 10px;  /* 텍스트와 아이템 정보에 여백 */
+}
+
+.store-item-info p {
+  margin: 5px 0;  /* 텍스트 간의 간격 */
+  color: #333;  /* 텍스트 색상 */
+  font-size: 14px;  /* 텍스트 크기 */
+}

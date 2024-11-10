@@ -15,8 +15,8 @@ public class ItemDto {
     private String name;
     private String description;
     private int price;
-    private Item.Category category; // 카테고리 필드 추가
-
+    private Item.Category category;
+    private String imageUrl;
     // Entity에서 DTO로 변환하는 메서드
     public static ItemDto fromEntity(Item item) {
         return new ItemDto(
@@ -24,7 +24,8 @@ public class ItemDto {
                 item.getName(),
                 item.getDescription(),
                 item.getPrice(),
-                item.getCategory() // 카테고리 포함
+                item.getCategory(),
+                item.getImageUrl()
         );
     }
 }
