@@ -154,6 +154,25 @@ const MyMenu = () => {
             setLoading(false);
         }
     };
+
+const handleSaveClick = async () => {
+    setLoading(true);
+    try {
+        // 소개글 저장 요청
+        if (introduction) {
+            await api.post('/myhome/update-introduction', { introduction }, {
+                headers: { 'Content-Type': 'application/json' }
+            });
+        }
+        alert('저장되었습니다.');
+    } catch (error) {
+        console.error("저장 실패:", error);
+        alert('저장에 실패했습니다.');
+    } finally {
+        setLoading(false);
+    }
+};
+
     // 포인트 차감 함수
     const updatePoints = (amount) => {
         setPoints(prevPoints => prevPoints - amount);
@@ -212,7 +231,7 @@ const MyMenu = () => {
                     </div>
                     <div className="my-menu-content">
                         <div className="my-menu-content1">
-                            <Visithistory visitorCount={visitorCount} visitorDataPoints={visitorDataPoints} />
+                            <Visithistory visitorCount={visitorCount} visitorDataPoints={visitorDataPoints} introduction={introduction} onSaveIntroduction={handleSaveClick}  />
                         </div>
                         <div className="my-menu-content2">
                             {activeTab === 'myhomepost' && <Myhomepost posts={userPosts} />}

@@ -12,12 +12,12 @@ const CustomizationPage = ({
                              userId, // userId를 props로 받음
                            }) => {
   const defaultItems = [
-    { item_category: '프로필', item_name: '기본 1💰 Gif 2💰', image_url: '', isUploadOption: true },
-    { item_category: '배경', item_name: '기본 1💰 Gif 2💰', image_url: '', isUploadOption: true },
-    { item_category: '프로필', item_name: '테스트 이미지 1', image_url: 'https://i.pinimg.com/originals/6a/f4/0b/6af40b1d8318adbe38072284f24851b9.jpg' },
-    { item_category: '프로필', item_name: '테스트 이미지 2', image_url: 'https://i.pinimg.com/originals/fd/29/9a/fd299aac8ae19c908fac63c9407a8460.jpg' },
-    { item_category: '배경', item_name: '테스트 이미지 1', image_url: 'https://web.mission1.co.kr/boardForder/print/%EB%B0%B0%EA%B2%BD%ED%99%94%EB%A9%B4PC4062341.jpg' },
-    { item_category: '배경', item_name: '테스트 이미지 2', image_url: 'https://d2v80xjmx68n4w.cloudfront.net/gigs/DsuFJ1702393141.jpg' },
+    { item_category: "프로필", item_name: "기본 1💰 Gif 2💰", image_url: "", isUploadOption: true },
+    { item_category: "배경", item_name: "기본 1💰 Gif 2💰", image_url: "", isUploadOption: true },
+    { item_category: "프로필", item_name: "토끼", image_url: "https://i.pinimg.com/236x/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg" },
+    { item_category: "프로필", item_name: "곰", image_url: "https://i.pinimg.com/236x/d6/4e/97/d64e9765deca662e8fa07d2cfdb67f7c.jpg" },
+    { item_category: "배경", item_name: "남색 배경", image_url: "https://my-tpo-images.s3.ap-southeast-2.amazonaws.com/94080ca7-9d9b-423d-a63e-408b8756059f_9.png" },
+    { item_category: "배경", item_name: "바다색 배경", image_url: "https://my-tpo-images.s3.ap-southeast-2.amazonaws.com/579311bb-cf13-491a-bc98-78203d2008ab_qkek.png" },
   ];
 
   const [items, setItems] = useState(defaultItems);
