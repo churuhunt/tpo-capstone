@@ -1,53 +1,100 @@
 /* 첫 컨테이너 */
 .CustomizationPage-container1 {
-  background-color: #fff;
+  background-color: #ffffff;
   width: 850px;
   height: 80%;
   margin: 0 auto;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid #CCCCCC;
+  border-radius: 15px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  border: 1px solid #e0e0e0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
+
 
 /* 보유 아이템 컨테이너 */
 .CustomizationPage-container2 {
-  background-color: #fff;
+  background-color: #fafafa;
   width: 800px;
   height: 400px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border: 1px solid #CCCCCC;
+  border-radius: 15px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e0e0e0;
   margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 10px;
+  padding: 15px;
 }
 
 /* 아이템 목록 */
 .CustomizationPage-items {
   display: grid;
   grid-template-columns: repeat(5, 1fr); /* 5개 칸 */
-  grid-template-rows: repeat(2, 1fr); /* 2개 행 */
-  gap: 10px;
+  gap: 15px;
   width: 100%;
   height: 100%;
+  animation: fadeInUp 0.5s ease forwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* 개별 아이템 스타일 */
 .CustomizationPage-item {
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 10px;
+  padding: 15px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.CustomizationPage-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* 클릭 효과 */
+.CustomizationPage-item:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* 클릭 효과 애니메이션 */
+.CustomizationPage-item:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(64, 196, 255, 0.3);
+  border-radius: 10px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.CustomizationPage-item:active:after {
+  opacity: 1;
+  transition: opacity 0.1s;
 }
 
 /* 아이템 이미지 */
@@ -55,15 +102,22 @@
   width: 130px;
   height: 110px;
   border-radius: 5px;
-  margin-bottom: 5px;
+  margin-bottom: 8px;
+  transition: transform 0.3s ease;
+}
+
+.CustomizationPage-item:hover .CustomizationPage-item-image {
+  transform: scale(1.1);
 }
 
 /* 아이템 이름 */
 .CustomizationPage-item-name {
   text-align: center;
   font-size: 14px;
-  color: #333;
-  margin-top: 5px;
+  color: #555;
+  font-weight: bold;
+  margin-top: 8px;
+  opacity: 0.9;
 }
 
 /* 페이지 네이션 버튼 스타일 */
@@ -71,20 +125,104 @@
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .CustomizationPage-pagination button {
-  padding: 5px 10px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  border-radius: 5px;
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background-color: #ffffff;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
+  font-weight: bold;
+  color: #555;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+}
+
+.CustomizationPage-pagination button:hover {
+  background-color: #40C4FF;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.CustomizationPage-pagination button:active {
+  transform: scale(0.9);
 }
 
 .CustomizationPage-pagination button:disabled {
   cursor: not-allowed;
-  color: #aaa;
+  color: #bbb;
+  background-color: #f0f0f0;
 }
 
+/* 탭 버튼 스타일 */
+.CustomizationPage-container-button-container2 button {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #555;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  cursor: pointer;
+  margin: 0 10px;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.CustomizationPage-container-button-container2 button:hover {
+  background-color: #40C4FF;
+  color: #ffffff;
+  box-shadow: 0 4px 8px rgba(64, 196, 255, 0.3);
+}
+
+.CustomizationPage-container-button-container2 button:active {
+  transform: scale(0.95);
+  box-shadow: 0 2px 4px rgba(64, 196, 255, 0.2);
+}
+
+/* 선택된 탭 버튼 스타일 */
+.CustomizationPage-container-button-container2 button.selected {
+  background-color: #40C4FF;
+  color: #ffffff;
+  box-shadow: 0 4px 8px rgba(64, 196, 255, 0.3);
+}
+
+/* 저장/취소 버튼 스타일 */
+.CustomizationPage-container1 .save-button, .CustomizationPage-container1 .cancel-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  margin: 10px 20px;
+}
+
+.CustomizationPage-container1 .save-button {
+  background-color: #28a745;
+  color: #ffffff;
+  border: none;
+}
+
+.CustomizationPage-container1 .cancel-button {
+  background-color: #dc3545;
+  color: #ffffff;
+  border: none;
+}
+
+.CustomizationPage-container1 .save-button:hover, .CustomizationPage-container1 .cancel-button:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+.CustomizationPage-container1 .save-button:active, .CustomizationPage-container1 .cancel-button:active {
+  transform: scale(0.95);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.store-points {
+    font-family: 'Jua', sans-serif;
+    position:relative;
+    left:390px;
+    top: -20px;
+}

@@ -1,7 +1,6 @@
 .visit-history-container {
-    padding: 20px;
-    width: 100%;
-    max-width: 500px;
+    padding: 5px;
+    width: 400px;
     margin: 20px auto;
 }
 
@@ -48,4 +47,29 @@
     border: none;
     border-top: 1px solid #ddd;
     margin: 10px 0;
+}
+
+.visit-history-container1{
+    height:40%;
+    font-family: "Jua", sans-serif;
+    margin-bottom:100px;
+}
+
+.visit-history-container2{
+    height:60%;
+    font-family: "Jua", sans-serif;
+}
+
+.visit-history-container1-1 {
+    display: flex;
+}
+
+.visit-history-container1-1 button{
+    width: 33px;
+    font-size:11px;
+    height: 30px;
+    position: relative;
+    top:15px;
+    left: 330px;
+    border-radius: 10px;
 }
