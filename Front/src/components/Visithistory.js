@@ -69,67 +69,74 @@ const Visithistory = ({ visitorCount, visitorDataPoints }) => {
         ],
     };
 
-    const options = {
-        responsive: true,
-        layout: {
-            padding: {
-                top: 20,
+const options = {
+    responsive: true,
+    layout: {
+        padding: {
+            top: 20,
+        },
+    },
+    plugins: {
+        legend: {
+            display: false, // 범례 숨기기
+        },
+        tooltip: {
+            enabled: true,
+        },
+        datalabels: {
+            color: visitorData.datasets[0].borderColor,
+            anchor: 'end',
+            align: 'top',
+            formatter: (value) => value.toLocaleString(),
+            font: {
+                size: 12,
+                weight: 'bold',
             },
         },
-        plugins: {
-            tooltip: {
-                enabled: true,
+    },
+    scales: {
+        x: {
+            grid: {
+                display: false,
             },
-            datalabels: {
-                color: visitorData.datasets[0].borderColor,
-                anchor: 'end',
-                align: 'top',
-                formatter: (value) => value.toLocaleString(),
-                font: {
-                    size: 12,
-                    weight: 'bold',
-                },
+            ticks: {
+                color: '#888',
             },
         },
-        scales: {
-            x: {
-                grid: {
-                    display: false,
-                },
-                ticks: {
-                    color: '#888',
-                },
+        y: {
+            grid: {
+                display: false,
             },
-            y: {
-                grid: {
-                    display: false,
-                },
-                ticks: {
-                    display: false,
-                },
+            ticks: {
+                display: false,
             },
         },
-        elements: {
-            line: {
-                tension: 0.3,
-            },
-            point: {
-                radius: 4,
-                hoverRadius: 6,
-            },
+    },
+    elements: {
+        line: {
+            tension: 0.3,
         },
-    };
-
+        point: {
+            radius: 4,
+            hoverRadius: 6,
+        },
+    },
+};
     return (
         <div className="visit-history-container">
+            <div className="visit-history-container1">
+            <div className="visit-history-container1-1">
             <h2 className="visit-history-title">소개</h2>
-            <p className="visit-history-intro">{introduction}</p>
+            <button>Edit</button>
+            </div>
+            <p className="visit-history-intro">{introduction}</p></div>
+            <div className="visit-history-container2">
             <hr className="visit-history-divider" />
             <h2 className="visit-history-title">방문자</h2>
-            <p className="visitor-count">총 방문자 수: {visitorCount.toLocaleString()}</p>
+            {/*<p className="visitor-count">{visitorCount.toLocaleString()}</p>*/}
             <div className="visit-history-chart">
                 <Line data={visitorData} options={options} />
-            </div>
+            </div></div>
         </div>
     );
 };
