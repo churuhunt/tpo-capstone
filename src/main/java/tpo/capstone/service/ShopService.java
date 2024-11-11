@@ -3,6 +3,7 @@ package tpo.capstone.service;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tpo.capstone.dto.ItemDto;
 import tpo.capstone.entity.Item;
 import tpo.capstone.entity.PurchaseHistory;
 import tpo.capstone.entity.UserAccount;
@@ -12,6 +13,7 @@ import tpo.capstone.repository.UserAccountRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ShopService {
@@ -89,4 +91,13 @@ public class ShopService {
     public List<PurchaseHistory> getPurchaseHistory(Long userId) {
         return purchaseHistoryRepository.findByUser_IdOrderByPurchaseDateDesc(userId);
     }
+
+
+
+    public List<ItemDto> getOwnedItems(Long userId) {
+        List<PurchaseHistory> purchaseHistories = purchaseHistoryRepository.findByUser_IdOrderByPurchaseDateDesc(userId);
+        return purchaseHistories.stream()
+                .map(purchase -> ItemDto.fromEntity(purchase.getItem()))
+                .collect(Collectors.toList());
+        }
 }

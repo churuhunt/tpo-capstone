@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import tpo.capstone.entity.UserAccount;
+import tpo.capstone.entity.UserProfile;
 
 @Getter
 @Setter
@@ -20,10 +21,15 @@ public class UserAccountDto {
     private String email;
     private String nickname;
     private int points;
-    private String profileImageUrl; // 프로필 이미지 URL 필드 추가
+    private String profileImageUrl;
+    private String backgroundImageUrl;
+    private String nicknameDecoration;
+    private String introduction;
+    private String interests;
 
     // 엔티티에서 DTO로 변환
     public static UserAccountDto fromEntity(UserAccount userAccount) {
+        UserProfile profile = userAccount.getUserProfile();
         return new UserAccountDto(
                 userAccount.getId(),
                 userAccount.getUserId(),
@@ -34,14 +40,17 @@ public class UserAccountDto {
                 userAccount.getEmail(),
                 userAccount.getNickname(),
                 userAccount.getPoints(),
-                userAccount.getUserProfile() != null ? userAccount.getUserProfile().getProfileImageUrl() : null // 프로필 이미지 URL 추가
+                profile != null ? profile.getProfileImageUrl() : null,
+                profile != null ? profile.getBackgroundImageUrl() : null,
+                profile != null ? profile.getNicknameDecoration() : null,
+                profile != null ? profile.getIntroduction() : null,
+                profile != null ? profile.getInterests() : null
         );
     }
 
     // DTO에서 엔티티로 변환
     public UserAccount toEntity() {
-        return UserAccount.builder()
-                .id(this.id)
+        UserAccount userAccount = UserAccount.builder()
                 .userId(this.userId)
                 .password(this.password)
                 .name(this.name)
@@ -51,5 +60,20 @@ public class UserAccountDto {
                 .nickname(this.nickname)
                 .points(this.points)
                 .build();
+
+        // 프로필 데이터를 UserProfile로 변환하여 UserAccount와 연관 설정
+        if (this.profileImageUrl != null || this.backgroundImageUrl != null ||
+                this.nicknameDecoration != null || this.introduction != null || this.interests != null) {
+            UserProfile profile = new UserProfile();
+            profile.setProfileImageUrl(this.profileImageUrl);
+            profile.setBackgroundImageUrl(this.backgroundImageUrl);
+            profile.setNicknameDecoration(this.nicknameDecoration);
+            profile.setIntroduction(this.introduction);
+            profile.setInterests(this.interests);
+            profile.setUser(userAccount);
+            userAccount.setUserProfile(profile);
+        }
+
+        return userAccount;
     }
 }

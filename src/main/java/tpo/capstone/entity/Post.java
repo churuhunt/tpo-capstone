@@ -76,7 +76,6 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Comment> comments = new ArrayList<>(); // 댓글 리스트 추가 및 JsonManagedReference 적용
-
     public void incrementViews() {
         this.views += 1;
     }

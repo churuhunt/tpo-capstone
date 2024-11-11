@@ -35,58 +35,57 @@ const MyMenu = () => {
     const [visitorCount, setVisitorCount] = useState(0);
     const [visitorDataPoints, setVisitorDataPoints] = useState([]);
     const [userId, setUserId] = useState(null);
-    const [totalPages, setTotalPages] = useState(0); // totalPages 상태 추가
+    const [totalPages, setTotalPages] = useState(0);
+
+
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            // 사용자 정보 및 ID 가져오기
+            const userResponse = await api.get('/users/current');
+            const userData = userResponse.data;
+            setUserId(userData.id);
+            setNickname(userData.nickname || '사용자');
+            setPoints(userData.points);
+
+            await Promise.all([
+                api.get('/myhome/profile').then(response => {
+                    const userData = response.data;
+                    setProfileImage(userData.profileImageUrl || '');
+                    setTempProfileImage(userData.profileImageUrl || '');
+                    setBackgroundImage(userData.backgroundImageUrl || '');
+                    setTempBackgroundImage(userData.backgroundImageUrl || '');
+                    setNicknameDecoration(userData.nicknameDecoration || '');
+                    setIntroduction(userData.introduction || '');
+                }),
+                api.get('/myhome/activity').then(response => {
+                    const fetchedData = response.data;
+                    setActivityStats({
+                        posts: fetchedData.postCount,
+                        comments: fetchedData.commentCount,
+                        likes: fetchedData.likesReceived,
+                        dislikes: fetchedData.dislikesReceived,
+                    });
+                }),
+                api.get('/myhome/visitor-count').then(response => {
+                    const totalVisitorCount = response.data;
+                    setVisitorCount(totalVisitorCount);
+                    setVisitorDataPoints(Array(6).fill(totalVisitorCount));
+                })
+            ]);
+
+            // 게시물 가져오기 함수 호출
+            fetchPosts(userData.id);
+        } catch (error) {
+            console.error("데이터 로드 중 오류 발생:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                // 사용자 정보 및 ID 가져오기
-                const userResponse = await api.get('/users/current');
-                const userData = userResponse.data;
-                setUserId(userData.id); // 현재 사용자 ID 설정
-                setNickname(userData.nickname || '사용자');
-                setPoints(userData.points);
-
-                await Promise.all([
-                    api.get('/myhome/profile').then(response => {
-                        const userData = response.data;
-                        setProfileImage(userData.profileImageUrl || '');
-                        setTempProfileImage(userData.profileImageUrl || '');
-                        setBackgroundImage(userData.backgroundImageUrl || '');
-                        setTempBackgroundImage(userData.backgroundImageUrl || '');
-                        setNicknameDecoration(userData.nicknameDecoration || '');
-                        setIntroduction(userData.introduction || '');
-                    }),
-                    api.get('/myhome/activity').then(response => {
-                        const fetchedData = response.data;
-                        setActivityStats({
-                            posts: fetchedData.postCount,
-                            comments: fetchedData.commentCount,
-                            likes: fetchedData.likesReceived,
-                            dislikes: fetchedData.dislikesReceived,
-                        });
-                    }),
-                    api.get('/myhome/visitor-count').then(response => {
-                        const totalVisitorCount = response.data;
-                        setVisitorCount(totalVisitorCount);
-                        setVisitorDataPoints(Array(6).fill(totalVisitorCount));
-                    })
-                ]);
-
-                // 게시물 가져오기 함수 호출
-                if (userId) {
-                    fetchPosts(userId);
-                }
-            } catch (error) {
-                console.error("데이터 로드 중 오류 발생:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchData();
-    }, [userId]);
+    }, []);
 
     // 게시물 가져오기 함수
     const fetchPosts = async (userId) => {
@@ -94,7 +93,7 @@ const MyMenu = () => {
             setLoading(true);
             const response = await api.get('/posts', {
                 params: {
-                    userId, // 현재 사용자의 ID로 필터링
+                    userId,
                 },
                 paramsSerializer: params => {
                     return Object.keys(params)
@@ -110,26 +109,43 @@ const MyMenu = () => {
             setLoading(false);
         }
     };
+    const updateProfileImageUrl = async (imageUrl) => {
+        await api.post('/myhome/update-profile-url', { imageUrl });
+    };
+
+    const updateBackgroundImageUrl = async (imageUrl) => {
+        await api.post('/myhome/update-background-url', { imageUrl });
+    };
 
     const handleSave = async () => {
         setLoading(true);
         try {
-            if (tempProfileImage instanceof File) {
+            // URL 저장 요청
+            if (typeof tempProfileImage === 'string') {
+                await updateProfileImageUrl(tempProfileImage);
+                setProfileImage(tempProfileImage);
+            } else if (tempProfileImage instanceof File) {
+                // 파일 업로드 요청
                 const formData = new FormData();
                 formData.append('file', tempProfileImage);
-                const response = await api.post('/myhome/profile/upload-profile-image', formData, {
+                const response = await api.post('/api/myhome/profile/upload-profile-image', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
                 setProfileImage(response.data);
             }
-            if (tempBackgroundImage instanceof File) {
+
+            if (typeof tempBackgroundImage === 'string') {
+                await updateBackgroundImageUrl(tempBackgroundImage);
+                setBackgroundImage(tempBackgroundImage);
+            } else if (tempBackgroundImage instanceof File) {
                 const formData = new FormData();
                 formData.append('file', tempBackgroundImage);
-                const response = await api.post('/myhome/profile/upload-background-image', formData, {
+                const response = await api.post('/api/myhome/profile/upload-background-image', formData, {
                     headers: { 'Content-Type': 'multipart/form-data' }
                 });
                 setBackgroundImage(response.data);
             }
+
             alert('저장되었습니다.');
         } catch (error) {
             console.error("이미지 저장 실패:", error);
@@ -138,6 +154,11 @@ const MyMenu = () => {
             setLoading(false);
         }
     };
+    // 포인트 차감 함수
+    const updatePoints = (amount) => {
+        setPoints(prevPoints => prevPoints - amount);
+    };
+
 
     const handleCancel = () => {
         setTempProfileImage(profileImage);
@@ -155,6 +176,7 @@ const MyMenu = () => {
             setActiveTab("custom");
         }
     };
+
 
     return (
         <div className="my-menu-container">
@@ -203,6 +225,8 @@ const MyMenu = () => {
                                     onSave={handleSave}
                                     onCancel={handleCancel}
                                     points={points}
+                                    updatePoints={setPoints} // 로컬 포인트 업데이트 함수
+                                    userId={userId} // userId를 전달합니다.
                                 />
                             )}
                             {activeTab === 'follower' && <FriendList type="follower" />}

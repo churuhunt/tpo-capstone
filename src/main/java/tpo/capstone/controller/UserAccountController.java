@@ -1,25 +1,19 @@
 package tpo.capstone.controller;
 
-import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import tpo.capstone.dto.*;
 import tpo.capstone.entity.Block;
 import tpo.capstone.entity.UserAccount;
-import tpo.capstone.auth.CustomUserDetails;
 import tpo.capstone.entity.UserSettings;
+import tpo.capstone.security.JwtTokenProvider;
 import tpo.capstone.service.BlockService;
 import tpo.capstone.service.UserAccountService;
-import tpo.capstone.security.JwtTokenProvider;
 import tpo.capstone.service.UserSettingsService;
 
 import java.security.Principal;
@@ -262,5 +256,17 @@ public class UserAccountController {
         userSettingsService.unblockUser(blockerId, blockedId);
         return ResponseEntity.ok("차단이 해제되었습니다.");
     }
+
+    // 포인트 차감 API
+    @PostMapping("/users/{id}/deduct-points")
+    public ResponseEntity<Integer> deductPoints(@PathVariable Long id, @RequestParam int points) {
+        try {
+            int updatedPoints = userAccountService.deductPoints(id, points);
+            return ResponseEntity.ok(updatedPoints);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
 }
 

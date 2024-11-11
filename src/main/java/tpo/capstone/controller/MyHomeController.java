@@ -8,7 +8,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tpo.capstone.auth.CustomUserDetails;
-import tpo.capstone.dto.UserAccountDto;
+import tpo.capstone.dto.UserProfileDto;
 import tpo.capstone.dto.UserProfileRequestDto;
 import tpo.capstone.entity.Post;
 import tpo.capstone.entity.UserActivity;
@@ -50,11 +50,18 @@ public class MyHomeController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<UserProfile> getProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<UserProfileDto> getProfile(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getUserAccountDto().getId();
         log.info("Fetching profile for userId: {}", userId);
+
         UserProfile userProfile = userProfileService.getProfile(userId);
-        return ResponseEntity.ok(userProfile);
+        if (userProfile == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        UserProfileDto userProfileDto = UserProfileDto.fromEntity(userProfile);
+        log.info("User profile image URL: {}", userProfileDto.getProfileImageUrl());
+        return ResponseEntity.ok(userProfileDto);
     }
 
     @PutMapping("/profile")
@@ -72,6 +79,7 @@ public class MyHomeController {
             userProfileService.updateProfileImage(userDetails.getUserAccountDto().getId(), imageUrl);
             return ResponseEntity.ok(imageUrl);
         } catch (IOException e) {
+            log.error("Failed to upload profile image", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("프로필 이미지 업로드 실패");
         }
     }
@@ -83,14 +91,14 @@ public class MyHomeController {
             userProfileService.updateBackgroundImage(userDetails.getUserAccountDto().getId(), imageUrl);
             return ResponseEntity.ok(imageUrl);
         } catch (IOException e) {
+            log.error("Failed to upload background image", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("배경 이미지 업로드 실패");
         }
     }
 
     @GetMapping("/activity")
     public ResponseEntity<Map<String, Long>> getActivityStatistics(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
-        Long userId = userAccountDto.getId();
+        Long userId = userDetails.getUserAccountDto().getId();
         log.info("Fetching activity statistics for userId: {}", userId);
         Map<String, Long> activityStatistics = userActivityService.getActivityStatistics(userId);
         return ResponseEntity.ok(activityStatistics);
@@ -98,8 +106,7 @@ public class MyHomeController {
 
     @GetMapping("/bookmarks")
     public ResponseEntity<List<Post>> getBookmarks(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
-        Long userId = userAccountDto.getId();
+        Long userId = userDetails.getUserAccountDto().getId();
         log.info("Fetching bookmarks for userId: {}", userId);
         List<Post> bookmarks = bookmarkService.getBookmarkedPosts(userId);
         return ResponseEntity.ok(bookmarks);
@@ -107,8 +114,7 @@ public class MyHomeController {
 
     @PostMapping("/add-visitor")
     public ResponseEntity<Void> addVisitor(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam String visitorUsername) {
-        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
-        Long userId = userAccountDto.getId();
+        Long userId = userDetails.getUserAccountDto().getId();
         log.info("Adding visitor: {} for userId: {}", visitorUsername, userId);
         visitorService.addVisitor(userId, visitorUsername);
         return ResponseEntity.ok().build();
@@ -116,8 +122,7 @@ public class MyHomeController {
 
     @GetMapping("/visitor-count")
     public ResponseEntity<Long> getVisitorCount(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
-        Long userId = userAccountDto.getId();
+        Long userId = userDetails.getUserAccountDto().getId();
         log.info("Fetching visitor count for userId: {}", userId);
         Long visitorCount = visitorService.getVisitorCount(userId);
         return ResponseEntity.ok(visitorCount);
@@ -125,8 +130,7 @@ public class MyHomeController {
 
     @GetMapping("/timeline")
     public ResponseEntity<List<UserActivity>> getTimeline(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
-        Long userId = userAccountDto.getId();
+        Long userId = userDetails.getUserAccountDto().getId();
         log.info("Fetching timeline for userId: {}", userId);
         List<UserActivity> timeline = timelineService.getUserTimeline(userId);
         return ResponseEntity.ok(timeline);
@@ -134,8 +138,7 @@ public class MyHomeController {
 
     @GetMapping("/posts")
     public ResponseEntity<List<Post>> getUserPosts(@AuthenticationPrincipal CustomUserDetails userDetails) {
-        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
-        Long userId = userAccountDto.getId();
+        Long userId = userDetails.getUserAccountDto().getId();
         log.info("Fetching posts for userId: {}", userId);
         List<Post> userPosts = postService.getUserPosts(userId);
         return ResponseEntity.ok(userPosts);
@@ -143,59 +146,25 @@ public class MyHomeController {
 
     @GetMapping("/posts/{category}")
     public ResponseEntity<List<Post>> getUserPostsByCategory(@AuthenticationPrincipal CustomUserDetails userDetails, @PathVariable String category) {
-        UserAccountDto userAccountDto = userDetails.getUserAccountDto();
-        Long userId = userAccountDto.getId();
+        Long userId = userDetails.getUserAccountDto().getId();
         log.info("Fetching posts for userId: {} in category: {}", userId, category);
         List<Post> userPostsByCategory = postService.getUserPostsByCategory(userId, category);
         return ResponseEntity.ok(userPostsByCategory);
     }
 
-    // 다른 사용자의 프로필 조회
-    @GetMapping("/profile/{userId}")
-    public ResponseEntity<UserProfile> getProfile(@PathVariable Long userId) {
-        log.info("Fetching profile for userId: {}", userId);
-        UserProfile userProfile = userProfileService.getProfile(userId);
-        return ResponseEntity.ok(userProfile);
+    @PostMapping("/update-profile-url")
+    public ResponseEntity<String> updateProfileImageUrl(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Map<String, String> request) {
+        String imageUrl = request.get("imageUrl");
+        Long userId = userDetails.getUserAccountDto().getId();
+        userProfileService.updateProfileImage(userId, imageUrl);
+        return ResponseEntity.ok("프로필 이미지 URL이 성공적으로 업데이트되었습니다.");
     }
 
-    // 다른 사용자의 활동 통계 조회
-    @GetMapping("/activity/{userId}")
-    public ResponseEntity<Map<String, Long>> getActivityStatistics(@PathVariable Long userId) {
-        log.info("Fetching activity statistics for userId: {}", userId);
-        Map<String, Long> activityStatistics = userActivityService.getActivityStatistics(userId);
-        return ResponseEntity.ok(activityStatistics);
+    @PostMapping("/update-background-url")
+    public ResponseEntity<String> updateBackgroundImageUrl(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestBody Map<String, String> request) {
+        String imageUrl = request.get("imageUrl");
+        Long userId = userDetails.getUserAccountDto().getId();
+        userProfileService.updateBackgroundImage(userId, imageUrl);
+        return ResponseEntity.ok("배경 이미지 URL이 성공적으로 업데이트되었습니다.");
     }
-
-    // 다른 사용자의 게시물 조회
-    @GetMapping("/posts/{userId}")
-    public ResponseEntity<List<Post>> getUserPosts(@PathVariable Long userId) {
-        log.info("Fetching posts for userId: {}", userId);
-        List<Post> userPosts = postService.getUserPosts(userId);
-        return ResponseEntity.ok(userPosts);
-    }
-
-    // 다른 사용자의 특정 카테고리 게시물 조회
-    @GetMapping("/posts/{userId}/{category}")
-    public ResponseEntity<List<Post>> getUserPostsByCategory(@PathVariable Long userId, @PathVariable String category) {
-        log.info("Fetching posts for userId: {} in category: {}", userId, category);
-        List<Post> userPostsByCategory = postService.getUserPostsByCategory(userId, category);
-        return ResponseEntity.ok(userPostsByCategory);
-    }
-
-    // 다른 사용자의 타임라인 조회
-    @GetMapping("/timeline/{userId}")
-    public ResponseEntity<List<UserActivity>> getTimeline(@PathVariable Long userId) {
-        log.info("Fetching timeline for userId: {}", userId);
-        List<UserActivity> timeline = timelineService.getUserTimeline(userId);
-        return ResponseEntity.ok(timeline);
-    }
-
-    // 다른 사용자의 방문자 수 조회
-    @GetMapping("/visitor-count/{userId}")
-    public ResponseEntity<Long> getVisitorCount(@PathVariable Long userId) {
-        log.info("Fetching visitor count for userId: {}", userId);
-        Long visitorCount = visitorService.getVisitorCount(userId);
-        return ResponseEntity.ok(visitorCount);
-    }
-
 }

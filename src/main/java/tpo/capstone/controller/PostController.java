@@ -97,14 +97,27 @@ public class PostController {
 
         // ObjectMapper로 JSON 문자열을 PostDto로 변환
         PostDto postDto = objectMapper.readValue(postDtoString, PostDto.class);
+
+        // userId를 userDto에서 가져오기
         String userId = userDto.getUserId();
         log.info("User ID extracted from token: {}", userId);
 
-        UserAccount authorAccount = userAccountService.findByUserId(userId);
+        // UserAccount 객체 가져오기 (방법 1 또는 방법 2)
+        UserAccount author = userAccountService.findByUserId(userId);
+        if (author == null) {
+            throw new IllegalArgumentException("Invalid userId: " + userId);
+        }
 
         // UserProfile 가져와서 프로필 이미지 URL 설정
-        UserProfile userProfile = userProfileRepository.findByUser_Id(authorAccount.getId())
-                .orElseThrow(() -> new IllegalArgumentException("User profile not found for userId: " + userId));
+        UserProfile userProfile = userProfileRepository.findByUser_Id(author.getId())
+                .orElseGet(() -> {
+                    // 기본 UserProfile 생성
+                    UserProfile defaultProfile = new UserProfile();
+                    defaultProfile.setUser(author);
+                    defaultProfile.setProfileImageUrl("/path/to/default/profile/image.png");
+                    userProfileRepository.save(defaultProfile);
+                    return defaultProfile;
+                });
         postDto.setProfileImageUrl(userProfile.getProfileImageUrl());
 
         // 이미지 파일이 있을 경우 S3에 업로드하고, URL을 PostDto에 설정
@@ -114,7 +127,7 @@ public class PostController {
         }
 
         // Post 엔티티로 변환하여 저장
-        Post savedPost = postService.savePost(postDto.toEntity(authorAccount), userId);
+        Post savedPost = postService.savePost(postDto.toEntity(author), userId);
         return ResponseEntity.status(HttpStatus.CREATED).body(PostDto.fromEntity(savedPost));
     }
 
@@ -163,7 +176,6 @@ public class PostController {
             @AuthenticationPrincipal(expression = "userAccountDto") UserAccountDto userDto,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-
         Map<String, Object> response = new HashMap<>();
         Long userId = userDto.getId(); // 사용자 ID 추가
 
@@ -176,7 +188,6 @@ public class PostController {
         String searchMode = null; // 적절한 기본값 설정
         String sortBy = "date"; // 기본 정렬 기준
         String direction = "desc"; // 기본 정렬 방향
-
         Page<PostDto> notices = postService.getFilteredPosts(userId, categories, null, searchMode, sortBy, direction, PageRequest.of(page, size))
                 .map(PostDto::fromEntity);
         response.put("notices", notices.getContent());

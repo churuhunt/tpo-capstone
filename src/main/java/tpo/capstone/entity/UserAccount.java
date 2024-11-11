@@ -1,5 +1,6 @@
 package tpo.capstone.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -49,6 +50,7 @@ public class UserAccount implements UserDetails {
 
     // UserProfile과의 1:1 관계 추가
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference // 순환 참조 방지
     private UserProfile userProfile;
 
     @Override

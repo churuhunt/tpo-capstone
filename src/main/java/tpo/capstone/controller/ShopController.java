@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tpo.capstone.auth.CustomUserDetails;
+import tpo.capstone.dto.ItemDto;
 import tpo.capstone.entity.Item;
 import tpo.capstone.entity.PurchaseHistory;
 import tpo.capstone.service.ShopService;
@@ -80,4 +81,13 @@ public class ShopController {
         Long userId = userDetails.getId(); // 인증된 사용자 ID 가져오기
         return ResponseEntity.ok(shopService.getPurchaseHistory(userId));
     }
+
+    @GetMapping("/owned-items")
+    public ResponseEntity<List<ItemDto>> getOwnedItems(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        Long userId = userDetails.getId();
+        List<ItemDto> ownedItems = shopService.getOwnedItems(userId);  // 사용자 보유 아이템 가져오기
+        return ResponseEntity.ok(ownedItems);
+    }
+
+
 }

@@ -81,11 +81,9 @@ public class UserAccountService {
         if (bCryptPasswordEncoder.matches(request.getPassword(), user.getPassword())) {
             log.info("비밀번호가 일치합니다. 로그인 성공: {}", request.getUserId());
             String token = jwtTokenProvider.createToken(new CustomUserDetails(user));
-
             // 로그인 시 lastActiveDate 업데이트
             user.setLastActiveDate(new Date());
             userAccountRepository.save(user);
-
             return new JwtResponse(token);
         } else {
             log.warn("비밀번호가 일치하지 않습니다. 로그인 실패: {}", request.getUserId());
@@ -225,5 +223,15 @@ public class UserAccountService {
     public UserAccount findByUserId(String userId) {
         return userAccountRepository.findByUserId(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with userId: " + userId));
+    }
+
+    @Transactional
+    public int deductPoints(Long userId, int pointsToDeduct) {
+        UserAccount user = getUserAccountById(userId);
+        if (user.getPoints() < pointsToDeduct) {
+            throw new IllegalArgumentException("포인트가 부족합니다.");
+        }
+        user.setPoints(user.getPoints() - pointsToDeduct);
+        return user.getPoints(); // 차감된 포인트 반환
     }
 }
