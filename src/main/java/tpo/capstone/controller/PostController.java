@@ -66,12 +66,13 @@ public class PostController {
             @RequestParam(defaultValue = "date") String sortBy,
             @RequestParam(defaultValue = "desc") String direction,
             @RequestParam(defaultValue = "title") String searchMode,
-            @AuthenticationPrincipal(expression = "userAccountDto.id") Long userId) {
+            @RequestParam(required = false) Long userId) {  // userId를 선택적으로 받음
 
-        log.info("Received getFilteredPosts request for userId={}, with category={}, searchTerm={}, page={}, size={}, sortBy={}, direction={}, searchMode={}",
+        log.info("Received getFilteredPosts request with userId={}, category={}, searchTerm={}, page={}, size={}, sortBy={}, direction={}, searchMode={}",
                 userId, category, searchTerm, page, size, sortBy, direction, searchMode);
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortBy));
+        // userId가 있을 때는 특정 사용자의 게시글을, 없으면 모든 사용자의 게시글을 필터링
         Page<Post> filteredPosts = postService.getFilteredPosts(userId, category, searchTerm, searchMode, sortBy, direction, pageable);
 
         List<PostDto> postDtoList = filteredPosts.stream()
@@ -86,7 +87,6 @@ public class PostController {
 
         return ResponseEntity.ok(response);
     }
-
     @PostMapping(value = "/posts", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<PostDto> createPost(
             @RequestParam("postDto") String postDtoString,

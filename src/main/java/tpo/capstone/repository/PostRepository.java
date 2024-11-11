@@ -80,4 +80,26 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             @Param("authorId") Long authorId,
             @Param("searchTerm") String searchTerm,
             Pageable pageable);
+
+    // 특정 사용자의 게시글만 필터링하여 조회하는 메서드
+    @Query("SELECT p FROM Post p WHERE " +
+            "(:category IS NULL OR p.category IN :category) " +
+            "AND (:searchTerm IS NULL OR " +
+            "(CASE WHEN :searchMode = 'title' THEN p.title " +
+            "WHEN :searchMode = 'content' THEN p.content END) LIKE %:searchTerm%)")
+    Page<Post> findFilteredPosts(@Param("category") List<String> category,
+                                 @Param("searchTerm") String searchTerm,
+                                 @Param("searchMode") String searchMode,
+                                 Pageable pageable);
+
+    @Query("SELECT p FROM Post p WHERE p.author.id = :userId " +
+            "AND (:category IS NULL OR p.category IN :category) " +
+            "AND (:searchTerm IS NULL OR " +
+            "(CASE WHEN :searchMode = 'title' THEN p.title " +
+            "WHEN :searchMode = 'content' THEN p.content END) LIKE %:searchTerm%)")
+    Page<Post> findByUserIdAndFilters(@Param("userId") Long userId,
+                                      @Param("category") List<String> category,
+                                      @Param("searchTerm") String searchTerm,
+                                      @Param("searchMode") String searchMode,
+                                      Pageable pageable);
 }

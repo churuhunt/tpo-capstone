@@ -37,9 +37,10 @@ const Community = () => {
         const fetchPosts = async () => {
             setLoading(true); // 로딩 시작
             try {
+                // 서버에서 게시물을 가져올 때 userId 파라미터를 포함하지 않음
                 const response = await api.get('/posts', {
                     params: {
-                        category: ['자유게시판', '데일리룩', '질문게시판'],
+                        category: subCategoryFilter === 'all' ? ['자유게시판', '데일리룩', '질문게시판'] : [subCategoryFilter],
                         searchTerm: debouncedSearchTerm,
                         searchMode,
                         sortBy,
@@ -64,7 +65,8 @@ const Community = () => {
         };
 
         fetchPosts(); // 게시물 데이터 가져오기 함수 호출
-    }, [debouncedSearchTerm, searchMode, sortBy, direction, currentPage]);
+    }, [debouncedSearchTerm, searchMode, sortBy, direction, currentPage, subCategoryFilter]);
+
 
     // posts 상태가 변경될 때 filteredPosts 상태 업데이트
     useEffect(() => {

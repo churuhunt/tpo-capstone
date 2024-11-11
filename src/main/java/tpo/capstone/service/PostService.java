@@ -3,9 +3,7 @@ package tpo.capstone.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tpo.capstone.entity.Post;
@@ -177,18 +175,14 @@ public class PostService {
      * @param pageable 페이징 정보
      * @return 필터링된 게시물 페이지
      */
-    public Page<Post> getFilteredPosts(Long userId, List<String> category, String searchTerm, String searchMode, String sortBy, String direction, Pageable pageable) {
-        log.info("Filtering posts for userId={} with category={}, searchTerm={}, pageable={}, searchMode={}, sortBy={}, direction={}",
-                userId, category, searchTerm, pageable, searchMode, sortBy, direction);
-
-        Sort sort = direction.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-        pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
-
-        // 카테고리가 null이거나 비어있다면 모든 카테고리를 대상으로 검색
-        if (category == null || category.isEmpty()) {
-            return postRepository.findFilteredPostsByUserWithoutCategory(userId, searchTerm, pageable);
+    public Page<Post> getFilteredPosts(Long userId, List<String> category, String searchTerm, String searchMode,
+                                       String sortBy, String direction, Pageable pageable) {
+        if (userId != null) {
+            // 특정 사용자의 게시글만 조회
+            return postRepository.findByUserIdAndFilters(userId, category, searchTerm, searchMode, pageable);
         } else {
-            return postRepository.findFilteredPostsByUser(userId, category, searchTerm, pageable);
+            // 모든 사용자의 게시글 조회
+            return postRepository.findFilteredPosts(category, searchTerm, searchMode, pageable);
         }
     }
 
