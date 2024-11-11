@@ -31,8 +31,11 @@
   margin-right: 10px;
 }
 
-.store-points {
-  font-size: 25px;
+.store-container .store-points {
+  font-size: 30px;
+  position:relative;
+  top:-8px;
+  left:0px;
 }
 
 .image-slider {

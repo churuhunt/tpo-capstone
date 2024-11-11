@@ -63,22 +63,49 @@ const Store = () => {
       setStoreModalItem(null);
     };
 
+
+const handlePurchase = async (item) => {
+  if (points < item.price) {
+    alert("포인트가 부족합니다.");
+    closeStoreModal();
+    return;
+  }
+
+  setLoading(true);
+
+  try {
+    await api.post('/items/purchase', { itemId: item.id });
+    setPoints(points - item.price);  // 포인트 차감
+    alert("구매하였습니다.");
+    closeStoreModal();  // 성공 시 모달 닫기
+  } catch (error) {
+    console.error("구매 실패:", error.response ? error.response.data : error);
+    alert(error.response?.data?.message || "구매에 실패했습니다."); // 서버 메시지 출력
+    closeStoreModal();  // 실패 시에도 모달 닫기
+  } finally {
+    setLoading(false);
+  }
+};
+
   // 사용자 포인트와 활성화된 탭의 아이템 목록 불러오기
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
         // 소지 포인트 가져오기
-        const userResponse = await api.get('/user/points');
+        const userResponse = await api.get('/users/current');
         setPoints(userResponse.data.points);
+        const userData = userResponse.data;
 
         const itemsResponse = await api.get('/items');
         console.log('Fetched items:', itemsResponse.data);  // 데이터 확인용
         setItems(itemsResponse.data);
 
       } catch (error) {
-        console.error("데이터를 불러오는 데 실패했습니다:", error);
-      } finally {
+         console.error("구매 실패:", error.response ? error.response.data : error);
+         alert("구매에 실패했습니다.");
+      }
+         finally {
         setLoading(false);
       }
     };
@@ -213,8 +240,8 @@ const Store = () => {
       <p>{storeModalItem.description}</p>
       <p className="store-modal-price">💰 {storeModalItem.price} 포인트</p>
       <div className="store-modal-buttons">
-        <button className="store-modal-buy-button">구매</button>
-        <button className="store-modal-close-button" onClick={closeStoreModal}>취소</button>
+            <button className="store-modal-buy-button" onClick={() => handlePurchase(storeModalItem)}>구매</button>
+            <button className="store-modal-close-button" onClick={closeStoreModal}>취소</button>
       </div>
     </div>
   </div>
