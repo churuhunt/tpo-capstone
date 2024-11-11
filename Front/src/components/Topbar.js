@@ -95,7 +95,9 @@ const Topbar = () => {
               </li>
 
               <li>
-                <li><Link to="/ranking">레벨랭킹</Link></li>
+                <li><Link to="/ranking">🕛일간</Link></li>
+                <li><Link to="/ranking">🕐주간</Link></li>
+                <li><Link to="/ranking">🕜월간</Link></li>
               </li>
               <li>
                 <li><Link to="/profile" onClick={(e) => handleProtectedRoute(e, '/profile')}>👤프로필</Link></li>
