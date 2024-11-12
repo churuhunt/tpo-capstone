@@ -61,7 +61,7 @@ public class ShopService {
 
     /**
      * 모든 상점 아이템 목록 반환
-     * @return List<ShopItem> 아이템 목록
+     * @return List<Item> 아이템 목록
      */
     public List<Item> getAllItems() {
         return itemRepository.findAll();
@@ -69,7 +69,7 @@ public class ShopService {
 
     /**
      * 가격 오름차순 정렬된 아이템 목록 반환
-     * @return List<ShopItem> 오름차순으로 정렬된 아이템 목록
+     * @return List<Item> 오름차순으로 정렬된 아이템 목록
      */
     public List<Item> getItemsByAscendingPrice() {
         return itemRepository.findAllByOrderByPriceAsc();
@@ -77,12 +77,11 @@ public class ShopService {
 
     /**
      * 가격 내림차순 정렬된 아이템 목록 반환
-     * @return List<ShopItem> 내림차순으로 정렬된 아이템 목록
+     * @return List<Item> 내림차순으로 정렬된 아이템 목록
      */
     public List<Item> getItemsByDescendingPrice() {
         return itemRepository.findAllByOrderByPriceDesc();
     }
-
     /**
      * 특정 사용자의 구매 내역 반환
      * @param userId 사용자 ID
