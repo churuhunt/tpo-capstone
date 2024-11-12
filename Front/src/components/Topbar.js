@@ -3,17 +3,30 @@ import './Topbar.css';
 import logoImage from '../image/Logo.png';
 import { Link, useNavigate } from "react-router-dom";
 import PositionAwareButton from '../components/PositionAwareButton';
-
+import api from '../axios';
 
 const Topbar = () => {
   // 로그인 상태 관리
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userId, setUserId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     // 로그인 여부 확인
     const token = localStorage.getItem("token"); // 토큰이 있으면 로그인 상태로 설정
     setIsLoggedIn(!!token);
+
+    // 로그인 상태일 경우 /users/current에서 userId 가져오기
+    if (token) {
+      api.get('/users/current')
+        .then(response => {
+          const currentUserId = response.data.id;
+          setUserId(currentUserId);
+        })
+        .catch(error => {
+          console.error("Failed to fetch user ID:", error);
+        });
+    }
 
     // 로그인/로그아웃 시 'storage' 이벤트 감지
     const handleStorageChange = () => {
@@ -62,7 +75,14 @@ const Topbar = () => {
           <li><Link to="/informationboard">ℹ️정보</Link></li>
           <li><Link to="/ranking">🏆랭킹</Link></li>
           <li><Link to="/store">🏪상점</Link></li>
-          <li><Link to="/mymenu" onClick={(e) => handleProtectedRoute(e, '/mymenu')}>⭐마이홈</Link></li>
+          <li>
+            <Link
+              to={userId ? `/mymenu/${userId}` : "#"}
+              onClick={(e) => handleProtectedRoute(e, `/mymenu/${userId}`)}
+            >
+              ⭐마이홈
+            </Link>
+          </li>
         </ul>
       </nav>
       <div className="submenu">

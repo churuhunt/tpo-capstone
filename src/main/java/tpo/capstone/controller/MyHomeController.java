@@ -167,4 +167,32 @@ public class MyHomeController {
         userProfileService.updateBackgroundImage(userId, imageUrl);
         return ResponseEntity.ok("배경 이미지 URL이 성공적으로 업데이트되었습니다.");
     }
+
+    @GetMapping("/profile/{userId}")
+    public ResponseEntity<UserProfileDto> getProfile(@PathVariable Long userId) {
+        log.info("👁️에러1: {}", userId);
+
+        UserProfile userProfile = userProfileService.getProfile(userId);
+        if (userProfile == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        UserProfileDto userProfileDto = UserProfileDto.fromEntity(userProfile);
+        log.info("🤣에러2 {}", userProfileDto.getProfileImageUrl());
+        return ResponseEntity.ok(userProfileDto);
+    }
+
+    @GetMapping("/activity/{userId}")
+    public ResponseEntity<Map<String, Long>> getActivityStatistics(@PathVariable(required = false) Long userId,
+                                                                   @AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userId == null) {
+            // userId가 경로에 없을 때 인증된 사용자 ID 사용
+            userId = userDetails.getUserAccountDto().getId();
+        }
+        log.info("Fetching activity statistics for userId: {}", userId);
+        Map<String, Long> activityStatistics = userActivityService.getActivityStatistics(userId);
+        return ResponseEntity.ok(activityStatistics);
+    }
+
+
 }

@@ -6,7 +6,7 @@ import './Visithistory.css';
 
 ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement, Tooltip, ChartDataLabels);
 
-const Visithistory = ({ visitorCount, visitorDataPoints, introduction: initialIntroduction, onSaveIntroduction }) => {
+const Visithistory = ({ visitorCount, visitorDataPoints, introduction: initialIntroduction, onSaveIntroduction, isEditable }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [localIntroduction, setLocalIntroduction] = useState(initialIntroduction);
 
@@ -25,11 +25,11 @@ const Visithistory = ({ visitorCount, visitorDataPoints, introduction: initialIn
             <div className="visit-history-container1">
                 <div className="visit-history-container1-1">
                     <h2 className="visit-history-title">소개</h2>
-                    {isEditing ? (
+                    {isEditable && (isEditing ? (
                         <button onClick={handleSaveClick}>Save</button>
                     ) : (
                         <button onClick={() => setIsEditing(true)}>Edit</button>
-                    )}
+                    ))}
                 </div>
                 {isEditing ? (
                     <textarea

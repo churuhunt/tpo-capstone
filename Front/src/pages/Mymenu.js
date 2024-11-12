@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Mymenu.css';
+import { useParams } from 'react-router-dom';
 import profileImageSrc from '../image/profile.png';
 import Guestbook from '../components/Guestbook';
 import PageSubMenu from '../components/PageSubMenu';
@@ -8,6 +9,7 @@ import Myhomepost from '../components/Myhomepost';
 import ActivityDashboard from '../components/ActivityDashboard';
 import LoadingModal from '../components/LoadingModal';
 import CustomizationPage from '../components/CustomizationPage';
+import ProfileDec from '../components/ProfileDec';
 import FriendList from '../components/FriendList';
 import api from '../axios';
 
@@ -16,7 +18,8 @@ import { Line } from 'react-chartjs-2';
 ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement);
 
 const MyMenu = () => {
-    const menuItems = ["게시물", "방명록", "활동통계", "커스텀"];
+    const { userId: paramUserId } = useParams();
+    const [menuItems, setMenuItems] = useState(["게시물", "방명록", "활동통계", "커스텀"]);
     const [activeIndex, setActiveIndex] = useState(0);
     const [points, setPoints] = useState(0);
     const [profileImage, setProfileImage] = useState(null);
@@ -34,22 +37,31 @@ const MyMenu = () => {
     const [activityStats, setActivityStats] = useState({ posts: 0, comments: 0, likes: 0, dislikes: 0 });
     const [visitorCount, setVisitorCount] = useState(0);
     const [visitorDataPoints, setVisitorDataPoints] = useState([]);
-    const [userId, setUserId] = useState(null);
     const [totalPages, setTotalPages] = useState(0);
-
+    const [currentUserId, setCurrentUserId] = useState(null);
+    const [loggedInUserId, setLoggedInUserId] = useState(null);
+    const [decId, setDecId] = useState(1);
 
     const fetchData = async () => {
         setLoading(true);
         try {
             // 사용자 정보 및 ID 가져오기
             const userResponse = await api.get('/users/current');
-            const userData = userResponse.data;
-            setUserId(userData.id);
+            const currentUserData = userResponse.data;
+            setLoggedInUserId(currentUserData.id);
+
+            const response = await api.get(paramUserId ? `/users/${paramUserId}` : '/users/current');
+            const userData = response.data;
             setNickname(userData.nickname || '사용자');
             setPoints(userData.points);
+            setCurrentUserId(response.data.id);
+
+            if (paramUserId !== currentUserData.id.toString()) {
+                setMenuItems(["게시물", "방명록", "활동통계"]);
+            }
 
             await Promise.all([
-                api.get('/myhome/profile').then(response => {
+                api.get(paramUserId ? `/myhome/profile/${paramUserId}` : '/myhome/profile').then(response => {
                     const userData = response.data;
                     setProfileImage(userData.profileImageUrl || '');
                     setTempProfileImage(userData.profileImageUrl || '');
@@ -67,6 +79,7 @@ const MyMenu = () => {
                         dislikes: fetchedData.dislikesReceived,
                     });
                 }),
+
                 api.get('/myhome/visitor-count').then(response => {
                     const totalVisitorCount = response.data;
                     setVisitorCount(totalVisitorCount);
@@ -205,6 +218,11 @@ const handleSaveClick = async () => {
                 <>
                     <div className="background-image" style={{ backgroundImage: `url(${tempBackgroundImage || backgroundImage || "https://mblogthumb-phinf.pstatic.net/MjAxODAzMTFfMjU1/MDAxNTIwNzMyNzIzNzU0.r1JTCWNwtluFmL3NWdESziciZuyHzRi2T59CmVKPh7Mg.3pVF4jNFRCLJLUr89Z2ma3dL7prKPuNU8YjIHrduMGgg.PNG.osy2201/1.png?type=w800"})` }}></div>
                     <div className="profile-info">
+
+
+                    <ProfileDec decId={decId} />
+
+
                         <img src={tempProfileImage || profileImage || profileImageSrc} className="profile-picture" alt="프로필 사진" onError={(e) => e.target.src = profileImageSrc} />
                         <span className="nickname">{nickname}</span>
                         <div className="follow-info">
@@ -231,7 +249,7 @@ const handleSaveClick = async () => {
                     </div>
                     <div className="my-menu-content">
                         <div className="my-menu-content1">
-                            <Visithistory visitorCount={visitorCount} visitorDataPoints={visitorDataPoints} introduction={introduction} onSaveIntroduction={handleSaveClick}  />
+                            <Visithistory visitorCount={visitorCount} visitorDataPoints={visitorDataPoints} introduction={introduction} onSaveIntroduction={handleSaveClick} isEditable={paramUserId === loggedInUserId.toString()} />
                         </div>
                         <div className="my-menu-content2">
                             {activeTab === 'myhomepost' && <Myhomepost posts={userPosts} />}
@@ -245,7 +263,7 @@ const handleSaveClick = async () => {
                                     onCancel={handleCancel}
                                     points={points}
                                     updatePoints={setPoints} // 로컬 포인트 업데이트 함수
-                                    userId={userId} // userId를 전달합니다.
+                                    userId={paramUserId}
                                 />
                             )}
                             {activeTab === 'follower' && <FriendList type="follower" />}

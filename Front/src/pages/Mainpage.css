@@ -185,10 +185,27 @@
   height: 30px;
   border-radius: 50%;
   margin: 0 10px;
+  object-fit: cover;
 }
+
 .ranking-nickname {
   flex: 1;
+  color: black;
+  text-decoration: none;
 }
+
+.ranking-item:hover .ranking-nickname {
+  color: red;
+  font-size: 20px;
+}
+
+.ranking-item:hover .profile-image {
+  width: 40px;
+  height: 40px;
+}
+
+
+
 .ranking-points {
   text-align: right; /* 포인트를 오른쪽 정렬 */
   color: #333;

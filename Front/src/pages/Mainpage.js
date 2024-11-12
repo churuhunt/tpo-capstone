@@ -188,12 +188,17 @@ const Mainpage = () => {
                   {rankings.slice(0, 5).map((rank, index) => (
                     <li key={index} className="ranking-item">
                       <span>{rankEmojis[index] || `${index + 1}위`}</span>
-                      <img src={rank.profileImageUrl || profileImage} alt="프로필" className="profile-image" />
-                      <span className="ranking-nickname">{rank.nickname}</span>
+                      <Link to={`/mymenu/${rank.id}`}>
+                        <img src={rank.profileImageUrl || profileImage} alt="프로필" className="profile-image" />
+                      </Link>
+                      <Link to={`/mymenu/${rank.id}`} className="ranking-nickname" >
+                        {rank.nickname}
+                      </Link>
                       <span className="ranking-points">{rank.points} 포인트</span>
                     </li>
                   ))}
                 </ul>
+
               </div>
             </div>
           </div>

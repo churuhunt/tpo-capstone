@@ -39,7 +39,7 @@ const App = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/store" element={<Store />} />
-            <Route path="/mymenu" element={<MyMenu />} />
+            <Route path="/mymenu/:userId" element={<MyMenu />} />
             <Route path="/write" element={<PostForm />} />
             <Route path="/postview/:postId" element={<PostView />} />
             <Route path="/profile" element={<ProfileManagement />} />
