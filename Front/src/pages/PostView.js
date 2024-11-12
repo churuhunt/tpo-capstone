@@ -343,7 +343,7 @@ const [loadingDelete, setLoadingDelete] = useState(false);
                     </div>
                 ) : (
                     <>
-                      <p>{comment.author.nickname}: {comment.content}</p>
+                      <p>{comment.authorNickname}: {comment.content}</p>
                       <div className="comment-reactions">
                         <button onClick={() => handleLikeComment(comment.id)}>
                           <FontAwesomeIcon icon={faThumbsUp}/> 추천 {comment.likes || 0}

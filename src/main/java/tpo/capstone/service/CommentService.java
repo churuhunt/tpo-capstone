@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tpo.capstone.config.NotificationType;
+import tpo.capstone.dto.CommentResponse;
 import tpo.capstone.entity.Comment;
 import tpo.capstone.entity.Post;
 import tpo.capstone.entity.Report;
@@ -15,7 +16,7 @@ import tpo.capstone.repository.UserAccountRepository;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -138,11 +139,13 @@ public class CommentService {
      * @param postId 게시물 ID
      * @return 댓글 목록
      */
-    public List<Comment> getCommentsByPostId(Long postId) {
+    public List<CommentResponse> getCommentsByPostId(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post not found with ID: " + postId));
 
-        return commentRepository.findByPost(post);  // 댓글을 게시물과 연결하여 조회
+        return commentRepository.findByPost(post).stream()
+                .map(CommentResponse::new)
+                .collect(Collectors.toList());
     }
 
     /**

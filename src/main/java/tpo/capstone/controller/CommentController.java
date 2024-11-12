@@ -7,11 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import tpo.capstone.auth.CustomUserDetails;
+import tpo.capstone.dto.CommentRequest;
+import tpo.capstone.dto.CommentResponse;
 import tpo.capstone.dto.ReportRequest;
 import tpo.capstone.dto.UserAccountDto;
 import tpo.capstone.entity.Comment;
 import tpo.capstone.service.CommentService;
-import tpo.capstone.dto.CommentRequest;
 
 import java.util.List;
 
@@ -30,7 +31,8 @@ public class CommentController {
 
     /**
      * 댓글 작성 API
-     * @param postId 게시글 ID
+     *
+     * @param postId         게시글 ID
      * @param commentRequest 댓글 요청 DTO
      * @param userAccountDto 인증된 사용자 정보
      * @return 생성된 댓글 객체
@@ -56,7 +58,8 @@ public class CommentController {
 
     /**
      * 댓글 삭제 API
-     * @param commentId 댓글 ID
+     *
+     * @param commentId      댓글 ID
      * @param userAccountDto 인증된 사용자 정보
      * @return 삭제된 댓글의 ID 또는 실패 메시지
      */
@@ -81,7 +84,8 @@ public class CommentController {
 
     /**
      * 댓글 추천 API
-     * @param commentId 댓글 ID
+     *
+     * @param commentId      댓글 ID
      * @param userAccountDto 인증된 사용자 정보
      */
     @PostMapping("/comments/{commentId}/like")
@@ -103,7 +107,8 @@ public class CommentController {
 
     /**
      * 댓글 비추천 API
-     * @param commentId 댓글 ID
+     *
+     * @param commentId      댓글 ID
      * @param userAccountDto 인증된 사용자 정보
      */
     @PostMapping("/comments/{commentId}/dislike")
@@ -125,7 +130,8 @@ public class CommentController {
 
     /**
      * 댓글 신고 처리 API
-     * @param commentId 댓글 ID
+     *
+     * @param commentId      댓글 ID
      * @param userAccountDto 인증된 사용자 정보
      * @return 신고 처리 결과 메시지
      */
@@ -150,13 +156,14 @@ public class CommentController {
 
     /**
      * 게시물에 대한 댓글 목록 조회 API
+     *
      * @param postId 게시글 ID
      * @return 댓글 목록
      */
     @GetMapping("/posts/{postId}/comments")
-    public ResponseEntity<List<Comment>> fetchComments(@PathVariable Long postId) {
+    public ResponseEntity<List<CommentResponse>> fetchComments(@PathVariable Long postId) {
         try {
-            List<Comment> comments = commentService.getCommentsByPostId(postId);
+            List<CommentResponse> comments = commentService.getCommentsByPostId(postId);
             log.info("댓글 조회 성공: postId={}", postId);
             return ResponseEntity.ok(comments);
         } catch (Exception e) {
@@ -164,5 +171,4 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
-
 }
