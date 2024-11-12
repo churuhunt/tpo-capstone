@@ -1,0 +1,28 @@
+.profile-decor {
+  position: absolute; /* 다른 요소에 영향을 주지 않음 */
+  pointer-events: none; /* 클릭 이벤트 방지 */
+}
+
+.profile-decor-1 img {
+  width: 500px;
+  height: 500px;
+}
+
+.profile-decor-1 {
+
+  z-index: -1;
+  position:relative;
+  top:10px;
+}
+
+.profile-decor-2 img {
+  width: 60px;
+  height: 60px;
+  z-index: 2;
+}
+
+.profile-decor-3 img {
+  width: 70px;
+  height: 70px;
+  z-index: 3;
+}

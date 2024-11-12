@@ -1,7 +1,9 @@
 import React from 'react';
+import './ProfileDec.css';
+
 import image1 from '../image/ProfileDecor1.gif';
-import image2 from '../image/Store1.jpg';
-import image3 from '../image/Store1.jpg';
+import image2 from '../image/ProfileDecor2.gif';
+import image3 from '../image/ProfileDecor2.gif';
 
 const ProfileDec = ({ decId }) => {
   let selectedImage;
@@ -11,7 +13,7 @@ const ProfileDec = ({ decId }) => {
       selectedImage = null;
       break;
     case 1:
-      selectedImage = null;
+      selectedImage = image1;
       break;
     case 2:
       selectedImage = image2;
@@ -25,7 +27,7 @@ const ProfileDec = ({ decId }) => {
   }
 
   return (
-    <div>
+    <div className={`profile-decor profile-decor-${decId}`}>
       {selectedImage ? (
         <img src={selectedImage} alt={`Decoration ${decId}`} />
       ) : (

@@ -40,7 +40,7 @@ const MyMenu = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [currentUserId, setCurrentUserId] = useState(null);
     const [loggedInUserId, setLoggedInUserId] = useState(null);
-    const [decId, setDecId] = useState(1);
+    const [decId, setDecId] = useState(0);
 
     const fetchData = async () => {
         setLoading(true);

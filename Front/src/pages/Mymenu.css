@@ -30,6 +30,8 @@
     border: 5px solid rgba(255, 255, 255, 0.8); /* 밝은 테두리 */
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.3), /* 외부 그림자 */
                 inset 0 0 15px rgba(255, 255, 255, 0.7); /* 내부 밝은 효과 */
+    position:relative;
+    z-index:2;
 }
 
 .my-menu-container .nickname {
