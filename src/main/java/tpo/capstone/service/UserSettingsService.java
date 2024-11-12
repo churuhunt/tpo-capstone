@@ -3,6 +3,7 @@ package tpo.capstone.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tpo.capstone.entity.Block;
 import tpo.capstone.entity.UserAccount;
 import tpo.capstone.entity.UserSettings;
@@ -32,6 +33,7 @@ public class UserSettingsService {
      * @param newNickname 새 닉네임
      * @return 닉네임 변경 성공 여부
      */
+    @Transactional
     public boolean changeNickname(Long userId, String newNickname) {
         UserSettings settings = getUserSettings(userId);
         if (settings.getNicknameLastChanged().isAfter(LocalDateTime.now().minusDays(7))) {
@@ -54,6 +56,7 @@ public class UserSettingsService {
      * @param newEmail 새 이메일
      * @return 이메일 변경 성공 여부
      */
+    @Transactional
     public boolean changeEmail(Long userId, String newEmail) {
         UserSettings settings = getUserSettings(userId);
         if (settings.isEmailChanged()) {
@@ -76,6 +79,7 @@ public class UserSettingsService {
      * @param newUserId 새 아이디
      * @return 아이디 변경 성공 여부
      */
+    @Transactional
     public boolean changeUserId(Long userId, String newUserId) {
         if (userAccountRepository.findByUserId(newUserId).isPresent()) {
             throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
@@ -97,6 +101,7 @@ public class UserSettingsService {
      * @param newPassword 새 비밀번호
      * @return 비밀번호 변경 성공 여부
      */
+    @Transactional
     public boolean changePassword(Long userId, String oldPassword, String newPassword) {
         UserAccount user = userAccountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
@@ -117,11 +122,13 @@ public class UserSettingsService {
      * @param userId 사용자 ID
      * @return 차단된 사용자 목록
      */
+    @Transactional(readOnly = true)
     public List<Block> getBlockedUsers(Long userId) {
         UserAccount user = userAccountRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
         return blockRepository.findByBlocker(user);
     }
+    
     /**
      * 사용자 차단
      *
@@ -129,6 +136,7 @@ public class UserSettingsService {
      * @param blockedId 차단당하는 사용자 ID
      * @return 차단 성공 여부
      */
+    @Transactional
     public boolean blockUser(Long blockerId, Long blockedId) {
         if (blockRepository.existsByBlocker_IdAndBlocked_Id(blockerId, blockedId)) {
             return false;
@@ -151,6 +159,7 @@ public class UserSettingsService {
      * @param blockedId 차단을 해제할 대상 사용자 ID
      * @return 차단 해제 성공 여부
      */
+    @Transactional
     public boolean unblockUser(Long blockerId, Long blockedId) {
         UserAccount blocker = userAccountRepository.findById(blockerId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자를 찾을 수 없습니다."));
@@ -198,6 +207,7 @@ public class UserSettingsService {
      * @param user 사용자 계정
      * @param settings 업데이트할 사용자 설정
      */
+    @Transactional
     public void updateUserSettings(UserAccount user, UserSettings settings) {
         UserSettings userSettings = userSettingsRepository.findByUser(user)
                 .orElseGet(() -> {
