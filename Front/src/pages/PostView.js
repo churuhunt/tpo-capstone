@@ -9,6 +9,7 @@ import book1 from '../image/book1.png';
 import book2 from '../image/book2.png';
 import Banner from '../components/Banner';
 import LoadingModal from '../components/LoadingModal';
+import profileImageSrc from '../image/profile.png';
 
 import reportIcon from '../image/report.png';  // 신고하기 아이콘
 import replyIcon from '../image/reply.png';    // 대댓글 작성 아이콘
@@ -38,7 +39,7 @@ const PostView = () => {
   const [loadingDislike, setLoadingDislike] = useState(false);
   const [loadingComment, setLoadingComment] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
-  const defaultProfileImageUrl = '/path/to/default-profile-image.png'; // 기본 프로필 이미지 경로 설정
+  const defaultProfileImageUrl = profileImageSrc;
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -52,8 +53,8 @@ const PostView = () => {
 
 
     const fetchPost = async () => {
-    setLoading(true)
       try {
+        setLoading(true);
         const response = await api.get(`/posts/${postId}`); // axios 인스턴스 사용
         setPost(response.data);
         setComments(response.data.comments || []);
@@ -71,14 +72,19 @@ const PostView = () => {
       }
     };
 
-  const toggleBookmark = async () => {
-    try {
-      await api.post(`/bookmarks/toggle/${postId}`);
-      setIsBookmarked(prev => !prev);  // 북마크 상태를 토글
-    } catch (error) {
-      console.error("북마크 토글 중 오류가 발생했습니다:", error);
-    }
-  };
+    const toggleBookmark = async () => {
+      try {
+        setLoading(true);
+        await api.post(`/bookmarks/toggle/${postId}`);
+        setIsBookmarked(prev => {
+          const newState = !prev;  // 북마크 상태를 토글
+          alert(newState ? '북마크가 추가되었습니다.' : '북마크를 취소했습니다.');
+          return newState;
+        });
+      } catch (error) {
+        console.error("북마크 토글 중 오류가 발생했습니다:", error);
+      }
+    };
 
 
 
@@ -108,6 +114,7 @@ const PostView = () => {
       await api.post(`/posts/${postId}/like`);
       setPost({ ...post, likes: post.likes + 1 });
     } finally {
+      alert('이 게시물을 추천했습니다.');
       setLoading(false);
     }
   };
@@ -120,6 +127,7 @@ const PostView = () => {
       await api.post(`/posts/${postId}/dislike`);
       setPost({ ...post, dislikes: post.dislikes + 1 });
     } finally {
+      alert('이 게시물을 비추천했습니다.');
       setLoading(false);
     }
   };
@@ -127,8 +135,8 @@ const PostView = () => {
 
 // 댓글 등록 함수
   const handleCommentSubmit = async () => {
+    setLoading(true);
     if (!commentText.trim()) return;
-    setLoadingComment(true); // 로딩 상태를 시작
     try {
       // 서버에 댓글을 등록 요청
       const response = await api.post(`/posts/${postId}/comments`, { content: commentText });
@@ -138,26 +146,31 @@ const PostView = () => {
       setComments((prevComments) => [...prevComments, newComment]);
       setCommentText(''); // 입력창 초기화
 
-      // 댓글 목록 다시 불러오기
-      await fetchComments();
+      // 성공 시 알림 메시지
+      alert("댓글이 등록되었습니다.");
     } catch (error) {
       console.error("댓글 등록 중 오류가 발생했습니다:", error);
+      alert("댓글 등록에 실패했습니다. 다시 시도해 주세요.");
     } finally {
-      setLoadingComment(false); // 로딩 상태 종료
+      setLoading(false); // 로딩 상태 종료
     }
   };
 
   const fetchComments = async () => {
+    setLoading(true);
     try {
       const response = await api.get(`/posts/${postId}/comments`);
       setComments(Array.isArray(response.data) ? response.data : []); // 배열이 아니면 빈 배열 설정
     } catch (error) {
       console.error("댓글을 불러오는 중 오류 발생:", error);
       setComments([]); // 오류 발생 시 빈 배열로 설정
+    } finally {
+      setLoading(false); // 로딩 상태 종료
     }
   };
 
   const handleLikeComment = async (commentId) => {
+    setLoading(true);
     try {
       await api.post(`/comments/${commentId}/like`);
       setComments((prevComments) =>
@@ -167,10 +180,13 @@ const PostView = () => {
       );
     } catch (error) {
       console.error("댓글 추천 중 오류가 발생했습니다:", error);
+    } finally {
+      setLoading(false); // 로딩 상태 종료
     }
   };
 
   const handleDislikeComment = async (commentId) => {
+    setLoading(true);
     try {
       await api.post(`/comments/${commentId}/dislike`);
       setComments((prevComments) =>
@@ -180,6 +196,8 @@ const PostView = () => {
       );
     } catch (error) {
       console.error("댓글 비추천 중 오류가 발생했습니다:", error);
+    } finally {
+      setLoading(false); // 로딩 상태 종료
     }
   };
 
@@ -257,6 +275,7 @@ const PostView = () => {
 
   // 댓글 삭제
   const handleDeleteComment = async (commentId) => {
+    setLoading(true);
     if (window.confirm("정말로 이 댓글을 삭제하시겠습니까?")) {
       try {
         await api.delete(`/comments/${commentId}`); // axios 인스턴스 사용
@@ -265,6 +284,8 @@ const PostView = () => {
         // 댓글 목록 갱신 로직 필요
       } catch (error) {
         alert("댓글 삭제 중 오류가 발생했습니다. 다시 시도해주세요");
+      } finally {
+         setLoading(false);
       }
     }
   };
@@ -358,6 +379,7 @@ const PostView = () => {
         </div>
 
         <div className="PageView-comments-section">
+        <hr className="PageView-comment-separator" />
           <h2>댓글</h2>
           {Array.isArray(comments) && comments.map((comment, index) => (
               <div key={index} className="comment-item">
@@ -368,29 +390,30 @@ const PostView = () => {
                     </div>
                 ) : (
                     <>
-                      <div className="comment-author-info">
+                      <div className="PostView-comment-author-info">
                         <img
                             src={comment.authorProfileImageUrl || defaultProfileImageUrl} // 기본 이미지 제공
                             alt={`${comment.authorNickname} 프로필`}
-                            className="comment-profile-image"
+                            className="PostView-comment-profile-image"
                         />
-                        <p>{comment.authorNickname}</p>
-                        <p className="comment-date">
+                        <p className="PostView-comment-userid">{comment.authorId}</p>
+                        <p className="PostView-comment-nickname">{comment.authorNickname}</p>
+                        <p className="PostView-comment-date">
                           {new Date(comment.date).toLocaleDateString()} {/* 작성일자 표시 */}
                         </p>
                       </div>
-                      <p>{comment.content}</p>
-                      <div className="comment-reactions">
-                      <button onClick={() => handleDeleteComment(comment.id)}>댓글 삭제</button>
+                      <p className="PostView-comment-content">{comment.content}</p>
+                      <div className="comment-reactions-button">
                         <button onClick={() => handleLikeComment(comment.id)}>
-                          <FontAwesomeIcon icon={faThumbsUp}/>{comment.likes || 0}
+                          <span>👍{comment.likes || 0}</span>
                         </button>
                         <button onClick={() => handleDislikeComment(comment.id)}>
-                          <FontAwesomeIcon icon={faThumbsDown}/>{comment.dislikes || 0}
+                          <span>👎{comment.dislikes || 0}</span>
                         </button>
                         <button onClick={() => handleOpenReportModal(comment.id, 'comment')}>
-                          <FontAwesomeIcon icon={faExclamationTriangle}/>
+                          <span>⚠️</span>
                         </button>
+                        <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
                       </div>
                     </>
                 )}

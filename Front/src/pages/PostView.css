@@ -486,6 +486,7 @@
   width:80px;
   height:80px;
   margin-right: 10px;
+  margin-top: 40px;
   padding: 10px;
   border: none;
   background-color: #f0f0f0;
@@ -525,4 +526,70 @@
 .PageView-post-info{
     position: relative;
     top: -70px;
+}
+
+.comment-reactions-button{
+      display: flex;
+      margin-left:100px;
+      align-items: center;
+      gap: -50px;
+
+}
+
+.comment-reactions-button button {
+  margin-left: -40px; /* 버튼 간격을 음수로 줄이기 */
+  padding: 5px;
+  font-weight: bold;
+  color: black;
+  background-color: #F0F0F0;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index:0;
+}
+
+.comment-item {
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.PostView-comment-author-info img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  border: 2px solid #ccc;
+  margin-right: 10px;
+}
+
+.PostView-comment-author-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: -22px;
+}
+.PostView-comment-date {
+  font-size: 0.9rem;
+  color: #888;
+  margin-left: 1px;
+}
+.PostView-comment-content {
+  margin-left: 65px;
+  line-height: 1.5;
+  margin-bottom: 50px;
+}
+
+.PostView-comment-nickname{
+  font-weight: bold;
+  color: #333;
+  margin-right: 10px;
+}
+
+.PageView-comment-separator {
+  border: none;
+  border-top: 2px solid #DDDDDD; /* 원하는 색상과 두께로 설정 */
+  margin-bottom: 10px; /* 간격 조정 */
+}
+
+.PostView-comment-userid{
+    font-size: 100px;
 }
