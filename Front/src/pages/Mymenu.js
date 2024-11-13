@@ -69,6 +69,7 @@ const MyMenu = () => {
                     setTempBackgroundImage(userData.backgroundImageUrl || '');
                     setNicknameDecoration(userData.nicknameDecoration || '');
                     setIntroduction(userData.introduction || '');
+                    setIntroduction(userData.introduction ? userData.introduction.replace(/^"|"$/g, '') : '');
                 }),
                 api.get('/myhome/activity').then(response => {
                     const fetchedData = response.data;
@@ -180,6 +181,7 @@ const MyMenu = () => {
             // 소개글 업데이트 후 상태 설정
             setIntroduction(response.data.introduction);
             alert('소개글이 저장되었습니다.');
+            window.location.reload();
         } catch (error) {
             console.error("저장 실패:", error);
             alert('소개글 저장에 실패했습니다.');
