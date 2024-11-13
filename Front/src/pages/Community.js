@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../axios';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import './Informationboard.css';
 import LoadingModal from '../components/LoadingModal';
 
@@ -31,6 +31,7 @@ const Community = () => {
     const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
     const [subCategoryFilter, setSubCategoryFilter] = useState("all"); // 소카테고리 필터 상태
     const [viewMode, setViewMode] = useState('list'); // 뷰 모드 상태
+    const location = useLocation();
 
     // 소카테고리 상태 관리
     const handleSubCategoryChange = (category) => {
@@ -47,6 +48,22 @@ const Community = () => {
         console.log("소카테고리 필터 설정됨:", category);
         setCurrentPage(1); // 소카테고리 변경 시 페이지를 첫 페이지로 초기화
     };
+
+    const subCategoryMap = { // URL 파라미터를 메뉴 항목으로 매핑
+        "all": "🅰️전체",
+        "free": "🗽자유게시판",
+        "DailyLook": "👖데일리룩게시판",
+        "Questions": "❔질문게시판"
+    };
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const subcategory = params.get('subcategory') || 'all';
+        const categoryName = subCategoryMap[subcategory] || "🅰️전체";
+        const index = menuItems.indexOf(categoryName);
+        setActiveIndex(index);
+        handleSubCategoryChange(categoryName);
+    }, [location.search]);
 
     // API 호출 시 동적으로 소카테고리 필터 추가
     useEffect(() => {
@@ -141,8 +158,10 @@ const Community = () => {
                     activeIndex={activeIndex}
                     setActiveIndex={setActiveIndex}
                     onItemClick={(item, index) => {
-                        handleSubCategoryChange(item);
+                        setActiveIndex(index); // 클릭된 메뉴 인덱스를 설정합니다
+                        handleSubCategoryChange(item); // 선택된 소카테고리로 변경
                     }}
+
                 />
             </div>
 

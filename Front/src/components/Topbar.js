@@ -89,20 +89,21 @@ const Topbar = () => {
           <nav>
             <ul>
               <li>
-                <li><Link to="/notification/updates">📢공지사항</Link></li>
-                <li><Link to="/notification/events">🎁이벤트</Link></li>
-                <li><Link to="/notification/announcements">🆙업데이트</Link></li>
+                <li><Link to="/notification?subcategory=updates">📢공지사항</Link></li>
+                <li><Link to="/notification?subcategory=events">🎁이벤트</Link></li>
+                <li><Link to="/notification?subcategory=announcements">🆙업데이트</Link></li>
               </li>
               <li>
-                <li><Link to="/free">🗽자유게시판</Link></li>
-                <li><Link to="/DailyLook">👖데일리룩게시판</Link></li>
-                <li><Link to="/Questions">❔질문게시판</Link></li>
+              <li><Link to="/community?subcategory=free">🗽자유게시판</Link></li>
+              <li><Link to="/community?subcategory=DailyLook">👖데일리룩게시판</Link></li>
+              <li><Link to="/community?subcategory=Questions">❔질문게시판</Link></li>
+
               </li>
 
               <li>
-                <li><Link to="/Articles">🕺패션정보</Link></li>
-                <li><Link to="/Sales">💲세일정보</Link></li>
-                <li><Link to="/Others">🎸기타정보</Link></li>
+                <li><Link to="/informationboard?subcategory=Articles">🕺패션정보</Link></li>
+                <li><Link to="/informationboard?subcategory=Sales">💲세일정보</Link></li>
+                <li><Link to="/informationboard?subcategory=Others">🎸기타정보</Link></li>
               </li>
 
               <li>
