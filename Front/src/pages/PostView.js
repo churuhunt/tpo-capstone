@@ -314,15 +314,22 @@ const PostView = () => {
       <div className="PageView-container">
         <h1 className="PageView-post-title">{post.title}</h1>
 
+        {/* 글삭제 버튼 */}
+        <button className="PageView-comment-button3" onClick={handleDeletePost}>글 삭제</button>
 
+        {/* 북마크 버튼 */}
+        <button className="bookmark-button-con" onClick={toggleBookmark} style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer' }}>
+            <img src={isBookmarked ? book2 : book1} alt="Bookmark button" style={{ width: '50px', height: '50px' }} /> </button>
+
+        {/* 목록 버튼 */}
+        <button onClick={() => navigate(-1)} className="PageView-comment-button2">목록</button>
 
         <div className="PageView-post-info">
           <img src={post.profileImageUrl} alt={`${post.author} 프로필`} className="PageView-profile-image"/>
           <p className="PageView-author">{post.author}</p>
           <div className="PageView-post-info2">
           <p className="PageView-date">작성일자: {new Date(post.date).toLocaleDateString()}</p>
-          <p className="PageView-views">조회수: {post.views}</p>
-          <p className="PageView-likes">추천수: {post.likes}</p></div>
+          <p className="PageView-views">조회수: {post.views}</p></div>
         </div>
         <div className="PageView-post-content">
           <div>{removeImagesAndBase64(post.content)}</div>
@@ -339,15 +346,14 @@ const PostView = () => {
 
         <div className="post-reactions">
           <button className="postview-but-a" onClick={handleLike}>
-            <FontAwesomeIcon icon={faThumbsUp}/> 추천 {post.likes}
+            <span style={{ fontSize: '20px' }}>👍{post.likes}</span>
           </button>
           <button className="postview-but-a" onClick={handleDislike}>
-            <FontAwesomeIcon icon={faThumbsDown}/> 비추천 {post.dislikes}
+            <span style={{ fontSize: '20px' }}>👎{post.dislikes}</span>
           </button>
           <button className="postview-but-a" onClick={() => handleOpenReportModal(postId, 'post')}>
-            <FontAwesomeIcon icon={faExclamationTriangle}/> 신고
+            <span style={{ fontSize: '20px' }}>⚠️</span>
           </button>
-          <button className="postview-but-a" onClick={handleDeletePost}>글 삭제</button>
         </div>
 
         <div className="PageView-comments-section">
@@ -363,17 +369,16 @@ const PostView = () => {
                     <>
                       <p>{comment.authorNickname}: {comment.content}</p>
                       <div className="comment-reactions">
+                      <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
                         <button onClick={() => handleLikeComment(comment.id)}>
-                          <FontAwesomeIcon icon={faThumbsUp}/> 추천 {comment.likes || 0}
+                          <FontAwesomeIcon icon={faThumbsUp}/>{comment.likes || 0}
                         </button>
                         <button onClick={() => handleDislikeComment(comment.id)}>
-                          <FontAwesomeIcon icon={faThumbsDown}/> 비추천 {comment.dislikes || 0}
+                          <FontAwesomeIcon icon={faThumbsDown}/>{comment.dislikes || 0}
                         </button>
                         <button onClick={() => handleOpenReportModal(comment.id, 'comment')}>
-                          <FontAwesomeIcon icon={faExclamationTriangle}/> 신고
+                          <FontAwesomeIcon icon={faExclamationTriangle}/>
                         </button>
-                        <button onClick={() => handleDeleteComment(comment.id)}>댓글 삭제</button>
-
                       </div>
                     </>
                 )}
@@ -393,8 +398,6 @@ const PostView = () => {
             </button>
           </div>
         </div>
-
-        <button onClick={() => navigate(-1)} className="PageView-comment-button2">목록</button>
 
         {isReportModalOpen && (
             <div className="report-modal">
@@ -417,13 +420,6 @@ const PostView = () => {
 
 
           }
-          <button className="bookmark-button-con" onClick={toggleBookmark} style={{ border: 'none', background: 'none', padding: 0, cursor: 'pointer' }}>
-                            <img
-                              src={isBookmarked ? book2 : book1}
-                              alt="Bookmark button"
-                              style={{ width: '50px', height: '50px' }}
-                            />
-                          </button>
         </div>
           );
           };
