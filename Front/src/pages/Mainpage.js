@@ -156,7 +156,7 @@ const Mainpage = () => {
                   {popularPosts.slice(0, 5).map((post, index) => (
                     <li key={index} className="post-item">
                       <img
-                        src={post.thumbnail || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwpSuPwVevZxk9WHC04FSWZqscJudpoQhFzw&s"}
+                        src={post.ImageUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwpSuPwVevZxk9WHC04FSWZqscJudpoQhFzw&s"}
                         alt="포스트 썸네일"
                         className="post-thumbnail"
                       />
@@ -166,12 +166,11 @@ const Mainpage = () => {
                         </Link>
                       </div>
                       <div className="post-author">
-                        <img
-                          src={post.profileImageUrl || profileImage}
-                          alt="작성자 프로필"
-                          className="author-profile"
-                        />
-                        <span>{post.author.nickname}</span>
+                      <Link to={`/mymenu/${post.author.id}`}> <img src={post.profileImageUrl || profileImage} alt="작성자 프로필" className="author-profile" /></Link>
+                       <Link to={`/mymenu/${post.author.id}`} className="mainpage-author-name-link">
+                           <span className="mainpage-author-name">{post.author}</span>
+                       </Link>
+
                       </div>
                     </li>
                   ))}

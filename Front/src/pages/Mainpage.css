@@ -285,6 +285,12 @@
 .post-author {
   display: flex;
   align-items: center;
+  text-decoration: none;
+}
+
+.main-page .mainpage-author-name{
+    text-decoration-line: none;
+    color: black;
 }
 
 .author-profile {
@@ -363,6 +369,11 @@
 }
 
 .post-title-link {
+  text-decoration: none; /* 밑줄 제거 */
+  color: black;
+}
+
+.mainpage-author-name-link{
   text-decoration: none; /* 밑줄 제거 */
   color: black;
 }
