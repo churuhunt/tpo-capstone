@@ -64,28 +64,28 @@ const Store = () => {
     };
 
 
-const handlePurchase = async (item) => {
-  if (points < item.price) {
-    alert("포인트가 부족합니다.");
-    closeStoreModal();
-    return;
-  }
+  const handlePurchase = async (item) => {
+    if (points < item.price) {
+      alert("포인트가 부족합니다.");
+      closeStoreModal();
+      return;
+    }
 
-  setLoading(true);
+    setLoading(true);
 
-  try {
-    await api.post('/items/purchase', { itemId: item.id });
-    setPoints(points - item.price);  // 포인트 차감
-    alert("구매하였습니다.");
-    closeStoreModal();  // 성공 시 모달 닫기
-  } catch (error) {
-    console.error("구매 실패:", error.response ? error.response.data : error);
-    alert(error.response?.data?.message || "구매에 실패했습니다."); // 서버 메시지 출력
-    closeStoreModal();  // 실패 시에도 모달 닫기
-  } finally {
-    setLoading(false);
-  }
-};
+    try {
+      await api.post(`/shop/purchase?itemId=${item.id}`); // URL 파라미터로 itemId 전달
+      setPoints(points - item.price);  // 포인트 차감
+      alert("구매하였습니다.");
+      closeStoreModal();  // 성공 시 모달 닫기
+    } catch (error) {
+      console.error("구매 실패:", error.response ? error.response.data : error);
+      alert(error.response?.data?.message || "구매에 실패했습니다."); // 서버 메시지 출력
+      closeStoreModal();  // 실패 시에도 모달 닫기
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 사용자 포인트와 활성화된 탭의 아이템 목록 불러오기
   useEffect(() => {

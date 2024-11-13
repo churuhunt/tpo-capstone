@@ -44,6 +44,11 @@ public class ShopService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid item ID"));
 
+        // 중복 구매 여부 확인
+        if (purchaseHistoryRepository.existsByUser_IdAndItem_Id(userId, itemId)) {
+            throw new IllegalArgumentException("This item has already been purchased.");
+        }
+
         // 포인트가 충분한지 확인
         if (user.getPoints() < item.getPrice()) {
             throw new IllegalArgumentException("Insufficient points for purchase");
