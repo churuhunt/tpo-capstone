@@ -81,8 +81,8 @@
 
 .PageView-comment-button2 {
   position: relative;
-  top:-450px;
-  left:930px;
+  top:-100px;
+  left:650px;
   padding: 10px 20px;
   font-size: 1rem;
   font-weight: bold;
@@ -96,6 +96,23 @@
   z-index:0;
 }
 
+.PageView-comment-button3 {
+  position: relative;
+  top:-100px;
+  left:790px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: black;
+  background-color: #F0F0F0;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index:0;
+}
+
 .PageView-comment-button:hover {
   background-color: #45A049; /* 호버 시 배경색 */
   transform: translateY(-2px); /* 살짝 위로 이동 */
@@ -103,6 +120,12 @@
 }
 
 .PageView-comment-button2:hover {
+  background-color: #fffff;
+  transform: translateY(-2px);
+  box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.PageView-comment-button3:hover {
   background-color: #fffff; /* 호버 시 배경색 */
   transform: translateY(-2px); /* 살짝 위로 이동 */
   box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 강화 */
@@ -497,7 +520,12 @@
 
 .PageView-container .bookmark-button-con {
     position: relative;
-    top: -470px;
-    right: -750px;
+    top: -125px;
+    right: -820px;
+
 }
 
+.PageView-post-info{
+    position: relative;
+    top: -70px;
+}

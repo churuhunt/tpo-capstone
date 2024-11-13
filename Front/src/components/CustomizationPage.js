@@ -14,10 +14,6 @@ const CustomizationPage = ({
   const defaultItems = [
     { item_category: "PROFILE", item_name: "기본 1💰 Gif 2💰", image_url: "", isUploadOption: true },
     { item_category: "BACKGROUND", item_name: "기본 1💰 Gif 2💰", image_url: "", isUploadOption: true },
-    { item_category: "PROFILE", item_name: "토끼", image_url: "https://i.pinimg.com/236x/2f/55/97/2f559707c3b04a1964b37856f00ad608.jpg" },
-    { item_category: "PROFILE", item_name: "곰", image_url: "https://i.pinimg.com/236x/d6/4e/97/d64e9765deca662e8fa07d2cfdb67f7c.jpg" },
-    { item_category: "BACKGROUND", item_name: "남색 배경", image_url: "https://my-tpo-images.s3.ap-southeast-2.amazonaws.com/94080ca7-9d9b-423d-a63e-408b8756059f_9.png" },
-    { item_category: "BACKGROUND", item_name: "바다색 배경", image_url: "https://my-tpo-images.s3.ap-southeast-2.amazonaws.com/579311bb-cf13-491a-bc98-78203d2008ab_qkek.png" },
   ];
 
   const [items, setItems] = useState(defaultItems); // 초기 상태 설정

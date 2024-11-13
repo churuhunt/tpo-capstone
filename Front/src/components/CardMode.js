@@ -20,7 +20,10 @@ const CardMode = ({ posts }) => {
                             <div className="card-mode-details">
                                 <div className="card-mode-author-info">
                                     <img src={post.profileImageUrl} alt={`${post.author} 프로필`} className="card-mode-profile-image" />
-                                    <p>{post.author} 👁️{post.views} 👍{post.likes}</p>
+                                    <p>{post.author}</p>
+                                </div>
+                                <div className="card-mode-stats">
+                                    <p>👁️{post.views} 👍{post.likes}</p>
                                 </div>
                             </div>
                         </div>
