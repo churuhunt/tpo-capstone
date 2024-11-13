@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tpo.capstone.auth.CustomUserDetails;
 import tpo.capstone.dto.GuestbookCommentResponseDto;
+import tpo.capstone.dto.PostDto;
 import tpo.capstone.dto.UserProfileDto;
 import tpo.capstone.dto.UserProfileRequestDto;
 import tpo.capstone.entity.Post;
@@ -21,6 +22,7 @@ import tpo.capstone.service.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -112,10 +114,15 @@ public class MyHomeController {
     }
 
     @GetMapping("/bookmarks")
-    public ResponseEntity<List<Post>> getBookmarks(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<List<PostDto>> getBookmarks(@AuthenticationPrincipal CustomUserDetails userDetails) {
         Long userId = userDetails.getUserAccountDto().getId();
         log.info("Fetching bookmarks for userId: {}", userId);
-        List<Post> bookmarks = bookmarkService.getBookmarkedPosts(userId);
+
+        // bookmarkService에서 Post 엔티티 리스트를 받아와서 PostDto로 변환
+        List<PostDto> bookmarks = bookmarkService.getBookmarkedPosts(userId).stream()
+                .map(PostDto::fromEntity)
+                .collect(Collectors.toList());
+
         return ResponseEntity.ok(bookmarks);
     }
 
