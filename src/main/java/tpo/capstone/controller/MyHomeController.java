@@ -4,10 +4,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import tpo.capstone.auth.CustomUserDetails;
+import tpo.capstone.dto.GuestbookCommentResponseDto;
 import tpo.capstone.dto.UserProfileDto;
 import tpo.capstone.dto.UserProfileRequestDto;
 import tpo.capstone.entity.Post;
@@ -31,6 +34,8 @@ public class MyHomeController {
     private final TimelineService timelineService;
     private final PostService postService;
     private final S3Service s3Service;
+    private final GuestbookService guestbookService;
+
 
     @Autowired
     public MyHomeController(UserProfileService userProfileService,
@@ -39,7 +44,8 @@ public class MyHomeController {
                             VisitorService visitorService,
                             TimelineService timelineService,
                             PostService postService,
-                            S3Service s3Service) {
+                            S3Service s3Service,
+                            GuestbookService guestbookService) {
         this.userProfileService = userProfileService;
         this.userActivityService = userActivityService;
         this.bookmarkService = bookmarkService;
@@ -47,6 +53,7 @@ public class MyHomeController {
         this.timelineService = timelineService;
         this.postService = postService;
         this.s3Service = s3Service;
+        this.guestbookService = guestbookService;
     }
 
     @GetMapping("/profile")
@@ -212,4 +219,23 @@ public class MyHomeController {
     }
 
 
+    // 방명록 댓글 목록 조회
+    @GetMapping("/guestbook/comments")
+    public ResponseEntity<List<GuestbookCommentResponseDto>> getGuestbookComments() {
+        List<GuestbookCommentResponseDto> comments = guestbookService.getGuestbookComments();
+        return ResponseEntity.ok(comments);
+    }
+
+    @PostMapping("/guestbook/comments")
+    public ResponseEntity<GuestbookCommentResponseDto> addGuestbookComment(
+            @RequestBody GuestbookCommentResponseDto responseDto) {
+
+        // SecurityContextHolder에서 인증된 사용자 정보 가져오기
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        String userId = userDetails.getUserAccountDto().getUserId();
+        GuestbookCommentResponseDto response = guestbookService.addGuestbookComment(responseDto, userId);
+        return ResponseEntity.ok(response);
+    }
 }

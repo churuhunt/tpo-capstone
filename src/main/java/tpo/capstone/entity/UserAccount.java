@@ -110,4 +110,8 @@ public class UserAccount implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public String getProfileImageUrl() {
+        return this.userProfile != null ? this.userProfile.getProfileImageUrl() : null;
+    }
 }

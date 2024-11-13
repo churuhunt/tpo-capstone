@@ -44,11 +44,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     long countByAuthor_Id(@Param("authorId") Long authorId);
 
     // 특정 사용자가 작성한 게시물의 총 추천 수
-    @Query("SELECT SUM(p.likes) FROM Post p WHERE p.author.id = :authorId")
+    @Query("SELECT COALESCE(SUM(p.likes), 0) FROM Post p WHERE p.author.id = :authorId")
     long countTotalLikesByAuthor_Id(@Param("authorId") Long authorId);
 
     // 특정 사용자가 작성한 게시물의 총 비추천 수
-    @Query("SELECT SUM(p.dislikes) FROM Post p WHERE p.author.id = :authorId")
+    @Query("SELECT COALESCE(SUM(p.dislikes), 0) FROM Post p WHERE p.author.id = :authorId")
     long countTotalDislikesByAuthor_Id(@Param("authorId") Long authorId);
 
     // 여러 카테고리를 필터링하는 메서드 추가

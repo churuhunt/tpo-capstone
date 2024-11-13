@@ -38,6 +38,7 @@ const PostView = () => {
   const [loadingDislike, setLoadingDislike] = useState(false);
   const [loadingComment, setLoadingComment] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
+  const defaultProfileImageUrl = '/path/to/default-profile-image.png'; // 기본 프로필 이미지 경로 설정
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -367,9 +368,20 @@ const PostView = () => {
                     </div>
                 ) : (
                     <>
-                      <p>{comment.authorNickname}: {comment.content}</p>
+                      <div className="comment-author-info">
+                        <img
+                            src={comment.authorProfileImageUrl || defaultProfileImageUrl} // 기본 이미지 제공
+                            alt={`${comment.authorNickname} 프로필`}
+                            className="comment-profile-image"
+                        />
+                        <p>{comment.authorNickname}</p>
+                        <p className="comment-date">
+                          {new Date(comment.date).toLocaleDateString()} {/* 작성일자 표시 */}
+                        </p>
+                      </div>
+                      <p>{comment.content}</p>
                       <div className="comment-reactions">
-                      <button onClick={() => handleDeleteComment(comment.id)}>삭제</button>
+                      <button onClick={() => handleDeleteComment(comment.id)}>댓글 삭제</button>
                         <button onClick={() => handleLikeComment(comment.id)}>
                           <FontAwesomeIcon icon={faThumbsUp}/>{comment.likes || 0}
                         </button>
