@@ -6,6 +6,7 @@
     table-layout: fixed;
     position: relative;
     top: -35px;
+    white-space: nowrap;
 }
 
 .Post-List-Mode-table .empty-row td {

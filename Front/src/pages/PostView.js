@@ -398,7 +398,7 @@ const PostView = () => {
                             alt={`${comment.authorNickname} 프로필`}
                             className="PostView-comment-profile-image"
                         />
-                        <p className="PostView-comment-userid">{comment.authorid}</p>
+                        <p className="PostView-comment-userid">{comment.authorUserId}</p>
                         <p className="PostView-comment-nickname">{comment.authorNickname}</p>
                         <p className="PostView-comment-date">
                           {new Date(comment.date).toLocaleDateString()} {/* 작성일자 표시 */}
