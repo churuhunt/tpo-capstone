@@ -38,22 +38,22 @@ const Mainpage = () => {
         // 비동기 요청 병렬 처리
         const [communityResponse, announcementResponse, rankingResponse, ...popularResponses] = await Promise.all([
           api.get('/posts', {
-            params: { category: ['자유게시판'], page: 0, size: 5 },
+            params: { mainCategories: ['커뮤니티'], smallCategories: ['자유게시판'], page: 0, size: 5 },
             paramsSerializer: params => Object.keys(params)
-              .map(key => Array.isArray(params[key]) ? params[key].map(val => `${key}=${encodeURIComponent(val)}`).join('&') : `${key}=${encodeURIComponent(params[key])}`)
-              .join('&')
+                .map(key => Array.isArray(params[key]) ? params[key].map(val => `${key}=${encodeURIComponent(val)}`).join('&') : `${key}=${encodeURIComponent(params[key])}`)
+                .join('&')
           }),
           api.get('/posts', {
-            params: { category: ['공지사항'], page: 0, size: 5 },
+            params: { mainCategories: ['공지사항'], page: 0, size: 5 },
             paramsSerializer: params => Object.keys(params)
-              .map(key => Array.isArray(params[key]) ? params[key].map(val => `${key}=${encodeURIComponent(val)}`).join('&') : `${key}=${encodeURIComponent(params[key])}`)
-              .join('&')
+                .map(key => Array.isArray(params[key]) ? params[key].map(val => `${key}=${encodeURIComponent(val)}`).join('&') : `${key}=${encodeURIComponent(params[key])}`)
+                .join('&')
           }),
           api.get('/rankings/total'),
           ...['daily', 'weekly', 'monthly', 'yearly'].map(period =>
-            api.get('/posts', {
-              params: { likes: 10, sortBy: 'likes', direction: 'desc', page: 0, size: 5, timeFilter: period }
-            })
+              api.get('/posts', {
+                params: { likes: 10, sortBy: 'likes', direction: 'desc', page: 0, size: 5, timeFilter: period }
+              })
           )
         ]);
 
@@ -83,129 +83,126 @@ const Mainpage = () => {
     fetchData();
   }, []);
 
-    const handlePeriodChange = (period) => {
-      setSelectedPeriod(period);
-      setPopularPosts(cachedPosts[period]); // 캐시된 데이터 사용
-    };
+  const handlePeriodChange = (period) => {
+    setSelectedPeriod(period);
+    setPopularPosts(cachedPosts[period]); // 캐시된 데이터 사용
+  };
 
   return (
-    <div className="main-page">
-      {/* 로딩 상태가 true일 경우 로딩 컴포넌트 표시 */}
-      {loading ? (
-        <LoadingModal />
-      ) : (
-        <>
-          <div className="banner-slideshow">
-            <Slide easing="ease">
-              {slideBanners.map((image, index) => (
-                <div className="main-page-banner" key={index} style={{ backgroundImage: `url(${image})` }} />
-              ))}
-            </Slide>
-          </div>
+      <div className="main-page">
+        {/* 로딩 상태가 true일 경우 로딩 컴포넌트 표시 */}
+        {loading ? (
+            <LoadingModal />
+        ) : (
+            <>
+              <div className="banner-slideshow">
+                <Slide easing="ease">
+                  {slideBanners.map((image, index) => (
+                      <div className="main-page-banner" key={index} style={{ backgroundImage: `url(${image})` }} />
+                  ))}
+                </Slide>
+              </div>
 
-<div className="content">
-  <PageSubMenu items={[]} activeIndex={0} setActiveIndex={() => {}} />
+              <div className="content">
+                <PageSubMenu items={[]} activeIndex={0} setActiveIndex={() => {}} />
 
-          <div className="sections-container">
-            {/* 공지사항 섹션 */}
-            <div className="section">
-              <h2>📢 공지사항</h2>
-              <ul className="announcement-list">
-                {announcements.slice(0, 5).map((announcement, index) => (
-                  <li key={index} className="announcement-item">
-                    <Link to={`/postview/${announcement.id}`} className="post-title-link">
-                      <span className="announcement-title">{announcement.title}</span>
-                    </Link>
-                    <span className="announcement-date">{announcement.date}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                <div className="sections-container">
+                  {/* 공지사항 섹션 */}
+                  <div className="section">
+                    <h2>📢 공지사항</h2>
+                    <ul className="announcement-list">
+                      {announcements.slice(0, 5).map((announcement, index) => (
+                          <li key={index} className="announcement-item">
+                            <Link to={`/postview/${announcement.id}`} className="post-title-link">
+                              <span className="announcement-title">{announcement.title}</span>
+                            </Link>
+                            <span className="announcement-date">{announcement.date}</span>
+                          </li>
+                      ))}
+                    </ul>
+                  </div>
 
-              {/* 인기 게시판 섹션 */}
-              <div className="section section-with-border">
-                <div className="popularity-header">
-                  <h2>🔥인기</h2>
-                  <div className="popularity-links">
-                    <a
-                      className={`period-link ${selectedPeriod === 'daily' ? 'selected' : ''}`}
-                      onClick={() => handlePeriodChange('daily')}
-                    >
-                      일간
-                    </a>
-                    <a
-                      className={`period-link ${selectedPeriod === 'weekly' ? 'selected' : ''}`}
-                      onClick={() => handlePeriodChange('weekly')}
-                    >
-                      주간
-                    </a>
-                    <a
-                      className={`period-link ${selectedPeriod === 'monthly' ? 'selected' : ''}`}
-                      onClick={() => handlePeriodChange('monthly')}
-                    >
-                      월간
-                    </a>
-                    <a
-                      className={`period-link ${selectedPeriod === 'yearly' ? 'selected' : ''}`}
-                      onClick={() => handlePeriodChange('yearly')}
-                    >
-                      연간
-                    </a>
+                  {/* 인기 게시판 섹션 */}
+                  <div className="section section-with-border">
+                    <div className="popularity-header">
+                      <h2>🔥인기</h2>
+                      <div className="popularity-links">
+                        <a
+                            className={`period-link ${selectedPeriod === 'daily' ? 'selected' : ''}`}
+                            onClick={() => handlePeriodChange('daily')}
+                        >
+                          일간
+                        </a>
+                        <a
+                            className={`period-link ${selectedPeriod === 'weekly' ? 'selected' : ''}`}
+                            onClick={() => handlePeriodChange('weekly')}
+                        >
+                          주간
+                        </a>
+                        <a
+                            className={`period-link ${selectedPeriod === 'monthly' ? 'selected' : ''}`}
+                            onClick={() => handlePeriodChange('monthly')}
+                        >
+                          월간
+                        </a>
+                        <a
+                            className={`period-link ${selectedPeriod === 'yearly' ? 'selected' : ''}`}
+                            onClick={() => handlePeriodChange('yearly')}
+                        >
+                          연간
+                        </a>
+                      </div>
+                    </div>
+
+                    <ul className="popular-posts">
+                      {popularPosts.slice(0, 5).map((post, index) => (
+                          <li key={index} className="post-item">
+                            <img
+                                src={post.ImageUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwpSuPwVevZxk9WHC04FSWZqscJudpoQhFzw&s"}
+                                alt="포스트 썸네일"
+                                className="post-thumbnail"
+                            />
+                            <div className="post-content">
+                              <Link to={`/postview/${post.id}`} className="post-title-link">
+                                <span className="post-title">{post.title}</span>
+                              </Link>
+                            </div>
+                            <div className="post-author">
+                              <Link to={`/mymenu/${post.author.id}`}>
+                                <img src={post.profileImageUrl || profileImage} alt="작성자 프로필" className="author-profile" />
+                              </Link>
+                              <Link to={`/mymenu/${post.author.id}`} className="mainpage-author-name-link">
+                                <span className="mainpage-author-name">{post.author}</span>
+                              </Link>
+                            </div>
+                          </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* 랭킹 섹션 */}
+                  <div className="section">
+                    <h2>🏆랭킹</h2>
+                    <ul className="ranking-list">
+                      {rankings.slice(0, 5).map((rank, index) => (
+                          <li key={index} className="ranking-item">
+                            <span>{rankEmojis[index] || `${index + 1}위`}</span>
+                            <Link to={`/mymenu/${rank.id}`}>
+                              <img src={rank.profileImageUrl || profileImage} alt="프로필" className="profile-image" />
+                            </Link>
+                            <Link to={`/mymenu/${rank.id}`} className="ranking-nickname">
+                              {rank.nickname}
+                            </Link>
+                            <span className="ranking-points">{rank.points} 포인트</span>
+                          </li>
+                      ))}
+                    </ul>
                   </div>
                 </div>
-
-                <ul className="popular-posts">
-                  {popularPosts.slice(0, 5).map((post, index) => (
-                    <li key={index} className="post-item">
-                      <img
-                        src={post.ImageUrl || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTwpSuPwVevZxk9WHC04FSWZqscJudpoQhFzw&s"}
-                        alt="포스트 썸네일"
-                        className="post-thumbnail"
-                      />
-                      <div className="post-content">
-                        <Link to={`/postview/${post.id}`} className="post-title-link">
-                          <span className="post-title">{post.title}</span>
-                        </Link>
-                      </div>
-                      <div className="post-author">
-                      <Link to={`/mymenu/${post.author.id}`}> <img src={post.profileImageUrl || profileImage} alt="작성자 프로필" className="author-profile" /></Link>
-                       <Link to={`/mymenu/${post.author.id}`} className="mainpage-author-name-link">
-                           <span className="mainpage-author-name">{post.author}</span>
-                       </Link>
-
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-
-
-
               </div>
-
-              {/* 랭킹 섹션 */}
-              <div className="section">
-                <h2>🏆랭킹</h2>
-                <ul className="ranking-list">
-                  {rankings.slice(0, 5).map((rank, index) => (
-                    <li key={index} className="ranking-item">
-                      <span>{rankEmojis[index] || `${index + 1}위`}</span>
-                      <Link to={`/mymenu/${rank.id}`}>
-                        <img src={rank.profileImageUrl || profileImage} alt="프로필" className="profile-image" />
-                      </Link>
-                      <Link to={`/mymenu/${rank.id}`} className="ranking-nickname" >
-                        {rank.nickname}
-                      </Link>
-                      <span className="ranking-points">{rank.points} 포인트</span>
-                    </li>
-                  ))}
-                </ul>
-
-              </div>
-            </div>
-          </div>
-        </>
-      )}
-    </div>
+            </>
+        )}
+      </div>
   );
 };
 

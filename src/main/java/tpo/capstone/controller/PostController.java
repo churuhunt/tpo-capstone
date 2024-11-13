@@ -59,33 +59,37 @@ public class PostController {
 
     @GetMapping("/posts")
     public ResponseEntity<Map<String, Object>> getFilteredPosts(
-            @RequestParam(required = false) List<String> category,
+            @RequestParam(required = false) List<String> mainCategories,
+            @RequestParam(required = false) List<String> smallCategories,
             @RequestParam(required = false) String searchTerm,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "15") int size,
             @RequestParam(defaultValue = "date") String sortBy,
             @RequestParam(defaultValue = "desc") String direction,
             @RequestParam(defaultValue = "title") String searchMode,
-            @RequestParam(required = false) Long userId) {  // userId를 선택적으로 받음
+            @RequestParam(required = false) Long userId) {
 
-        log.info("Received getFilteredPosts request with userId={}, category={}, searchTerm={}, page={}, size={}, sortBy={}, direction={}, searchMode={}",
-                userId, category, searchTerm, page, size, sortBy, direction, searchMode);
+        log.info("Received getFilteredPosts request with userId={}, mainCategories={}, smallCategories={}, searchTerm={}, page={}, size={}, sortBy={}, direction={}, searchMode={}",
+                userId, mainCategories, smallCategories, searchTerm, page, size, sortBy, direction, searchMode);
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.fromString(direction), sortBy));
-        // userId가 있을 때는 특정 사용자의 게시글을, 없으면 모든 사용자의 게시글을 필터링
-        Page<Post> filteredPosts = postService.getFilteredPosts(userId, category, searchTerm, searchMode, sortBy, direction, pageable);
 
-        List<PostDto> postDtoList = filteredPosts.stream()
+        // 필터링된 게시물 목록을 가져오기
+        Page<Post> filteredPosts = postService.getFilteredPosts(userId, mainCategories, smallCategories, searchTerm, searchMode, sortBy, direction, pageable);
+
+        // Post -> PostDto 변환
+        List<PostDto> postDtoList = filteredPosts.getContent().stream()
                 .map(PostDto::fromEntity)
                 .collect(Collectors.toList());
 
+        // 응답에 필요한 데이터 구성
         Map<String, Object> response = new HashMap<>();
-        response.put("posts", postDtoList);
-        response.put("currentPage", filteredPosts.getNumber());
-        response.put("totalItems", filteredPosts.getTotalElements());
-        response.put("totalPages", filteredPosts.getTotalPages());
+        response.put("posts", postDtoList);                        // 게시물 목록
+        response.put("currentPage", filteredPosts.getNumber());    // 현재 페이지 번호
+        response.put("totalItems", filteredPosts.getTotalElements()); // 전체 항목 수
+        response.put("totalPages", filteredPosts.getTotalPages());    // 전체 페이지 수
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(response); // 응답 반환
     }
     @PostMapping(value = "/posts", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<PostDto> createPost(
@@ -160,13 +164,14 @@ public class PostController {
             @RequestParam(defaultValue = "10") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
-        List<String> categories = Collections.singletonList("공지사항");
+        List<String> mainCategories = Collections.singletonList("공지사항");
+        List<String> smallCategories = null;  // 소카테고리를 null로 설정
         String searchMode = null; // 적절한 기본값 설정
         String sortBy = "date"; // 기본 정렬 기준
         String direction = "desc"; // 기본 정렬 방향
 
         Long userId = userDto.getId(); // 사용자 ID 추가
-        Page<PostDto> notices = postService.getFilteredPosts(userId, categories, null, searchMode, sortBy, direction, pageable)
+        Page<PostDto> notices = postService.getFilteredPosts(userId, mainCategories, smallCategories, null, searchMode, sortBy, direction, pageable)
                 .map(PostDto::fromEntity);
         return ResponseEntity.ok(notices);
     }
@@ -184,11 +189,12 @@ public class PostController {
                 .toList();
         response.put("popularPosts", popularPosts);
 
-        List<String> categories = Collections.singletonList("공지사항");
+        List<String> mainCategories = Collections.singletonList("공지사항");
+        List<String> smallCategories = null;  // 소카테고리를 null로 설정
         String searchMode = null; // 적절한 기본값 설정
         String sortBy = "date"; // 기본 정렬 기준
         String direction = "desc"; // 기본 정렬 방향
-        Page<PostDto> notices = postService.getFilteredPosts(userId, categories, null, searchMode, sortBy, direction, PageRequest.of(page, size))
+        Page<PostDto> notices = postService.getFilteredPosts(userId, mainCategories, smallCategories, null, searchMode, sortBy, direction, PageRequest.of(page, size))
                 .map(PostDto::fromEntity);
         response.put("notices", notices.getContent());
         response.put("totalNotices", notices.getTotalElements());

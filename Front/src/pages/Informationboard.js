@@ -32,6 +32,21 @@ const Informationboard = () => {
     const [subCategoryFilter, setSubCategoryFilter] = useState('all'); // 소카테고리 필터 상태
     const [viewMode, setViewMode] = useState('list'); // 뷰 모드 상태
 
+    // 소카테고리 변경 핸들러
+    const handleSubCategoryChange = (category) => {
+        // 메뉴에 따른 필터 값을 명확하게 지정
+        if (category === "🅰️전체") {
+            setSubCategoryFilter("all"); // 전체 조회
+        } else if (category === "🕺패션정보") {
+            setSubCategoryFilter("패션정보");
+        } else if (category === "💲세일정보") {
+            setSubCategoryFilter("세일정보");
+        } else if (category === "🎸기타정보") {
+            setSubCategoryFilter("기타정보");
+        }
+        console.log("소카테고리 필터 설정됨:", category);
+        setCurrentPage(1); // 소카테고리 변경 시 페이지를 첫 페이지로 초기화
+    };
     // 게시물 데이터를 가져오는 useEffect 훅
     useEffect(() => {
         const fetchPosts = async () => {
@@ -39,7 +54,8 @@ const Informationboard = () => {
             try {
                 const response = await api.get('/posts', {
                     params: {
-                        category: ['정보게시판'], // 정보게시판으로 고정
+                        mainCategories: ['정보'], // mainCategory를 정보게시판으로 고정
+                        smallCategories: subCategoryFilter === 'all' ? null : [subCategoryFilter], // 선택한 소카테고리만
                         searchTerm: debouncedSearchTerm,
                         searchMode,
                         sortBy,
@@ -64,7 +80,8 @@ const Informationboard = () => {
         };
 
         fetchPosts(); // 게시물 데이터 가져오기 함수 호출
-    }, [debouncedSearchTerm, searchMode, sortBy, direction, currentPage]);
+    }, [debouncedSearchTerm, searchMode, sortBy, direction, currentPage, subCategoryFilter]);
+
 
     // posts 상태가 변경될 때 filteredPosts 상태 업데이트
     useEffect(() => {
@@ -105,11 +122,6 @@ const Informationboard = () => {
         setCurrentPage(page); // 현재 페이지 상태 업데이트
     };
 
-    // 소카테고리 변경 핸들러
-    const handleSubCategoryChange = (event) => {
-        setSubCategoryFilter(event.target.value); // 소카테고리 상태 업데이트
-        setCurrentPage(1); // 첫 페이지로 리셋
-    };
 
     // 뷰 모드 변경 핸들러
     const handleViewModeChange = (mode) => {
@@ -125,36 +137,39 @@ const Informationboard = () => {
     return (
         <div className="informationboard-container">
 
-           {/* 로딩 */}
-           {loading && <LoadingModal />}
+            {/* 로딩 */}
+            {loading && <LoadingModal />}
 
-           {/* 배너 */}
-           <Banner src={banner1} title="ℹ️정보 게시판" />
+            {/* 배너 */}
+            <Banner src={banner1} title="ℹ️정보 게시판" />
 
-           {/* 서브 메뉴 */}
-           <div className="information-container"><PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} onItemClick={(item, index) => { const value = item === "🅰️전체" ? "all" : item; handleSubCategoryChange({ target: { value } }); }} /></div>
+            {/* 서브 메뉴 */}
+            <div className="information-container">
+                <PageSubMenu
+                    items={menuItems}
+                    activeIndex={activeIndex}
+                    setActiveIndex={setActiveIndex}
+                    onItemClick={(item, index) => handleSubCategoryChange(item)}
+                />
+            </div>
 
-        <div className="post-head-container">
-           {/* 뷰 전환 버튼 컴포넌트 */}
-           <ViewModeToggle viewMode={viewMode} onChange={handleViewModeChange} />
+            {/* 나머지 UI (뷰 전환, 검색, 정렬, 페이징, 게시물 목록) */}
+            <div className="post-head-container">
+                <ViewModeToggle viewMode={viewMode} onChange={handleViewModeChange} />
+                <SearchBar searchTerm={searchTerm} searchMode={searchMode} onSearchChange={handleSearchChange} onSearchModeChange={handleSearchModeChange} onSearchSubmit={handleSearchSubmit} />
+                <SortDropdown sortBy={sortBy} direction={direction} onSortChange={handleSortChange} />
+            </div>
 
-            {/* 검색창 컴포넌트 */}
-            <SearchBar searchTerm={searchTerm} searchMode={searchMode} onSearchChange={handleSearchChange} onSearchModeChange={handleSearchModeChange} onSearchSubmit={handleSearchSubmit} />
+            <div>
+                {viewMode === 'list' ? <ListMode posts={filteredPosts} /> : <CardMode posts={filteredPosts} />}
+            </div>
 
-            {/* 정렬 컴포넌트 */}
-            <SortDropdown sortBy={sortBy} direction={direction} onSortChange={handleSortChange} />
-        </div>
-
-        {/* 게시글 (리스트/액자형) 컴포넌트 */}
-        <div> {viewMode === 'list' ? ( <ListMode posts={filteredPosts} /> ) : ( <CardMode posts={filteredPosts} /> )} </div>
-
-        {/* 페이징 컴포넌트 */}
             <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
+            <div className="post-button-container">
+                <Link to="/write" className="ShadowButton-inline" state={{ category: '정보게시판' }}><ShadowButton>글작성</ShadowButton></Link>
+            </div>
 
-        {/* 글작성 버튼 컴포넌트 */}
-        <div className="post-button-container"><Link to="/write" className="ShadowButton-inline" state={{ category: '정보게시판' }}><ShadowButton>글작성</ShadowButton></Link></div>
-
-    </div>
+        </div>
     );
 };
 

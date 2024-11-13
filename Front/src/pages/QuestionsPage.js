@@ -16,10 +16,7 @@ import Pagination from '../components/Pagination';
 import ShadowButton from '../components/ShadowButton';
 
 const QuestionsPage = () => {
-    const [activeIndex, setActiveIndex] = useState(0); /*sub */
-    const menuItems = ["❔질문게시판"]; /*sub */
-    const [posts, setPosts] = useState([]); // 전체 정보 게시물 목록
-    const [filteredPosts, setFilteredPosts] = useState([]); // 필터링된 정보 게시물 목록
+    const [posts, setPosts] = useState([]); // 전체 질문 게시물 목록
     const [sortBy, setSortBy] = useState('date'); // 정렬 기준
     const [direction, setDirection] = useState('desc'); // 정렬 방향
     const [searchTerm, setSearchTerm] = useState(''); // 검색어 상태
@@ -29,7 +26,6 @@ const QuestionsPage = () => {
     const [postsPerPage] = useState(15); // 페이지당 게시물 수
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
-    const [subCategoryFilter, setSubCategoryFilter] = useState('all'); // 소카테고리 필터 상태
     const [viewMode, setViewMode] = useState('list'); // 뷰 모드 상태
 
     // 게시물 데이터를 가져오는 useEffect 훅
@@ -39,7 +35,8 @@ const QuestionsPage = () => {
             try {
                 const response = await api.get('/posts', {
                     params: {
-                        category: ['질문게시판'],
+                        mainCategories: ['커뮤니티'], // 메인 카테고리를 '커뮤니티'로 설정
+                        smallCategories: ['질문게시판'], // 소카테고리를 '질문게시판'으로 설정
                         searchTerm: debouncedSearchTerm,
                         searchMode,
                         sortBy,
@@ -48,7 +45,6 @@ const QuestionsPage = () => {
                         size: postsPerPage,
                     },
                     paramsSerializer: params => {
-                        // 배열 파라미터를 서버에서 받을 수 있도록 문자열로 변환
                         return Object.keys(params)
                             .map(key => Array.isArray(params[key]) ? params[key].map(val => `${key}=${val}`).join('&') : `${key}=${params[key]}`)
                             .join('&');
@@ -65,15 +61,6 @@ const QuestionsPage = () => {
 
         fetchPosts(); // 게시물 데이터 가져오기 함수 호출
     }, [debouncedSearchTerm, searchMode, sortBy, direction, currentPage]);
-
-    // posts 상태가 변경될 때 filteredPosts 상태 업데이트
-    useEffect(() => {
-        if (subCategoryFilter === 'all') {
-            setFilteredPosts(posts); // 전체 게시물을 필터링된 게시물로 설정
-        } else {
-            setFilteredPosts(posts.filter((post) => post.smallCategory === subCategoryFilter)); // 소카테고리 필터링
-        }
-    }, [subCategoryFilter, posts]);
 
     // 정렬 기준 변경 핸들러
     const handleSortChange = (event) => {
@@ -105,12 +92,6 @@ const QuestionsPage = () => {
         setCurrentPage(page); // 현재 페이지 상태 업데이트
     };
 
-    // 소카테고리 변경 핸들러
-    const handleSubCategoryChange = (event) => {
-        setSubCategoryFilter(event.target.value); // 소카테고리 상태 업데이트
-        setCurrentPage(1); // 첫 페이지로 리셋
-    };
-
     // 뷰 모드 변경 핸들러
     const handleViewModeChange = (mode) => {
         setViewMode(mode); // 뷰 모드 상태 업데이트
@@ -126,13 +107,10 @@ const QuestionsPage = () => {
         <div className="informationboard-container">
 
             {/* 로딩 */}
-            {loading && <LoadingModal />}
+            {loading && <LoadingModal/>}
 
             {/* 배너 */}
-            <Banner src={banner1} title="💬커뮤니티 게시판" />
-
-            {/* 서브 메뉴 */}
-            <div className="information-container"><PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} onItemClick={(item, index) => { const value = item === "🅰️전체" ? "all" : item; handleSubCategoryChange({ target: { value } }); }} /></div>
+            <Banner src={banner1} title="❔질문게시판" />
 
             <div className="post-head-container">
                 {/* 뷰 전환 버튼 컴포넌트 */}
@@ -146,14 +124,17 @@ const QuestionsPage = () => {
             </div>
 
             {/* 게시글 (리스트/액자형) 컴포넌트 */}
-            <div> {viewMode === 'list' ? ( <ListMode posts={filteredPosts} /> ) : ( <CardMode posts={filteredPosts} /> )} </div>
+            <div>{viewMode === 'list' ? <ListMode posts={posts} /> : <CardMode posts={posts} />}</div>
 
             {/* 페이징 컴포넌트 */}
             <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
 
             {/* 글작성 버튼 컴포넌트 */}
-            <div className="post-button-container"><Link to="/write" className="ShadowButton-inline" state={{ category: '커뮤니티' }}><ShadowButton>글작성</ShadowButton></Link></div>
-
+            <div className="post-button-container">
+                <Link to="/write" className="ShadowButton-inline" state={{ category: '커뮤니티' }}>
+                    <ShadowButton>글작성</ShadowButton>
+                </Link>
+            </div>
         </div>
     );
 };

@@ -23,7 +23,7 @@ const PostForm = () => {
 
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
-    const [category, setCategory] = useState(menuItems[0]);
+    const [mainCategory, setMainCategory] = useState('');
     const [smallCategory, setSmallCategory] = useState('');
     const [author, setAuthor] = useState('');
     const [imageFile, setImageFile] = useState(null);
@@ -59,15 +59,25 @@ const PostForm = () => {
         setCurrentPage(1);
     };
 
-    const categoryOptions = state?.category === '정보게시판'
-        ? ['패션정보', '세일정보', '기타정보']
-        : state?.category === '커뮤니티'
-        ? ['자유게시판', '데일리룩게시판', '질문게시판']
-        : ['기타1', '기타2', '기타3'];
+    // 메인 카테고리 및 소카테고리 옵션 설정
+    const mainCategoryOptions = ['공지사항', '커뮤니티', '추천', '정보'];
+    const subCategoryOptions = {
+        '커뮤니티': ['자유게시판', '데일리룩게시판', '질문게시판'],
+        '정보': ['패션정보', '세일정보', '기타정보']
+    };
 
-    useEffect(() => {
-        setCategory(categoryOptions[0]);
-    }, [categoryOptions]);
+    // 선택한 메인 카테고리에 맞는 소카테고리 옵션을 가져오기
+    const getCurrentSubCategories = () => {
+        return subCategoryOptions[mainCategory] || [];
+    };
+
+    // 메인 카테고리 변경 핸들러
+    const handleMainCategoryChange = (e) => {
+        const selectedMainCategory = e.target.value;
+        setMainCategory(selectedMainCategory);
+        setSmallCategory(''); // 메인 카테고리가 변경되면 소카테고리 초기화
+    };
+
 
     useEffect(() => {
         const fetchCurrentUserProfile = async () => {
@@ -107,11 +117,11 @@ const PostForm = () => {
         const postData = {
             title,
             content,
-            category,
-            smallCategory: category === "정보게시판" ? smallCategory : null,
+            category: mainCategory || '공지사항',  // mainCategory가 공지사항일 경우 기본값 설정
+            smallCategory: mainCategory === '커뮤니티' || mainCategory === '정보' ? smallCategory : null, // 커뮤니티나 정보일 때만 소카테고리 설정
             author,
-            profileImageUrl, // 프로필 이미지 URL 추가
             date: new Date(),
+            profileImageUrl, // 프로필 이미지 URL 추가
             views: 0,
             likes: 0,
         };
@@ -199,15 +209,27 @@ const PostForm = () => {
                 <div className="title-category-container2">
                     <div className="title-category-container">
                         <label className="category-label">
-                            <select className="Postform-sel-1" value={category} onChange={(e) => setCategory(e.target.value)}>
-                                {categoryOptions.map((option, idx) => (
-                                    <option key={idx} value={option}>{option}</option>
+                            <select className="Postform-sel-1" value={mainCategory} onChange={handleMainCategoryChange}>
+                                {mainCategoryOptions.map((category, idx) => (
+                                    <option key={idx} value={category}>{category}</option>
                                 ))}
                             </select>
                         </label>
+                        {/* 소카테고리 선택 (커뮤니티 또는 정보 카테고리 선택 시에만 표시) */}
+                        {getCurrentSubCategories().length > 0 && (
+                            <label>
+                                <select value={smallCategory} onChange={(e) => setSmallCategory(e.target.value)}>
+                                    <option value="">소카테고리를 선택하세요</option>
+                                    {getCurrentSubCategories().map((subCategory, idx) => (
+                                        <option key={idx} value={subCategory}>{subCategory}</option>
+                                    ))}
+                                </select>
+                            </label>
+                        )}
                         <label className="title-label">
                             <input type="text1" className="custom-title-input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="제목을 입력해주세요" />
                         </label>
+
                     </div>
 
                     <div className="editor-controls">

@@ -170,19 +170,27 @@ public class PostService {
 
     /**
      * 카테고리와 검색어에 따라 필터링된 게시물 목록 조회.
-     * @param category 게시물 카테고리
+     * @param mainCategories  게시물 카테고리
      * @param searchTerm 검색어
      * @param pageable 페이징 정보
      * @return 필터링된 게시물 페이지
      */
-    public Page<Post> getFilteredPosts(Long userId, List<String> category, String searchTerm, String searchMode,
-                                       String sortBy, String direction, Pageable pageable) {
+    public Page<Post> getFilteredPosts(Long userId, List<String> mainCategories, List<String> smallCategories,
+                                       String searchTerm, String searchMode, String sortBy, String direction, Pageable pageable) {
         if (userId != null) {
             // 특정 사용자의 게시글만 조회
-            return postRepository.findByUserIdAndFilters(userId, category, searchTerm, searchMode, pageable);
+            return postRepository.findByUserIdAndFilters(userId, mainCategories, smallCategories, searchTerm, searchMode, pageable);
         } else {
             // 모든 사용자의 게시글 조회
-            return postRepository.findFilteredPosts(category, searchTerm, searchMode, pageable);
+            // 커뮤니티 또는 정보게시판의 경우에만 소카테고리 필터를 적용
+            if ((mainCategories != null && (mainCategories.contains("커뮤니티") || mainCategories.contains("정보게시판")))
+                    && smallCategories != null && !smallCategories.isEmpty()) {
+                // mainCategories와 smallCategories로 필터링
+                return postRepository.findFilteredPosts(mainCategories, smallCategories, searchTerm, searchMode, pageable);
+            } else {
+                // mainCategories만으로 필터링 (smallCategories 무시)
+                return postRepository.findFilteredPosts(mainCategories, null, searchTerm, searchMode, pageable);
+            }
         }
     }
 

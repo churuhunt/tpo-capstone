@@ -29,18 +29,34 @@ const Community = () => {
     const [postsPerPage] = useState(15); // 페이지당 게시물 수
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [totalPages, setTotalPages] = useState(1); // 총 페이지 수
-    const [subCategoryFilter, setSubCategoryFilter] = useState('all'); // 소카테고리 필터 상태
+    const [subCategoryFilter, setSubCategoryFilter] = useState("all"); // 소카테고리 필터 상태
     const [viewMode, setViewMode] = useState('list'); // 뷰 모드 상태
 
-    // 게시물 데이터를 가져오는 useEffect 훅
+    // 소카테고리 상태 관리
+    const handleSubCategoryChange = (category) => {
+        // 메뉴에 따른 필터 값을 명확하게 지정
+        if (category === "🅰️전체") {
+            setSubCategoryFilter("all"); // 전체 조회
+        } else if (category === "🗽자유게시판") {
+            setSubCategoryFilter("자유게시판");
+        } else if (category === "👖데일리룩게시판") {
+            setSubCategoryFilter("데일리룩게시판");
+        } else if (category === "❔질문게시판") {
+            setSubCategoryFilter("질문게시판");
+        }
+        console.log("소카테고리 필터 설정됨:", category);
+        setCurrentPage(1); // 소카테고리 변경 시 페이지를 첫 페이지로 초기화
+    };
+
+    // API 호출 시 동적으로 소카테고리 필터 추가
     useEffect(() => {
         const fetchPosts = async () => {
-            setLoading(true); // 로딩 시작
+            setLoading(true);
             try {
-                // 서버에서 게시물을 가져올 때 userId 파라미터를 포함하지 않음
                 const response = await api.get('/posts', {
                     params: {
-                        category: subCategoryFilter === 'all' ? ['자유게시판', '데일리룩', '질문게시판'] : [subCategoryFilter],
+                        mainCategories: ['커뮤니티'],
+                        smallCategories: subCategoryFilter === 'all' ? null : [subCategoryFilter], // null로 설정하여 전체 조회
                         searchTerm: debouncedSearchTerm,
                         searchMode,
                         sortBy,
@@ -49,41 +65,37 @@ const Community = () => {
                         size: postsPerPage,
                     },
                     paramsSerializer: params => {
-                        // 배열 파라미터를 서버에서 받을 수 있도록 문자열로 변환
                         return Object.keys(params)
-                            .map(key => Array.isArray(params[key]) ? params[key].map(val => `${key}=${val}`).join('&') : `${key}=${params[key]}`)
-                            .join('&');
+                            .filter(key => params[key] !== null) // null인 경우는 필터링
+                            .map(key => Array.isArray(params[key])
+                                ? params[key].map(val => `${key}=${val}`).join('&')
+                                : `${key}=${params[key]}`
+                            ).join('&');
                     }
                 });
-                setPosts(response.data.posts || []); // 응답 데이터에서 게시물 목록 설정
-                setTotalPages(response.data.totalPages); // 총 페이지 수 설정
+                console.log("API 응답 데이터:", response.data);
+                console.log("소카테고리 필터 상태:", subCategoryFilter); // 현재 필터 상태를 콘솔에 출력
+                setPosts(response.data.posts || []);
+                setFilteredPosts(response.data.posts || []);
+                setTotalPages(response.data.totalPages);
             } catch (error) {
-                console.error('게시물 데이터를 가져오는 데 실패했습니다:', error); // 에러 처리
+                console.error('게시물 데이터를 가져오는 데 실패했습니다:', error);
             } finally {
-                setLoading(false); // 로딩 종료
+                setLoading(false);
             }
         };
 
-        fetchPosts(); // 게시물 데이터 가져오기 함수 호출
+        fetchPosts();
     }, [debouncedSearchTerm, searchMode, sortBy, direction, currentPage, subCategoryFilter]);
 
 
-    // posts 상태가 변경될 때 filteredPosts 상태 업데이트
-    useEffect(() => {
-        if (subCategoryFilter === 'all') {
-            setFilteredPosts(posts); // 전체 게시물을 필터링된 게시물로 설정
-        } else {
-            setFilteredPosts(posts.filter((post) => post.smallCategory === subCategoryFilter)); // 소카테고리 필터링
-        }
-    }, [subCategoryFilter, posts]);
-
     // 정렬 기준 변경 핸들러
     const handleSortChange = (event) => {
-        const selectedSort = event.target.value; // 선택한 정렬 기준
-        const [field, dir] = selectedSort.split('-'); // 필드와 방향 분리
-        setSortBy(field); // 정렬 기준 업데이트
-        setDirection(dir); // 정렬 방향 업데이트
-        setCurrentPage(1); // 첫 페이지로 리셋
+        const selectedSort = event.target.value;
+        const [field, dir] = selectedSort.split('-');
+        setSortBy(field);
+        setDirection(dir);
+        setCurrentPage(1);
     };
 
     // 검색 입력 변경 핸들러
@@ -107,12 +119,6 @@ const Community = () => {
         setCurrentPage(page); // 현재 페이지 상태 업데이트
     };
 
-    // 소카테고리 변경 핸들러
-    const handleSubCategoryChange = (event) => {
-        setSubCategoryFilter(event.target.value); // 소카테고리 상태 업데이트
-        setCurrentPage(1); // 첫 페이지로 리셋
-    };
-
     // 뷰 모드 변경 핸들러
     const handleViewModeChange = (mode) => {
         setViewMode(mode); // 뷰 모드 상태 업데이트
@@ -126,37 +132,33 @@ const Community = () => {
     // 컴포넌트 반환
     return (
         <div className="informationboard-container">
+            {loading && <LoadingModal />}
+            <Banner src={banner1} title="💬커뮤니티 게시판" />
 
-           {/* 로딩 */}
-           {loading && <LoadingModal />}
+            <div className="information-container">
+                <PageSubMenu
+                    items={menuItems}
+                    activeIndex={activeIndex}
+                    setActiveIndex={setActiveIndex}
+                    onItemClick={(item, index) => {
+                        handleSubCategoryChange(item);
+                    }}
+                />
+            </div>
 
-           {/* 배너 */}
-           <Banner src={banner1} title="💬커뮤니티 게시판" />
+            <div className="post-head-container">
+                <ViewModeToggle viewMode={viewMode} onChange={handleViewModeChange}/>
+                <SearchBar searchTerm={searchTerm} searchMode={searchMode} onSearchChange={handleSearchChange}
+                           onSearchModeChange={handleSearchModeChange} onSearchSubmit={handleSearchSubmit}/>
+                <SortDropdown sortBy={sortBy} direction={direction} onSortChange={handleSortChange}/>
+            </div>
 
-           {/* 서브 메뉴 */}
-           <div className="information-container"><PageSubMenu items={menuItems} activeIndex={activeIndex} setActiveIndex={setActiveIndex} onItemClick={(item, index) => { const value = item === "🅰️전체" ? "all" : item; handleSubCategoryChange({ target: { value } }); }} /></div>
-
-        <div className="post-head-container">
-           {/* 뷰 전환 버튼 컴포넌트 */}
-           <ViewModeToggle viewMode={viewMode} onChange={handleViewModeChange} />
-
-            {/* 검색창 컴포넌트 */}
-            <SearchBar searchTerm={searchTerm} searchMode={searchMode} onSearchChange={handleSearchChange} onSearchModeChange={handleSearchModeChange} onSearchSubmit={handleSearchSubmit} />
-
-            {/* 정렬 컴포넌트 */}
-            <SortDropdown sortBy={sortBy} direction={direction} onSortChange={handleSortChange} />
+            <div> {viewMode === 'grid' ? (<ListMode posts={filteredPosts}/>) : (<CardMode posts={filteredPosts}/>)} </div>
+            <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange}/>
+            <div className="post-button-container">
+                <Link to="/write" className="ShadowButton-inline" state={{category: '커뮤니티'}}><ShadowButton>글작성</ShadowButton></Link>
+            </div>
         </div>
-
-        {/* 게시글 (리스트/액자형) 컴포넌트 */}
-        <div> {viewMode === 'grid' ? ( <ListMode posts={filteredPosts} /> ) : ( <CardMode posts={filteredPosts} /> )} </div>
-
-        {/* 페이징 컴포넌트 */}
-            <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
-
-        {/* 글작성 버튼 컴포넌트 */}
-        <div className="post-button-container"><Link to="/write" className="ShadowButton-inline" state={{ category: '커뮤니티' }}><ShadowButton>글작성</ShadowButton></Link></div>
-
-    </div>
     );
 };
 
