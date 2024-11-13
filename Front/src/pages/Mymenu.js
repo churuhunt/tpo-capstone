@@ -11,6 +11,7 @@ import LoadingModal from '../components/LoadingModal';
 import CustomizationPage from '../components/CustomizationPage';
 import ProfileDec from '../components/ProfileDec';
 import FriendList from '../components/FriendList';
+import MyhomeRec from '../components/MyhomeRec';
 import api from '../axios';
 
 import { Chart as ChartJS, LinearScale, CategoryScale, PointElement, LineElement } from 'chart.js';
@@ -19,7 +20,7 @@ ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement);
 
 const MyMenu = () => {
     const { userId: paramUserId } = useParams();
-    const [menuItems, setMenuItems] = useState(["게시물", "방명록", "활동통계", "커스텀"]);
+    const [menuItems, setMenuItems] = useState(["게시물", "방명록", "활동통계", "추천글", "커스텀" ]);
     const [activeIndex, setActiveIndex] = useState(0);
     const [points, setPoints] = useState(0);
     const [profileImage, setProfileImage] = useState(null);
@@ -230,6 +231,8 @@ const MyMenu = () => {
             setActiveTab('ActivityDashboard');
         } else if (item === "방명록") {
             setActiveTab('guestbook');
+        }  else if (item === "추천글") {
+            setActiveTab('myhomerec');
         } else if (item === "커스텀") {
             setActiveTab("custom");
         }
@@ -284,6 +287,7 @@ const MyMenu = () => {
                             {activeTab === 'custom' && (<CustomizationPage setTempProfileImage={setTempProfileImage} setTempBackgroundImage={setTempBackgroundImage} onSave={handleSave} onCancel={handleCancel} points={points} updatePoints={setPoints} userId={paramUserId} items={ownedItems} />)}
                             {activeTab === 'follower' && <FriendList type="follower" />}
                             {activeTab === 'following' && <FriendList type="following" />}
+                            {activeTab === 'myhomerec' && <MyhomeRec />}
                         </div>
                     </div>
                 </>
