@@ -1,26 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Guestbook.css';
+import api from '../axios';
 
 const Guestbook = () => {
     const [comments, setComments] = useState([]);
     const [newComment, setNewComment] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const handleAddComment = () => {
-        if (newComment.trim()) {
-            setComments([
-                {
-                    id: comments.length + 1,
-                    profileImage: 'https://via.placeholder.com/40',
-                    name: 'GuestUser',
-                    date: new Date().toISOString().split('T')[0],
-                    content: newComment,
-                    profileLink: '/guestuser'
-                },
-                ...comments, // 새로운 댓글이 위로 오도록 설정
-            ]);
-            setNewComment('');
+    // 방명록 댓글 목록을 불러오는 함수
+    const fetchComments = async () => {
+        setLoading(true);
+        try {
+            const response = await api.get('/myhome/guestbook/comments');
+            const commentsWithDefaultImages = response.data.map(comment => ({
+                ...comment,
+                profileImageUrl: comment.profileImageUrl || 'https://via.placeholder.com/40'
+            }));
+            setComments(commentsWithDefaultImages);
+        } catch (error) {
+            console.error('방명록 댓글을 불러오는 중 오류가 발생했습니다:', error);
+        } finally {
+            setLoading(false);
         }
     };
+
+    // 댓글 추가 함수
+    const handleAddComment = async () => {
+        if (newComment.trim()) {
+            try {
+                const response = await api.post('/myhome/guestbook/comments', { content: newComment }); // 새 댓글 서버에 저장
+                const newCommentData = response.data;
+
+                // 상태를 최신 댓글 목록으로 갱신
+                setComments((prevComments) => [
+                    newCommentData,
+                    ...prevComments, // 새로운 댓글을 상단에 추가
+                ]);
+                setNewComment(''); // 입력 필드 초기화
+            } catch (error) {
+                console.error('방명록 댓글을 추가하는 중 오류가 발생했습니다:', error);
+            }
+        }
+    };
+
+    // 컴포넌트가 처음 렌더링될 때 댓글 목록을 불러옴
+    useEffect(() => {
+        fetchComments();
+    }, []);
 
     return (
         <div className="activity-dashboard-guestbook-container">
@@ -28,13 +54,13 @@ const Guestbook = () => {
             <div className="activity-dashboard-guestbook-comments">
                 {comments.map((comment) => (
                     <div key={comment.id} className="activity-dashboard-guestbook-comment">
-                        <a href={comment.profileLink} className="activity-dashboard-guestbook-comment-profile-link">
-                            <img src={comment.profileImage} alt="Profile" className="activity-dashboard-guestbook-comment-profile" />
+                        <a href={`/profile/${comment.userId}`} className="activity-dashboard-guestbook-comment-profile-link">
+                            <img src={comment.profileImageUrl || 'https://via.placeholder.com/40'}  alt="Profile" className="activity-dashboard-guestbook-comment-profile" />
                         </a>
                         <div className="activity-dashboard-guestbook-comment-content">
                             <div className="activity-dashboard-guestbook-comment-header">
-                                <a href={comment.profileLink} className="activity-dashboard-guestbook-comment-name">{comment.name}</a>
-                                <span className="activity-dashboard-guestbook-comment-date">{comment.date}</span>
+                                <a href={`/profile/${comment.userId}`} className="activity-dashboard-guestbook-comment-name">{comment.name || 'Unknown User'}</a>
+                                <span className="activity-dashboard-guestbook-comment-date">{new Date(comment.date).toLocaleDateString()}</span>
                             </div>
                             <p className="activity-dashboard-guestbook-comment-text">{comment.content}</p>
                         </div>
