@@ -20,9 +20,6 @@ import ScrollToTop from './components/ScrollToTop';
 import Recommendedboard from './pages/Recommendedboard';
 import Notification from './pages/Notification';
 import ItemRegistrationForm from "./pages/ItemRegistrasionForm";
-import FreePage from "./pages/FreePage";
-import DailyLook from "./pages/DailyLook";
-import QuestionsPage from "./pages/QuestionsPage";
 const App = () => {
   return (
     <div className="app-container">
@@ -47,9 +44,6 @@ const App = () => {
             <Route path="/recommendedboard" element={<Recommendedboard />} />
             <Route path="/notification" element={<Notification />} />
             <Route path="/itemregistrationForm" element={<ItemRegistrationForm />} />
-            <Route path="/free" element={<FreePage />} />
-            <Route path="/DailyLook" element={<DailyLook />} />
-            <Route path="/Questions" element={<QuestionsPage />} />
           </Routes>
         </div>
       </Router>

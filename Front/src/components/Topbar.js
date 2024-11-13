@@ -89,9 +89,9 @@ const Topbar = () => {
           <nav>
             <ul>
               <li>
-                <li><Link to="/notification?subcategory=updates">📢공지사항</Link></li>
+                <li><Link to="/notification?subcategory=announcements">📢공지사항</Link></li>
                 <li><Link to="/notification?subcategory=events">🎁이벤트</Link></li>
-                <li><Link to="/notification?subcategory=announcements">🆙업데이트</Link></li>
+                <li><Link to="/notification?subcategory=updates">🆙업데이트</Link></li>
               </li>
               <li>
               <li><Link to="/community?subcategory=free">🗽자유게시판</Link></li>
