@@ -69,7 +69,6 @@ const Topbar = () => {
       <nav>
         <ul>
           <li><Link to="/notification">📢공지사항</Link></li>
-          <li><Link to="/popularity">🔥인기</Link></li>
           <li><Link to="/community">💬커뮤니티</Link></li>
           <li><Link to="/recommendedboard">👍추천</Link></li>
           <li><Link to="/informationboard">ℹ️정보</Link></li>
@@ -94,14 +93,6 @@ const Topbar = () => {
                 <li><Link to="/notification/events">🎁이벤트</Link></li>
                 <li><Link to="/notification/announcements">🆙업데이트</Link></li>
               </li>
-
-              <li>
-                <li><Link to="/popularity/daily">😺일간 게시판</Link></li>
-                <li><Link to="/popularity/weekly">😸주간게시판</Link></li>
-                <li><Link to="/popularity/monthly">😹월간게시판</Link></li>
-                <li><Link to="/popularity/monthly">😻연간게시판</Link></li>
-              </li>
-
               <li>
                 <li><Link to="/free">🗽자유게시판</Link></li>
                 <li><Link to="/DailyLook">👖데일리룩게시판</Link></li>
@@ -120,8 +111,7 @@ const Topbar = () => {
                 <li><Link to="/ranking">🕜월간</Link></li>
               </li>
               <li>
-                <li><Link to="/profile" onClick={(e) => handleProtectedRoute(e, '/profile')}>👤프로필</Link></li>
-                <li><Link to="/settings" onClick={(e) => handleProtectedRoute(e, '/settings')}>⚙️설정</Link></li>
+                <li><Link to="/profile" onClick={(e) => handleProtectedRoute(e, '/profile')}>👤내정보관리</Link></li>
               </li>
             </ul>
           </nav>

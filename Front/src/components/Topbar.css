@@ -91,31 +91,31 @@ nav ul li {
 .submenu-2 {
   position: relative;
   top: 50px;
-  left: -37px;
+  left: -77px;
 }
 
 .submenu-2 > nav > ul > li:nth-child(2) {
   position: relative;
   top:0px;
-  left: -73px;
+  left: -68px;
 }
 
 .submenu-2 > nav > ul > li:nth-child(3) {
   position: relative;
   top:0px;
-  left: -165px;
+  left: -22px;
 }
 
 .submenu-2 > nav > ul > li:nth-child(4) {
   position: relative;
   top:0px;
-  left: -122px;
+  left: -87px;
 }
 
 .submenu-2 > nav > ul > li:nth-child(5) {
   position: relative;
   top:0px;
-  left: -180px;
+  left: -28px;
 }
 
 .submenu-2 > nav > ul > li:nth-child(6) {
