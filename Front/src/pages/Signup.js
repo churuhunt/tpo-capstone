@@ -183,7 +183,7 @@ const Signup = () => {
                 <button className="Sign-up-page-button2" type="button" onClick={handleNicknameCheck}>중복확인</button>
               </div>
 
-              <button className="Login-page-control-button Login-page-up">가입하기</button>
+              <button className="Login-page-control-button Login-page-up" onClick={handleSignup}>가입하기</button>
             </form>
           </div>
         </div>
