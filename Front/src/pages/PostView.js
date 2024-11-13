@@ -55,20 +55,22 @@ const PostView = () => {
     const fetchPost = async () => {
       try {
         setLoading(true);
-        const response = await api.get(`/posts/${postId}`); // axios 인스턴스 사용
-        setPost(response.data);
-        setComments(response.data.comments || []);
-        // 현재 게시물이 북마크 상태인지 확인합니다.
-        // 북마크 상태 확인 로직을 분리
-        const bookmarkStatus = await checkBookmarkStatus(response.data.id); // 수정된 코드
-        setIsBookmarked(bookmarkStatus);
-        if (response.data.isBlind) {
+        const [postResponse, commentsResponse, bookmarkStatus] = await Promise.all([
+        api.get(`/posts/${postId}`),
+        api.get(`/posts/${postId}/comments`),
+        checkBookmarkStatus()
+        ]);
+        setPost(postResponse.data); // 게시물 데이터 설정
+        setComments(commentsResponse.data || []); // 댓글 데이터 설정
+        setIsBookmarked(bookmarkStatus); // 북마크 상태 설정
+        if (postResponse.data.isBlind) {
           setIsBlind(true);
         }
       } catch (error) {
-        console.error('게시물을 불러오는 중 오류가 발생했습니다:', error);
+        console.error('데이터를 불러오는 중 오류가 발생했습니다:', error);
+        setError('데이터를 불러오는 중 오류가 발생했습니다.');
       } finally {
-        setLoading(false); // 로딩 완료
+        setLoading(false); // 로딩 상태 종료
       }
     };
 
@@ -396,7 +398,7 @@ const PostView = () => {
                             alt={`${comment.authorNickname} 프로필`}
                             className="PostView-comment-profile-image"
                         />
-                        <p className="PostView-comment-userid">{comment.authorId}</p>
+                        <p className="PostView-comment-userid">{comment.authorid}</p>
                         <p className="PostView-comment-nickname">{comment.authorNickname}</p>
                         <p className="PostView-comment-date">
                           {new Date(comment.date).toLocaleDateString()} {/* 작성일자 표시 */}
