@@ -10,44 +10,24 @@ const CustomizationPage = ({
                              points,
                              updatePoints, // 차감된 포인트를 반영할 상위 컴포넌트의 함수
                              userId, // userId를 props로 받음
+                             items,
                            }) => {
   const defaultItems = [
-    { item_category: "PROFILE", item_name: "기본 1💰 Gif 2💰", image_url: "", isUploadOption: true },
-    { item_category: "BACKGROUND", item_name: "기본 1💰 Gif 2💰", image_url: "", isUploadOption: true },
   ];
 
-  const [items, setItems] = useState(defaultItems); // 초기 상태 설정
   const [selectedCategory, setSelectedCategory] = useState("PROFILE");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
   useEffect(() => {
-    fetchOwnedItems(); // 구매한 아이템 목록을 불러오기
-  }, []);
-
-  useEffect(() => {
     setCurrentPage(1);
   }, [selectedCategory]);
 
-  const fetchOwnedItems = async () => {
-    try {
-      const response = await api.get('/shop/owned-items');
-      console.log('Owned items response:', response.data); // 데이터 구조 확인
-      const ownedItems = response.data.map(item => ({
-        item_category: item.category,
-        item_name: item.name,
-        image_url: item.imageUrl,
-      }));
-      setItems([...defaultItems, ...ownedItems]);
-    } catch (error) {
-      console.error('Failed to fetch owned items:', error);
-    }
-  };
-
-  const filteredItems = items.filter((item) => item.item_category === selectedCategory);
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
+    const combinedItems = [...defaultItems, ...items];
+    const filteredItems = combinedItems.filter((item) => item.item_category === selectedCategory);
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
   const nextPage = () => {
     if (currentPage < Math.ceil(filteredItems.length / itemsPerPage)) {

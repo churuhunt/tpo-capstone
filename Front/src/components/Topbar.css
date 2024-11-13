@@ -188,7 +188,7 @@ nav ul li {
 }
 
 
-.top-menu:not(:hover) .submenu {
+.top-menu:not(:hover) .submenu-2 {
   animation: floatDown 0.5s ease-out forwards;
   opacity: 0;
   visibility: hidden;

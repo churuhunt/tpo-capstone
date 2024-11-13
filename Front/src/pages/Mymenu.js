@@ -43,6 +43,11 @@ const MyMenu = () => {
     const [decId, setDecId] = useState(0);
     const [guestbookComments, setGuestbookComments] = useState([]);
     const [newGuestbookComment, setNewGuestbookComment] = useState('');
+    const [ownedItems, setOwnedItems] = useState([]);
+    const defaultItems = [
+        { item_category: "PROFILE", item_name: "기본 1💰/Gif 2💰", image_url: "", isUploadOption: true },
+        { item_category: "BACKGROUND", item_name: "기본 1💰/Gif 2💰", image_url: "", isUploadOption: true },
+    ];
 
     const fetchData = async () => {
         setLoading(true);
@@ -94,6 +99,14 @@ const MyMenu = () => {
                         profileImageUrl: comment.profileImageUrl || 'https://via.placeholder.com/40'
                     }));
                     setGuestbookComments(commentsWithDefaultImages);
+                }),
+                api.get('/shop/owned-items').then(response => {
+                    const fetchedItems = response.data.map(item => ({
+                        item_category: item.category,
+                        item_name: item.name,
+                        image_url: item.imageUrl,
+                    }));
+                    setOwnedItems([...defaultItems, ...fetchedItems]);
                 })
             ]);
 
@@ -267,25 +280,8 @@ const MyMenu = () => {
                         <div className="my-menu-content2">
                             {activeTab === 'myhomepost' && <Myhomepost posts={userPosts} />}
                             {activeTab === 'ActivityDashboard' && <ActivityDashboard stats={activityStats} />}
-                            {activeTab === 'guestbook' && (
-                                <Guestbook
-                                    comments={guestbookComments}
-                                    setComments={setGuestbookComments}
-                                    newComment={newGuestbookComment}
-                                    setNewComment={setNewGuestbookComment}
-                                />
-                            )}
-                            {activeTab === 'custom' && (
-                                <CustomizationPage
-                                    setTempProfileImage={setTempProfileImage}
-                                    setTempBackgroundImage={setTempBackgroundImage}
-                                    onSave={handleSave}
-                                    onCancel={handleCancel}
-                                    points={points}
-                                    updatePoints={setPoints} // 로컬 포인트 업데이트 함수
-                                    userId={paramUserId}
-                                />
-                            )}
+                            {activeTab === 'guestbook' && ( <Guestbook comments={guestbookComments} setComments={setGuestbookComments} newComment={newGuestbookComment} setNewComment={setNewGuestbookComment} /> )}
+                            <CustomizationPage setTempProfileImage={setTempProfileImage} setTempBackgroundImage={setTempBackgroundImage} onSave={handleSave} onCancel={handleCancel} points={points} updatePoints={setPoints} userId={paramUserId} items={ownedItems} />
                             {activeTab === 'follower' && <FriendList type="follower" />}
                             {activeTab === 'following' && <FriendList type="following" />}
                         </div>
