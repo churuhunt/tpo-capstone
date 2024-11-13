@@ -2,51 +2,27 @@ import React, { useState, useEffect } from 'react';
 import './Guestbook.css';
 import api from '../axios';
 
-const Guestbook = () => {
-    const [comments, setComments] = useState([]);
-    const [newComment, setNewComment] = useState('');
+const Guestbook = ({ comments, setComments, newComment, setNewComment }) => {
     const [loading, setLoading] = useState(false);
-
-    // 방명록 댓글 목록을 불러오는 함수
-    const fetchComments = async () => {
-        setLoading(true);
-        try {
-            const response = await api.get('/myhome/guestbook/comments');
-            const commentsWithDefaultImages = response.data.map(comment => ({
-                ...comment,
-                profileImageUrl: comment.profileImageUrl || 'https://via.placeholder.com/40'
-            }));
-            setComments(commentsWithDefaultImages);
-        } catch (error) {
-            console.error('방명록 댓글을 불러오는 중 오류가 발생했습니다:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     // 댓글 추가 함수
     const handleAddComment = async () => {
         if (newComment.trim()) {
             try {
-                const response = await api.post('/myhome/guestbook/comments', { content: newComment }); // 새 댓글 서버에 저장
+                setLoading(true);
+                const response = await api.post('/myhome/guestbook/comments', { content: newComment });
                 const newCommentData = response.data;
 
-                // 상태를 최신 댓글 목록으로 갱신
-                setComments((prevComments) => [
-                    newCommentData,
-                    ...prevComments, // 새로운 댓글을 상단에 추가
-                ]);
+                // 상위 컴포넌트의 comments 상태 업데이트
+                setComments((prevComments) => [newCommentData, ...prevComments]);
                 setNewComment(''); // 입력 필드 초기화
             } catch (error) {
                 console.error('방명록 댓글을 추가하는 중 오류가 발생했습니다:', error);
+            } finally {
+                setLoading(false);
             }
         }
     };
-
-    // 컴포넌트가 처음 렌더링될 때 댓글 목록을 불러옴
-    useEffect(() => {
-        fetchComments();
-    }, []);
 
     return (
         <div className="activity-dashboard-guestbook-container">

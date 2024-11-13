@@ -41,6 +41,8 @@ const MyMenu = () => {
     const [currentUserId, setCurrentUserId] = useState(null);
     const [loggedInUserId, setLoggedInUserId] = useState(null);
     const [decId, setDecId] = useState(0);
+    const [guestbookComments, setGuestbookComments] = useState([]);
+    const [newGuestbookComment, setNewGuestbookComment] = useState('');
 
     const fetchData = async () => {
         setLoading(true);
@@ -85,6 +87,13 @@ const MyMenu = () => {
                     const totalVisitorCount = response.data;
                     setVisitorCount(totalVisitorCount);
                     setVisitorDataPoints(Array(6).fill(totalVisitorCount));
+                }),
+                api.get('/myhome/guestbook/comments').then(response => {
+                    const commentsWithDefaultImages = response.data.map(comment => ({
+                        ...comment,
+                        profileImageUrl: comment.profileImageUrl || 'https://via.placeholder.com/40'
+                    }));
+                    setGuestbookComments(commentsWithDefaultImages);
                 })
             ]);
 
@@ -258,7 +267,14 @@ const MyMenu = () => {
                         <div className="my-menu-content2">
                             {activeTab === 'myhomepost' && <Myhomepost posts={userPosts} />}
                             {activeTab === 'ActivityDashboard' && <ActivityDashboard stats={activityStats} />}
-                            {activeTab === 'guestbook' && <Guestbook />}
+                            {activeTab === 'guestbook' && (
+                                <Guestbook
+                                    comments={guestbookComments}
+                                    setComments={setGuestbookComments}
+                                    newComment={newGuestbookComment}
+                                    setNewComment={setNewGuestbookComment}
+                                />
+                            )}
                             {activeTab === 'custom' && (
                                 <CustomizationPage
                                     setTempProfileImage={setTempProfileImage}
