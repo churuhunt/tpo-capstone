@@ -34,6 +34,15 @@ public class UserProfileService {
         return userAccount.getUserProfile();
     }
 
+    @Transactional
+    public void updateIntroduction(Long userId, String introduction) {
+        UserProfile userProfile = userProfileRepository.findByUser_Id(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User profile not found"));
+
+        userProfile.setIntroduction(introduction);
+        userProfileRepository.save(userProfile);
+    }
+
     /**
      * 특정 사용자의 프로필 업데이트
      *

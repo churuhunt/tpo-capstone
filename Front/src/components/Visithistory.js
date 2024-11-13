@@ -14,22 +14,17 @@ const Visithistory = ({ visitorCount, visitorDataPoints, introduction: initialIn
         setLocalIntroduction(initialIntroduction); // 초기 소개글 설정
     }, [initialIntroduction]);
 
-    // handleSaveClick에서 onSaveIntroduction 호출
-    const handleSaveClick = () => {
-        onSaveIntroduction(localIntroduction); // 부모 컴포넌트로 저장 요청
-        setIsEditing(false);
-    };
 
     return (
         <div className="visit-history-container">
             <div className="visit-history-container1">
                 <div className="visit-history-container1-1">
                     <h2 className="visit-history-title">소개</h2>
-                    {isEditable && (isEditing ? (
-                        <button onClick={handleSaveClick}>Save</button>
+                    {isEditing ? (
+                        <button onClick={() => { onSaveIntroduction(localIntroduction); setIsEditing(false); }}>Save</button>
                     ) : (
                         <button onClick={() => setIsEditing(true)}>Edit</button>
-                    ))}
+                    )}
                 </div>
                 {isEditing ? (
                     <textarea

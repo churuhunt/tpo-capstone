@@ -194,5 +194,22 @@ public class MyHomeController {
         return ResponseEntity.ok(activityStatistics);
     }
 
+    // 소개글 업데이트 API
+    @PutMapping("/update-introduction")
+    public ResponseEntity<String> updateIntroduction(@RequestBody String introduction, @AuthenticationPrincipal CustomUserDetails userDetails) {
+        // 인증된 사용자 ID를 가져옵니다.
+        Long userId = userDetails.getUserAccountDto().getId();
+
+        try {
+            // 소개글을 업데이트합니다.
+            userProfileService.updateIntroduction(userId, introduction);
+            return ResponseEntity.ok("Introduction updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to update introduction");
+        }
+
+    }
+
 
 }

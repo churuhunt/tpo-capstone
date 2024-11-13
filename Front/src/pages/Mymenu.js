@@ -168,23 +168,25 @@ const MyMenu = () => {
         }
     };
 
-const handleSaveClick = async () => {
-    setLoading(true);
-    try {
-        // 소개글 저장 요청
-        if (introduction) {
-            await api.post('/myhome/update-introduction', { introduction }, {
-                headers: { 'Content-Type': 'application/json' }
-            });
+    const handleSaveClick = async (newIntroduction) => {
+        setLoading(true);
+        try {
+            // 서버에 소개글 업데이트 API 호출
+            const response = await api.put('/myhome/update-introduction',
+                newIntroduction, // newIntroduction 문자열 자체를 전달
+                { headers: { 'Content-Type': 'application/json' } }
+            );
+
+            // 소개글 업데이트 후 상태 설정
+            setIntroduction(response.data.introduction);
+            alert('소개글이 저장되었습니다.');
+        } catch (error) {
+            console.error("저장 실패:", error);
+            alert('소개글 저장에 실패했습니다.');
+        } finally {
+            setLoading(false);
         }
-        alert('저장되었습니다.');
-    } catch (error) {
-        console.error("저장 실패:", error);
-        alert('저장에 실패했습니다.');
-    } finally {
-        setLoading(false);
-    }
-};
+    };
 
     // 포인트 차감 함수
     const updatePoints = (amount) => {
