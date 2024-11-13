@@ -8,6 +8,7 @@ import PageSubMenu from '../components/PageSubMenu';
 import Banner from '../components/Banner';
 import banner1 from '../image/rankingbanner.jpg';
 import LoadingModal from '../components/LoadingModal';
+import { Link } from 'react-router-dom';
 
 const Rankings = () => {
   const menuItems = ["일간", "주간", "월간"];
@@ -126,16 +127,19 @@ const Rankings = () => {
                     }}
                   >
                     <td>{getRankIcon(realIndex)}</td>
+                    <Link to={`/mymenu/${rank.id}`}>
                     <td className="profile-cell">
                       {rank.profileImageUrl ? (
                         <img src={rank.profileImageUrl} alt="프로필 사진" style={{ width: '60px', height: '60px' }} />
                       ) : (
                         <img src={profileImage} alt="기본 프로필 사진" style={{ width: '60px', height: '60px' }} />
                       )}
-                    </td>
-                    <td onClick={() => handleNicknameClick(rank.id)} style={{ cursor: 'pointer', color: 'black' }}>
-                      {rank.nickname}
-                    </td>
+                    </td></Link>
+                        <Link to={`/mymenu/${rank.id}`} style={{ textDecoration: 'none', whiteSpace: 'nowrap' }}>
+                          <td onClick={() => handleNicknameClick(rank.id)} style={{ cursor: 'pointer', color: 'black' }}>
+                            {rank.nickname}
+                          </td>
+                        </Link>
                     <td>{rank.points}</td>
                   </tr>
                 );
@@ -162,26 +166,6 @@ const Rankings = () => {
             </button>
             <div style={{ opacity: 0, fontSize: '1rem', display: 'flex' }}>{activeTab}</div>
           </div>
-
-          {isModalOpen && (
-            <div className="modal">
-              <div className="modal-content">
-                <span className="close" onClick={() => setIsModalOpen(false)}>
-                  &times;
-                </span>
-                <h3>사용자 요약 정보</h3>
-                {userSummary ? (
-                  <div>
-                    <p>닉네임: {userSummary.nickname}</p>
-                    <p>포인트: {userSummary.points}</p>
-                    <p>아이디: {userSummary.userId}</p>
-                  </div>
-                ) : (
-                  <p>요약 정보를 불러오는 중입니다...</p>
-                )}
-              </div>
-            </div>
-          )}
         </>
       )}
     </div>

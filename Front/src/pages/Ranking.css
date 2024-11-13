@@ -144,6 +144,8 @@
   align-items: flex-start; /* 셀의 상단에서 이미지 정렬 */
   justify-content: center;
 }
+
+
 .ranking-container h2 {
   color: #fff;
   font-size: 3vh;

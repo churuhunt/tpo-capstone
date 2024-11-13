@@ -148,7 +148,7 @@ const Community = () => {
         </div>
 
         {/* 게시글 (리스트/액자형) 컴포넌트 */}
-        <div> {viewMode === 'list' ? ( <ListMode posts={filteredPosts} /> ) : ( <CardMode posts={filteredPosts} /> )} </div>
+        <div> {viewMode === 'grid' ? ( <ListMode posts={filteredPosts} /> ) : ( <CardMode posts={filteredPosts} /> )} </div>
 
         {/* 페이징 컴포넌트 */}
             <Pagination totalPages={totalPages} currentPage={currentPage} onPageChange={handlePageChange} />
