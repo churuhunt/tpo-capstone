@@ -281,7 +281,7 @@ const MyMenu = () => {
                             {activeTab === 'myhomepost' && <Myhomepost posts={userPosts} />}
                             {activeTab === 'ActivityDashboard' && <ActivityDashboard stats={activityStats} />}
                             {activeTab === 'guestbook' && ( <Guestbook comments={guestbookComments} setComments={setGuestbookComments} newComment={newGuestbookComment} setNewComment={setNewGuestbookComment} /> )}
-                            <CustomizationPage setTempProfileImage={setTempProfileImage} setTempBackgroundImage={setTempBackgroundImage} onSave={handleSave} onCancel={handleCancel} points={points} updatePoints={setPoints} userId={paramUserId} items={ownedItems} />
+                            {activeTab === 'custom' && (<CustomizationPage setTempProfileImage={setTempProfileImage} setTempBackgroundImage={setTempBackgroundImage} onSave={handleSave} onCancel={handleCancel} points={points} updatePoints={setPoints} userId={paramUserId} items={ownedItems} />)}
                             {activeTab === 'follower' && <FriendList type="follower" />}
                             {activeTab === 'following' && <FriendList type="following" />}
                         </div>
