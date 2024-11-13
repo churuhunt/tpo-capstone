@@ -24,6 +24,8 @@ const PostView = () => {
   const [newReply, setNewReply] = useState({}); // 대댓글 상태
   const [activeReply, setActiveReply] = useState(null); // 활성화된 대댓글 입력창 상태
   const [reportReason, setReportReason] = useState('');  // 신고 사유
+  const [reportTargetId, setReportTargetId] = useState(null);  // 신고 대상 ID
+  const [reportTargetType, setReportTargetType] = useState('post');  // 신고 대상 타입 ('post' 또는 'comment')
   const [isReportModalOpen, setIsReportModalOpen] = useState(false);  // 신고 모달 상태
   const [editingCommentId, setEditingCommentId] = useState(null);  // 댓글 수정 상태
   const [commentEditText, setCommentEditText] = useState('');  // 댓글 수정 텍스트
@@ -32,11 +34,10 @@ const PostView = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [commentId, setcommentId] = useState(null);
-const [loadingLike, setLoadingLike] = useState(false);
-const [loadingBookmark, setLoadingBookmark] = useState(false);
-const [loadingDislike, setLoadingDislike] = useState(false);
-const [loadingComment, setLoadingComment] = useState(false);
-const [loadingDelete, setLoadingDelete] = useState(false);
+  const [loadingBookmark, setLoadingBookmark] = useState(false);
+  const [loadingDislike, setLoadingDislike] = useState(false);
+  const [loadingComment, setLoadingComment] = useState(false);
+  const [loadingDelete, setLoadingDelete] = useState(false);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -78,15 +79,7 @@ const [loadingDelete, setLoadingDelete] = useState(false);
     }
   };
 
-    const fetchComments = async () => {
-      try {
-        const response = await api.get(`/posts/${postId}/comments`);
-        setComments(Array.isArray(response.data) ? response.data : []); // 배열이 아니면 빈 배열 설정
-      } catch (error) {
-        console.error("댓글을 불러오는 중 오류 발생:", error);
-        setComments([]); // 오류 발생 시 빈 배열로 설정
-      }
-    };
+
 
     const checkBookmarkStatus = async () => {
       try {
@@ -131,16 +124,35 @@ const [loadingDelete, setLoadingDelete] = useState(false);
   };
 
 
-// 댓글 등록
+// 댓글 등록 함수
   const handleCommentSubmit = async () => {
     if (!commentText.trim()) return;
-    setLoading(true);
+    setLoadingComment(true); // 로딩 상태를 시작
     try {
+      // 서버에 댓글을 등록 요청
       const response = await api.post(`/posts/${postId}/comments`, { content: commentText });
-      setComments([...comments, { ...response.data }]);
-      setCommentText('');
+      const newComment = response.data; // 서버에서 반환된 새 댓글 데이터
+
+      // 댓글 리스트 상태 업데이트 (기존 댓글에 새 댓글 추가)
+      setComments((prevComments) => [...prevComments, newComment]);
+      setCommentText(''); // 입력창 초기화
+
+      // 댓글 목록 다시 불러오기
+      await fetchComments();
+    } catch (error) {
+      console.error("댓글 등록 중 오류가 발생했습니다:", error);
     } finally {
-      setLoading(false);
+      setLoadingComment(false); // 로딩 상태 종료
+    }
+  };
+
+  const fetchComments = async () => {
+    try {
+      const response = await api.get(`/posts/${postId}/comments`);
+      setComments(Array.isArray(response.data) ? response.data : []); // 배열이 아니면 빈 배열 설정
+    } catch (error) {
+      console.error("댓글을 불러오는 중 오류 발생:", error);
+      setComments([]); // 오류 발생 시 빈 배열로 설정
     }
   };
 
@@ -170,24 +182,30 @@ const [loadingDelete, setLoadingDelete] = useState(false);
     }
   };
 
-  const handleOpenReportModal = () => {
-    setIsReportModalOpen(true);  // 신고 모달 열기
+  // 신고 모달 열기
+  const handleOpenReportModal = (id, type = 'post') => {
+    setReportTargetId(id);  // 신고 대상 ID 설정
+    setReportTargetType(type);  // 신고 대상 타입 설정
+    setIsReportModalOpen(true);  // 모달 열기
   };
 
+  // 신고 모달 닫기
   const handleCloseReportModal = () => {
-    setIsReportModalOpen(false);  // 신고 모달 닫기
+    setIsReportModalOpen(false);
+    setReportReason('');
   };
 
+  // 신고 제출
   const handleReportSubmit = async () => {
     if (!reportReason.trim()) {
       alert("신고 사유를 입력해 주세요.");
       return;
     }
     try {
-      await api.post(`/posts/${postId}/report`, { reason: reportReason }); // axios 인스턴스 사용
+      const url = reportTargetType === 'post' ? `/posts/${reportTargetId}/report` : `/comments/${reportTargetId}/report`;
+      await api.post(url, { reason: reportReason });
       alert("신고가 접수되었습니다.");
-      setIsReportModalOpen(false);  // 신고 후 모달 닫기
-      setReportReason('');  // 신고 사유 초기화
+      handleCloseReportModal();  // 신고 후 모달 닫기
     } catch (error) {
       console.error("신고 중 오류가 발생했습니다:", error);
     }
@@ -326,7 +344,7 @@ const [loadingDelete, setLoadingDelete] = useState(false);
           <button className="postview-but-a" onClick={handleDislike}>
             <FontAwesomeIcon icon={faThumbsDown}/> 비추천 {post.dislikes}
           </button>
-          <button className="postview-but-a" onClick={handleOpenReportModal}>
+          <button className="postview-but-a" onClick={() => handleOpenReportModal(postId, 'post')}>
             <FontAwesomeIcon icon={faExclamationTriangle}/> 신고
           </button>
           <button className="postview-but-a" onClick={handleDeletePost}>글 삭제</button>
@@ -351,7 +369,7 @@ const [loadingDelete, setLoadingDelete] = useState(false);
                         <button onClick={() => handleDislikeComment(comment.id)}>
                           <FontAwesomeIcon icon={faThumbsDown}/> 비추천 {comment.dislikes || 0}
                         </button>
-                        <button onClick={() => handleOpenReportModal(comment.id)}>
+                        <button onClick={() => handleOpenReportModal(comment.id, 'comment')}>
                           <FontAwesomeIcon icon={faExclamationTriangle}/> 신고
                         </button>
                         <button onClick={() => handleDeleteComment(comment.id)}>댓글 삭제</button>
