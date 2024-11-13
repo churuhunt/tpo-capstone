@@ -103,22 +103,24 @@ const Mainpage = () => {
             </Slide>
           </div>
 
-          <div className="content">
-            <PageSubMenu items={[]} activeIndex={0} setActiveIndex={() => {}} />
+<div className="content">
+  <PageSubMenu items={[]} activeIndex={0} setActiveIndex={() => {}} />
 
-            <div className="sections-container">
-              {/* 공지사항 섹션 */}
-              <div className="section">
-                <h2>📢 공지사항</h2>
-                <ul>
-                  {announcements.slice(0, 5).map((announcement, index) => (
-                    <li key={index} className="announcement-item">
+          <div className="sections-container">
+            {/* 공지사항 섹션 */}
+            <div className="section">
+              <h2>📢 공지사항</h2>
+              <ul className="announcement-list">
+                {announcements.slice(0, 5).map((announcement, index) => (
+                  <li key={index} className="announcement-item">
+                    <Link to={`/postview/${announcement.id}`} className="post-title-link">
                       <span className="announcement-title">{announcement.title}</span>
-                      <span className="announcement-date">{announcement.date}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                    </Link>
+                    <span className="announcement-date">{announcement.date}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
 
               {/* 인기 게시판 섹션 */}
               <div className="section section-with-border">

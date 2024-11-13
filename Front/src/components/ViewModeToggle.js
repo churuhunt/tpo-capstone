@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import './ViewModeToggle.css';
 
-import listViewIcon from '../image/listview.png';
-import gridViewIcon from '../image/gridview.png';
+import listViewIcon from '../image/gridview.png';
+import gridViewIcon from '../image/listview.png';
 
 const ViewModeToggle = ({ viewMode, onChange }) => {
     return (

@@ -72,3 +72,7 @@
 .Post-List-Mode-table a {
     text-decoration: none; /* 테이블 내 링크 밑줄 제거 */
 }
+
+.profile-image {
+    object-fit: cover; /* 이미지가 영역을 꽉 채우도록 설정 */
+}

@@ -3,6 +3,7 @@ import './ListMode.css';
 import { Link } from 'react-router-dom';
 
 const ListMode = ({ posts }) => {
+    const defaultImageUrl = "https://blog-ko.engram.us/content/images/size/w760h400/2023/12/tpo.png";
     return (
         <table className="Post-List-Mode-table">
             <thead>
@@ -24,7 +25,16 @@ const ListMode = ({ posts }) => {
                         <td>
                             <Link to={`/postview/${post.id}`} style={{ color: 'black' }}>{post.title}</Link>
                         </td>
-                        <td>{post.author}</td>
+                        <td>
+                            <div className="author-info">
+                                <img
+                                    src={post.profileImageUrl || defaultImageUrl}
+                                    alt={`${post.author} 프로필`}
+                                    className="profile-image"
+                                />
+                                <span>{post.author}</span>
+                            </div>
+                        </td>
                         <td>{new Date(post.date).toLocaleDateString()}</td>
                         <td>{post.views}</td>
                         <td>{post.likes}</td>
