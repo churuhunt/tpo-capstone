@@ -1,0 +1,181 @@
+.myhomebookmark-container {
+    width: 90%; /* 화면 전체 너비 */
+    margin: 0; /* 외부 여백 제거 */
+    padding: 0; /* 내부 여백 제거 */
+    box-sizing: border-box; /* 패딩 포함 너비 조정 */
+}
+
+.myhomebookmark {
+    background-color: #f9f9f9;
+    padding: 20px; /* 필요한 경우 패딩을 줄이거나 없앨 수 있음 */
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* 아래쪽 여백만 유지 */
+    width: 100%; /* 부모 컨테이너 너비에 맞추기 */
+}
+
+.myhomebookmark-title {
+    font-size: 20px;
+    font-weight: bold;
+    text-decoration: none;
+    color: black;
+}
+
+.myhomebookmark-title:hover {
+    text-decoration: underline;
+}
+
+.myhomebookmark-date {
+    color: #888;
+    font-size: 12px;
+}
+
+.myhomebookmark-content {
+    margin-top: 10px;
+    line-height: 1.5;
+}
+
+.myhomebookmark-show-more {
+    color: black;
+    background: none;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* Dynamic image layout */
+.myhomebookmark-images {
+    display: grid;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.myhomebookmark-images.layout-1 img {
+    width: 100%;
+    height: auto;
+}
+
+.myhomebookmark-images.layout-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.myhomebookmark-images.layout-3 {
+    grid-template-areas:
+        "big big"
+        "small small";
+}
+
+.myhomebookmark-images.layout-3 img:nth-child(1) {
+    grid-area: big;
+    width: 100%;
+    height: 100%;
+}
+
+.myhomebookmark-images.layout-3 img:nth-child(2),
+.myhomebookmark-images.layout-3 img:nth-child(3) {
+    width: 100%;
+    height: 100px;
+}
+
+.myhomebookmark-images.layout-4 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.myhomebookmark-images.layout-5 {
+    grid-template-areas:
+        "big big"
+        "small small small";
+}
+
+.myhomebookmark-images.layout-5 img:nth-child(1),
+.myhomebookmark-images.layout-5 img:nth-child(2) {
+    grid-area: big;
+    height: 150px;
+}
+
+.myhomebookmark-images.layout-5 img:nth-child(3),
+.myhomebookmark-images.layout-5 img:nth-child(4),
+.myhomebookmark-images.layout-5 img:nth-child(5) {
+    width: 100%;
+    height: 100px;
+}
+
+/* Additional styling */
+.myhomebookmark-more-images {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.myhomebookmark-stats {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    color: #666;
+}
+
+.myhomebookmark-comments {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.myhomebookmark-comment {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.myhomebookmark-comment-profile {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.myhomebookmark-comment-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.myhomebookmark-comment-name {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.myhomebookmark-comment-date {
+    font-size: 12px;
+    color: #888;
+    margin-top: 2px;
+}
+
+.myhomebookmark-comment-text {
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.myhomebookmark-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.myhomebookmark-modal-image {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}

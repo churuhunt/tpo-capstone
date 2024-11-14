@@ -20,7 +20,7 @@ ChartJS.register(LinearScale, CategoryScale, PointElement, LineElement);
 
 const MyMenu = () => {
     const { userId: paramUserId } = useParams();
-    const [menuItems, setMenuItems] = useState(["게시물", "방명록", "활동통계", "추천글", "커스텀" ]);
+    const [menuItems, setMenuItems] = useState(["게시물", "방명록", "활동통계", "북마크", "커스텀" ]);
     const [activeIndex, setActiveIndex] = useState(0);
     const [points, setPoints] = useState(0);
     const [profileImage, setProfileImage] = useState(null);
@@ -231,7 +231,7 @@ const MyMenu = () => {
             setActiveTab('ActivityDashboard');
         } else if (item === "방명록") {
             setActiveTab('guestbook');
-        }  else if (item === "추천글") {
+        }  else if (item === "북마크") {
             setActiveTab('myhomerec');
         } else if (item === "커스텀") {
             setActiveTab("custom");
